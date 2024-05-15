@@ -290,7 +290,8 @@ return [
     |
     */
 
-    'workspace' => 'platform::workspace.compact',
+    // 'workspace' => 'platform::workspace.compact',
+    'workspace' => 'orchid.workspace.custom',
 
     /*
     |--------------------------------------------------------------------------
