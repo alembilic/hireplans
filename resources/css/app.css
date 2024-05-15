@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Path: resources/css/custom.css */
+
+/* This CSS ensures that the height: 100vh; is only applied on screens wider than 1024px */
+/* @media (min-width: 1024px) { */
+@media (min-width: 1200px) {
+    .aside.position-sticky {
+        height: 100vh;
+    }
+}

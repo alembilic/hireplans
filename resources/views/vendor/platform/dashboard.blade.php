@@ -1,7 +1,10 @@
 @extends(config('platform.workspace', 'platform::workspace.compact'))
 
+
 @section('aside')
-    <div class="aside col-xs-12 col-xxl-2 bg-dark d-flex flex-column me-auto" data-controller="menu">
+    {{-- <div class="aside col-xs-12 col-xxl-2 bg-dark d-flex flex-column me-auto" style="position: sticky; top: 0; height: 100vh;"
+    data-controller="menu"> --}}
+    <div class="aside position-sticky top-0 xl:h-screenxxx col-xs-12 col-xxl-2 bg-dark d-flex flex-column me-auto" data-controller="menu">
         <header class="d-xl-block p-3 mt-xl-4 w-100 d-flex align-items-center">
             <a href="#" class="header-toggler d-xl-none me-auto order-first d-flex align-items-center lh-1"
                data-action="click->menu#toggle">
@@ -54,7 +57,12 @@
     </div>
 @endsection
 
+
+
 @section('workspace')
+
+    <livewire:layout.navigation />
+
     @if(Breadcrumbs::has())
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb px-4 mb-2">
