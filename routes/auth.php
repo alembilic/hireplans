@@ -29,11 +29,16 @@ Route::middleware('auth')->group(function () {
     Volt::route('confirm-password', 'pages.auth.confirm-password')
         ->name('password.confirm');
 
-
-
-
     require __DIR__.'/platform.php';
-
-
-
 });
+
+use App\Orchid\Screens\Candidate\CandidateEditScreen;
+
+Route::screen('candidate/create', CandidateEditScreen::class)
+    ->name('platform.candidate.create')
+    ->middleware(['auth'])
+    // ->breadcrumbs(fn (Trail $trail) => $trail
+    //     ->parent('platform.Candidates')
+    //     ->push(__('Candidates'), route('platform.candidates'))
+    // )
+    ;

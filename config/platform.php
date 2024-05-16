@@ -46,7 +46,8 @@ return [
 
     'middleware' => [
         'public'  => ['web', 'cache.headers:private;must_revalidate;etag'],
-        'private' => ['web', 'platform', 'cache.headers:private;must_revalidate;etag'],
+        // 'private' => ['web', 'platform', 'cache.headers:private;must_revalidate;etag'],
+        'private' => ['web', 'auth', 'cache.headers:private;must_revalidate;etag'],
     ],
 
     /*
