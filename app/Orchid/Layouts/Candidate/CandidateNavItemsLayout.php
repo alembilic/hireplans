@@ -18,8 +18,12 @@ class CandidateNavItemsLayout extends TabMenu
             // Menu::make('Home')
             //     ->route(config('platform.index')),
 
+            Menu::make('Candidates')
+                ->route('platform.candidates.list')
+                ->icon('bs.list'),
+
             Menu::make('Create Candidate')
-                ->route('platform.candidate.create')
+                ->route('platform.candidates.create')
                 ->icon('bs.plus-circle'),
         ];
     }

@@ -1,0 +1,76 @@
+<?php
+
+namespace App\Orchid\Filters\Candidate;
+
+use Illuminate\Database\Eloquent\Builder;
+use Orchid\Filters\Filter;
+use Orchid\Screen\Field;
+use Orchid\Screen\Fields\Input;
+// use Orchid\Screen\Layouts\Rows;
+
+class CandidateNameFilter extends Filter
+{
+    /**
+     * @var array
+     */
+    // public $parameters = ['user_name'];
+
+    /**
+     * The displayable name of the filter.
+     *
+     * @return string
+     */
+    public function name(): string
+    {
+        return 'Candidate Name';
+    }
+
+    /**
+     * The array of matched parameters.
+     *
+     * @return array|null
+     */
+    public function parameters(): ?array
+    {
+        return ['user_name'];
+    }
+
+    /**
+     * Apply to a given Eloquent query builder.
+     *
+     * @param Builder $builder
+     *
+     * @return Builder
+     */
+    public function run(Builder $builder): Builder
+    {
+        // return $builder;
+        // return $builder->where('email', $this->request->get('email'));
+        return $builder->whereHas('user', function ($query) {
+            $query->where('name', 'like', '%' . $this->request->get('user_name') . '%');
+        });
+    }
+
+    /**
+     * Get the display fields.
+     *
+     * @return Field[]
+     */
+    public function display(): iterable
+    {
+        return [
+            Input::make('user_name')
+                ->type('text')
+                ->value($this->request->get('user_name'))
+                ->placeholder('Enter candidate name')
+                ->title('Candidate name'),
+        ];
+        // return [
+        //     Select::make('role')
+        //         ->fromModel(Role::class, 'name', 'slug')
+        //         ->empty()
+        //         ->value($this->request->get('role'))
+        //         ->title(__('Roles')),
+        // ];
+    }
+}

@@ -20,6 +20,7 @@ use App\Orchid\Screens\User\UserListScreen;
 use App\Orchid\Screens\User\UserProfileScreen;
 use Illuminate\Support\Facades\Route;
 use Tabuna\Breadcrumbs\Trail;
+use App\Orchid\Screens\Candidate\CandidateListScreen;
 
 /*
 |--------------------------------------------------------------------------
@@ -104,10 +105,17 @@ Route::screen('/examples/cards', ExampleCardsScreen::class)->name('platform.exam
 
 //Route::screen('idea', Idea::class, 'platform.screens.idea');
 
-Route::screen('candidate/create', CandidateEditScreen::class)
-    ->name('platform.candidate.create')
-    // ->breadcrumbs(fn (Trail $trail) => $trail
-    //     ->parent('platform.Candidates')
-    //     ->push(__('Candidates'), route('platform.candidates'))
-    // )
+Route::screen('candidates/list', CandidateListScreen::class)
+    ->name('platform.candidates.list')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push(__('Candidates'), route('platform.candidates.list'))
+    );
+
+Route::screen('candidates/create', CandidateEditScreen::class)
+    ->name('platform.candidates.create')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.candidates.list')
+        ->push(__('Create candidate'), route('platform.candidates.create'))
+    )
     ;
