@@ -26,9 +26,22 @@ class UserPasswordLayout extends Rows
             : __('Enter the password to be set');
 
         return [
+            // Trying to prevent pre-fill by browser!
+            // Password::make('dummy_password')
+            //     ->type('password')
+            //     ->horizontal()
+            //     ->hidden()
+            //     ->autocomplete('off'),
+
             Password::make('user.password')
                 ->placeholder($placeholder)
-                ->title(__('Password')),
+                ->title(__('Password'))
+                ->horizontal()
+                ->autocomplete('new-password')
+                // ->addAttributes([
+                //     'onfocus' => "this.removeAttribute('readonly');",
+                //     'readonly' => 'readonly',
+                // ]),
         ];
     }
 }

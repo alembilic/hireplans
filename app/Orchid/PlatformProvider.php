@@ -34,6 +34,13 @@ class PlatformProvider extends OrchidServiceProvider
     public function menu(): array
     {
         return [
+            Menu::make(__('Add Candidate'))
+            ->icon('bs.people')
+            ->route('platform.candidate.create')
+            ->permission('platform.systems.users')
+            ->title(__('Candidates'))
+            ->divider(),
+
             Menu::make('Get Started')
                 ->icon('bs.book')
                 ->title('Navigation')

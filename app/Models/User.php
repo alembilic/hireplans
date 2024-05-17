@@ -18,6 +18,14 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'permissions',
+        'phone',
+        'address_line_1',
+        'city',
+        'postcode',
+        'country',
+        'nationality',
+        'dob',
     ];
 
     /**
@@ -66,4 +74,12 @@ class User extends Authenticatable
         'updated_at',
         'created_at',
     ];
+
+    /**
+     * Get the candidate record associated with the user.
+     */
+    public function candidate()
+    {
+        return $this->hasOne(Candidate::class);
+    }
 }

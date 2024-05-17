@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Orchid\Platform\Dashboard;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -11,7 +12,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Register CountryHelper
+        $this->app->singleton('CountryHelper', function ($app) {
+            return new \App\Helpers\CountryHelper();
+        });
     }
 
     /**
@@ -19,6 +23,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // ====================== https://orchid.software/en/docs/configuration/#model-classes
+        // Dashboard::useModel(
+        //     \Orchid\Platform\Models\User::class,
+        //     \App\Models\User::class
+        // );
+
+        // Dashboard::configure([
+        //     'models' => [
+        //         User::class => MyCustomClass::class,
+        //     ],
+        // ]);
+        // ======================
     }
 }

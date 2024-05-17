@@ -7,6 +7,8 @@ namespace App\Orchid\Layouts\User;
 use Orchid\Screen\Field;
 use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Layouts\Rows;
+use Orchid\Screen\Fields\Select;
+use App\Helpers\CountryHelper;
 
 class UserEditLayout extends Rows
 {
@@ -22,14 +24,82 @@ class UserEditLayout extends Rows
                 ->type('text')
                 ->max(255)
                 ->required()
-                ->title(__('Name'))
-                ->placeholder(__('Name')),
+                ->title(__('Full Name'))
+                ->placeholder(__('Full Name'))
+                ->horizontal(),
+
+            // Trying to prevent pre-fill by browser!
+            // Input::make('dummy_email')
+            //     ->type('text')
+            //     ->hidden()
+            //     ->autocomplete('off'),
 
             Input::make('user.email')
                 ->type('email')
                 ->required()
                 ->title(__('Email'))
-                ->placeholder(__('Email')),
+                ->placeholder(__('Email'))
+                ->horizontal()
+                ->autocomplete('off'),
+
+            Input::make('user.phone')
+                ->type('text')
+                ->max(255)
+                ->required()
+                ->title(__('Phone'))
+                ->placeholder(__('Phone'))
+                ->horizontal(),
+
+            Input::make('user.address_line_1')
+                ->type('text')
+                ->max(255)
+                ->required()
+                ->title(__('Address line 1'))
+                ->placeholder(__('Hourse number and street'))
+                ->horizontal(),
+
+            Input::make('user.city')
+                ->type('text')
+                ->max(255)
+                ->required()
+                ->title(__('City'))
+                ->placeholder(__('City'))
+                ->horizontal(),
+
+            Input::make('user.postcode')
+                ->type('text')
+                ->max(255)
+                ->required()
+                ->title(__('Postcode'))
+                ->placeholder(__('Postcode'))
+                ->horizontal(),
+
+            // Select::make('user.country_code')
+                // ->fromModel(CountryHelper::getCountries(), 'value')
+                // ->title('Country')
+                // ->empty('Select a country')
+                // ->required(),
+            Select::make('user.country')
+                    ->options(CountryHelper::getCountries())
+                    ->title('Country')
+                    ->empty('Select a country')
+                    ->required()
+                    ->horizontal(),
+
+            Input::make('user.nationality')
+                ->type('text')
+                ->max(255)
+                ->required()
+                ->title(__('Nationality'))
+                ->placeholder(__('Nationality'))
+                ->horizontal(),
+
+            Input::make('user.dob')
+                ->type('date')
+                ->required()
+                ->title(__('Date of Birth'))
+                ->placeholder(__('Date of Birth'))
+                ->horizontal(),
         ];
     }
 }
