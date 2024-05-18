@@ -4,11 +4,14 @@ namespace App\Orchid\Screens\Candidate;
 
 use Orchid\Screen\Screen;
 use App\Models\Candidate;
+use App\Models\User;
 use Orchid\Support\Facades\Layout;
 use App\Orchid\Layouts\Candidate\CandidateListLayout;
 use App\Orchid\Layouts\Candidate\CandidateNavItemsLayout;
-use App\Orchid\Filters\Candidate\CandidateNameFilter;
+// use App\Orchid\Filters\Candidate\CandidateNameFilter;
 use App\Orchid\Layouts\Candidate\CandidateFiltersLayout;
+use Illuminate\Http\Request;
+use Orchid\Support\Facades\Toast;
 
 class CandidateListScreen extends Screen
 {
@@ -76,5 +79,15 @@ class CandidateListScreen extends Screen
 
             CandidateListLayout::class,
         ];
+    }
+    public function remove(Request $request): void
+    {
+        $candidate = Candidate::findOrFail($request->get('id'));
+
+        User::findOrFail($candidate->user->id)->delete();
+
+        $candidate->delete();
+
+        Toast::info(__('Candidate was removed'));
     }
 }

@@ -76,12 +76,12 @@ class CandidateListLayout extends Table
                             ->route('platform.candidates.edit', $candidate->id)
                             ->icon('bs.pencil'),
 
-                        // Button::make(__('Delete'))
-                        //     ->icon('bs.trash3')
-                        //     ->confirm(__('Once the account is deleted, all of its resources and data will be permanently deleted. Before deleting this account, please download any data or information that you wish to retain.'))
-                        //     ->method('remove', [
-                        //         'id' => $candidate->id,
-                        //     ]),
+                        Button::make(__('Delete'))
+                            ->icon('bs.trash3')
+                            ->confirm(__('Once the account is deleted, all of its resources and data will be permanently deleted. Before deleting this account, please download any data or information that you wish to retain.'))
+                            ->method('remove', [
+                                'id' => $candidate->id,
+                            ]),
                     ])),
         ];
     }

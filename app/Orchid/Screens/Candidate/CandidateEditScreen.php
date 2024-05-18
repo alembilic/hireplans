@@ -63,6 +63,11 @@ class CandidateEditScreen extends Screen
         return $this->candidate->exists ? 'Edit candidate' : 'Create candidate';
     }
 
+    /**
+     * Get the permissions required to access this screen.
+     *
+     * @return iterable|null The permissions required to access this screen.
+     */
     public function permission(): ?iterable
     {
         return [
@@ -191,5 +196,18 @@ class CandidateEditScreen extends Screen
         return $referenceNumber;
     }
 
+    /**
+     * @throws \Exception
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function remove(Candidate $candidate)
+    {
+        $candidate->delete();
+
+        Toast::info(__('Candidate was removed'));
+
+        return redirect()->route('platform.candidates.list');
+    }
 
 }
