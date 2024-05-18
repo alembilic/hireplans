@@ -105,6 +105,7 @@ Route::screen('/examples/cards', ExampleCardsScreen::class)->name('platform.exam
 
 //Route::screen('idea', Idea::class, 'platform.screens.idea');
 
+// Platform > Candidates > List
 Route::screen('candidates/list', CandidateListScreen::class)
     ->name('platform.candidates.list')
     ->breadcrumbs(fn (Trail $trail) => $trail
@@ -112,10 +113,22 @@ Route::screen('candidates/list', CandidateListScreen::class)
         ->push(__('Candidates'), route('platform.candidates.list'))
     );
 
+// Platform > Candidates > Create
 Route::screen('candidates/create', CandidateEditScreen::class)
     ->name('platform.candidates.create')
     ->breadcrumbs(fn (Trail $trail) => $trail
         ->parent('platform.candidates.list')
         ->push(__('Create candidate'), route('platform.candidates.create'))
+    );
+
+// Platform > Candidates > Edit
+// By making the candidate parameter optional (using {candidate?}),
+// you allow the route to handle both new and existing candidates.
+Route::screen('candidates/{candidate?}/edit', CandidateEditScreen::class)
+    ->name('platform.candidates.edit')
+    ->breadcrumbs(fn (Trail $trail, $candidate) => $trail
+        ->parent('platform.candidates.list')
+        ->push(__('Edit candidate'), route('platform.candidates.edit'))
     )
     ;
+

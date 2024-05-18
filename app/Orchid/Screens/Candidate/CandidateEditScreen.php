@@ -40,13 +40,16 @@ class CandidateEditScreen extends Screen
      *
      * @return array
      */
-    public function query(User $user, Candidate $candidate): iterable
+    public function query(Candidate $candidate): iterable
     {
-        // $candidate->load(['users']);
+        $candidate->load(['user']); // Eager load the user relationship
+
+        // Load the related user if the candidate exists
+        $user = $candidate->exists ? $candidate->user : new User();
 
         return [
-            'user'       => $user,
             'candidate'  => $candidate,
+            'user'       => $user,
         ];
     }
 
@@ -57,8 +60,7 @@ class CandidateEditScreen extends Screen
      */
     public function name(): ?string
     {
-        // return $this->candidate->exists ? 'Edit candidate' : 'Create candidate';
-        return 'Save Candidate';
+        return $this->candidate->exists ? 'Edit candidate' : 'Create candidate';
     }
 
     /**
@@ -111,8 +113,10 @@ class CandidateEditScreen extends Screen
      *
      * @return void
      */
-    public function saveCandidate(User $user, Candidate $candidate, Request $request)
+    public function saveCandidate(Candidate $candidate, Request $request)
     {
+        $user = $candidate->user ?? new User();
+
         $request->validate([
             'user.email' => [
                 'required',
@@ -143,7 +147,8 @@ class CandidateEditScreen extends Screen
 
         Toast::info(__('Candidate saved'));
 
-        // return redirect()->route('platform.systems.users');
+        return redirect()->route('platform.candidates.list');
+        // return redirect()->route('platform.candidates.view', $candidate->id);
     }
 
     /**

@@ -18,7 +18,7 @@ class CandidateNavItemsLayout extends TabMenu
             // Menu::make('Home')
             //     ->route(config('platform.index')),
 
-            Menu::make('Candidates')
+            Menu::make('Candidates List')
                 ->route('platform.candidates.list')
                 ->icon('bs.list'),
 
