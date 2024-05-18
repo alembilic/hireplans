@@ -40,6 +40,18 @@ class CandidateListScreen extends Screen
     }
 
     /**
+     * Get the permissions required to access this screen.
+     *
+     * @return iterable|null The permissions required to access this screen.
+     */
+    public function permission(): ?iterable
+    {
+        return [
+            'platform.systems.users',
+        ];
+    }
+
+    /**
      * The screen's action buttons.
      *
      * @return \Orchid\Screen\Action[]

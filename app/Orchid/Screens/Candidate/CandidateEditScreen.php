@@ -63,6 +63,13 @@ class CandidateEditScreen extends Screen
         return $this->candidate->exists ? 'Edit candidate' : 'Create candidate';
     }
 
+    public function permission(): ?iterable
+    {
+        return [
+            'platform.systems.users',
+        ];
+    }
+
     /**
      * The screen's action buttons.
      *
