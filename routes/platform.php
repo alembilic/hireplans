@@ -21,6 +21,7 @@ use App\Orchid\Screens\User\UserProfileScreen;
 use Illuminate\Support\Facades\Route;
 use Tabuna\Breadcrumbs\Trail;
 use App\Orchid\Screens\Candidate\CandidateListScreen;
+use App\Orchid\Screens\Candidate\CandidateViewScreen;
 
 /*
 |--------------------------------------------------------------------------
@@ -129,6 +130,15 @@ Route::screen('candidates/{candidate?}/edit', CandidateEditScreen::class)
     ->breadcrumbs(fn (Trail $trail, $candidate) => $trail
         ->parent('platform.candidates.list')
         ->push(__('Edit candidate'), route('platform.candidates.edit'))
+    )
+    ;
+
+// Platform > Candidates > View
+Route::screen('candidates/{candidate?}/view', CandidateViewScreen::class)
+    ->name('platform.candidates.view')
+    ->breadcrumbs(fn (Trail $trail, $candidate) => $trail
+        ->parent('platform.candidates.list')
+        ->push(__('Candidate details'), route('platform.candidates.view'))
     )
     ;
 

@@ -33,6 +33,8 @@ class CandidateListLayout extends Table
             TD::make('user_name', 'Name')
                 ->sort()
                 ->cantHide()
+                ->render(fn (Candidate $candidate) => Link::make($candidate->user->name)
+                            ->route('platform.candidates.view', $candidate->id))
                 // ->filter(TD::FILTER_TEXT)
                 ,
 

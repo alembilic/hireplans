@@ -20,6 +20,7 @@ use Illuminate\Validation\Rule;
 use Orchid\Support\Facades\Toast;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Hash;
+use Orchid\Screen\Actions\Link;
 
 // use Illuminate\Support\Facades\Log;
 
@@ -112,10 +113,13 @@ class CandidateEditScreen extends Screen
                     Button::make('Cancel')
                         ->method('cancel')
                         ->type(Color::SECONDARY)
-                        ->icon('bs.x-circle'),
+                        ->icon('bs.x-circle')
+                        ->rawClick(),
+                    // Link::make('Cancel')
+                    //     ->icon('close')
+                    //     ->route('platform.candidates.list'),
                 ])->autoWidth()->alignCenter(),
             ]),
-
 
         ];
     }
@@ -159,8 +163,18 @@ class CandidateEditScreen extends Screen
 
         Toast::info(__('Candidate saved'));
 
+        // return redirect()->route('platform.candidates.list');
+        return redirect()->route('platform.candidates.view', $candidate->id);
+    }
+
+    /**
+     * Cancel the edit operation and return to the list screen.
+     *
+     * @return void
+     */
+    public function cancel()
+    {
         return redirect()->route('platform.candidates.list');
-        // return redirect()->route('platform.candidates.view', $candidate->id);
     }
 
     /**
