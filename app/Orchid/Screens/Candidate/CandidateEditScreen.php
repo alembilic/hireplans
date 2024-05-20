@@ -21,6 +21,7 @@ use Orchid\Support\Facades\Toast;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Hash;
 use Orchid\Screen\Actions\Link;
+use App\Helpers\HelperFunc;
 
 // use Illuminate\Support\Facades\Log;
 
@@ -157,7 +158,7 @@ class CandidateEditScreen extends Screen
 
         $candidateData = $request->collect('candidate')->except([])->toArray();
         $candidateData['user_id'] = $user->id;
-        $candidateData['candidate_ref'] = self::generateReferenceNumber();
+        $candidateData['candidate_ref'] = HelperFunc::generateReferenceNumber('candidate');
 
         $candidate->fill($candidateData)->save();
 
@@ -177,38 +178,38 @@ class CandidateEditScreen extends Screen
         return redirect()->route('platform.candidates.list');
     }
 
-    /**
-     * Generate a random reference number.
-     *
-     * @return string
-     */
-    public static function generateReferenceNumber()
-    {
-        // $letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $letters = 'ABCDEGKRTVWYZ';
-        $numbers = '123456789';
-        $characters = $letters . $numbers;
+    // /**
+    //  * Generate a random reference number.
+    //  *
+    //  * @return string
+    //  */
+    // public static function generateReferenceNumber()
+    // {
+    //     // $letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    //     $letters = 'ABCDEGKRTVWYZ';
+    //     $numbers = '123456789';
+    //     $characters = $letters . $numbers;
 
-        do {
-            // Ensure at least one letter and one number
-            $referenceNumber = 'C-';
-            // $referenceNumber .= $numbers[rand(0, strlen($numbers) - 1)];
-            for ($i = 0; $i < 3; $i++) {
-                $referenceNumber .= $numbers[rand(0, strlen($numbers) - 1)];
-            }
-            $referenceNumber .= $letters[rand(0, strlen($letters) - 1)];
+    //     do {
+    //         // Ensure at least one letter and one number
+    //         $referenceNumber = 'C-';
+    //         // $referenceNumber .= $numbers[rand(0, strlen($numbers) - 1)];
+    //         for ($i = 0; $i < 3; $i++) {
+    //             $referenceNumber .= $numbers[rand(0, strlen($numbers) - 1)];
+    //         }
+    //         $referenceNumber .= $letters[rand(0, strlen($letters) - 1)];
 
-            // Fill the remaining 4 characters with random letters or numbers
-            for ($i = 0; $i < 4; $i++) {
-                $referenceNumber .= $characters[rand(0, strlen($characters) - 1)];
-            }
+    //         // Fill the remaining 4 characters with random letters or numbers
+    //         for ($i = 0; $i < 4; $i++) {
+    //             $referenceNumber .= $characters[rand(0, strlen($characters) - 1)];
+    //         }
 
-            // Shuffle the resulting string (excluding the 'C-' prefix)
-            $referenceNumber = 'C-' . str_shuffle(substr($referenceNumber, 2));
-        } while (Candidate::where('candidate_ref', $referenceNumber)->exists());
+    //         // Shuffle the resulting string (excluding the 'C-' prefix)
+    //         $referenceNumber = 'C-' . str_shuffle(substr($referenceNumber, 2));
+    //     } while (Candidate::where('candidate_ref', $referenceNumber)->exists());
 
-        return $referenceNumber;
-    }
+    //     return $referenceNumber;
+    // }
 
     /**
      * @throws \Exception

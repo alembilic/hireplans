@@ -16,6 +16,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton('CountryHelper', function ($app) {
             return new \App\Helpers\CountryHelper();
         });
+
+        $this->app->singleton('HelperFunc', function ($app) {
+            return new \App\Helpers\HelperFunc();
+        });
     }
 
     /**
