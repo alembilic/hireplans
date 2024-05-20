@@ -63,6 +63,10 @@
 
     <livewire:layout.navigation />
 
+    @if (!Auth::user()->hasVerifiedEmail())
+        @livewire('components.email-verification-notice')
+    @endif
+
     @if(Breadcrumbs::has())
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb px-4 mb-2">
