@@ -25,15 +25,15 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
 
     // Main
-    Route::screen('/main', PlatformScreen::class)
-        ->name('platform.main');
+    // Route::screen('/main', PlatformScreen::class)
+    //     ->name('platform.main');
 
     // Platform > Profile
-    Route::screen('profile', UserProfileScreen::class)
-        ->name('platform.profile')
-        ->breadcrumbs(fn (Trail $trail) => $trail
-            ->parent('platform.index')
-            ->push(__('Profile'), route('platform.profile')));
+    // Route::screen('profile', UserProfileScreen::class)
+    //     ->name('platform.profile')
+    //     ->breadcrumbs(fn (Trail $trail) => $trail
+    //         ->parent('platform.index')
+    //         ->push(__('Profile'), route('platform.profile')));
 
     Volt::route('verify-email', 'pages.auth.verify-email')
         ->name('verification.notice');
@@ -48,7 +48,8 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
-    require __DIR__.'/platform.php';
+    // require __DIR__.'/platform.php';
 
 });
 
+require __DIR__.'/platform.php';
