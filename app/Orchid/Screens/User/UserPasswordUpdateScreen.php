@@ -19,11 +19,8 @@ use Orchid\Support\Facades\Layout;
 use Orchid\Support\Facades\Toast;
 use App\Orchid\Layouts\Candidate\CandidateEditLayout;
 use Orchid\Screen\Fields\Group;
-use Illuminate\Support\Facades\Auth;
-use App\Models\Candidate;
-use App\Helpers\HelperFunc;
 
-class UserProfileScreen extends Screen
+class UserPasswordUpdateScreen extends Screen
 {
     /**
      * Fetch data to be displayed on the screen.
@@ -33,11 +30,8 @@ class UserProfileScreen extends Screen
      */
     public function query(Request $request): iterable
     {
-        $user = $request->user()->load('candidate');
-
         return [
             'user' => $request->user(),
-            'candidate' => $user->candidate ?? new Candidate(),
         ];
     }
 
@@ -46,7 +40,7 @@ class UserProfileScreen extends Screen
      */
     public function name(): ?string
     {
-        return 'My Account';
+        return 'Password Update';
     }
 
     /**
@@ -54,7 +48,7 @@ class UserProfileScreen extends Screen
      */
     public function description(): ?string
     {
-        return 'Update your account details such as name, email address and password';
+        return 'Update your password.';
     }
 
     /**
@@ -84,14 +78,12 @@ class UserProfileScreen extends Screen
     public function layout(): iterable
     {
         return [
-            Layout::block([UserEditLayout::class])->vertical()->title('Personal Details'),
-
-            Layout::block([CandidateEditLayout::class])->vertical()->title('Other Information'),
+            Layout::block([ProfilePasswordLayout::class])->vertical()->title(__('Update Password')),
 
             Layout::rows([
                 Group::make([
-                    Button::make('Save')
-                        ->method('saveProfile')
+                    Button::make(__('Update Password'))
+                        ->method('changePassword')
                         ->type(Color::PRIMARY)
                         ->icon('bs.check-circle'),
                     // Button::make('Cancel')
@@ -104,7 +96,6 @@ class UserProfileScreen extends Screen
                     //     ->route('platform.candidates.list'),
                 ])->autoWidth()->alignCenter(),
             ]),
-
         ];
     }
 
@@ -125,47 +116,18 @@ class UserProfileScreen extends Screen
     //     Toast::info(__('Profile updated.'));
     // }
 
-    /**
-     * @param \Illuminate\Http\Request $request
-     *
-     * @return void
-     */
-    public function saveProfile(Request $request)
+    public function changePassword(Request $request): void
     {
-        $user = Auth::user()->load('candidate');
-        $candidate = $user->candidate ?? new Candidate();
-
+        $guard = config('platform.guard', 'web');
         $request->validate([
-            'user.email' => [
-                'required',
-                Rule::unique(User::class, 'email')->ignore($user),
-            ],
-            'user.name' => 'required',
+            'old_password' => 'required|current_password:'.$guard,
+            'password'     => 'required|confirmed|different:old_password',
         ]);
 
-        // $user->when($request->filled('user.password'), function (Builder $builder) use ($request) {
-        //     $builder->getModel()->password = Hash::make($request->input('user.password'));
-        // });
+        tap($request->user(), function ($user) use ($request) {
+            $user->password = Hash::make($request->get('password'));
+        })->save();
 
-        $user
-            ->fill($request->collect('user')->except(['password', 'permissions', 'roles'])->toArray())
-            // ->forceFill(['permissions' => $permissions])
-            ->save();
-
-        // Find the roles
-        // $role1 = Role::where('slug', 'authenticated_user')->first();
-        // $role2 = Role::where('slug', 'candidate')->first();
-        // $user->replaceRoles([$role1->id, $role2->id]);
-
-        $candidateData = $request->collect('candidate')->except([])->toArray();
-        $candidateData['user_id'] = $user->id;
-        $candidateData['candidate_ref'] = HelperFunc::generateReferenceNumber('candidate');
-
-        $candidate->fill($candidateData)->save();
-
-        Toast::info(__('Profile saved'));
-
-        return redirect()->route('platform.main');
+        Toast::info(__('Password changed.'));
     }
-
 }

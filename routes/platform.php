@@ -12,12 +12,13 @@ use App\Orchid\Screens\Examples\ExampleGridScreen;
 use App\Orchid\Screens\Examples\ExampleLayoutsScreen;
 use App\Orchid\Screens\Examples\ExampleScreen;
 use App\Orchid\Screens\Examples\ExampleTextEditorsScreen;
-use App\Orchid\Screens\PlatformScreen;
+// use App\Orchid\Screens\PlatformScreen;
 use App\Orchid\Screens\Role\RoleEditScreen;
 use App\Orchid\Screens\Role\RoleListScreen;
 use App\Orchid\Screens\User\UserEditScreen;
 use App\Orchid\Screens\User\UserListScreen;
-use App\Orchid\Screens\User\UserProfileScreen;
+// use App\Orchid\Screens\User\UserProfileScreen;
+use App\Orchid\Screens\User\UserPasswordUpdateScreen;
 use Illuminate\Support\Facades\Route;
 use Tabuna\Breadcrumbs\Trail;
 use App\Orchid\Screens\Candidate\CandidateListScreen;
@@ -35,15 +36,22 @@ use App\Orchid\Screens\Candidate\CandidateViewScreen;
 */
 
 // Main
-Route::screen('/main', PlatformScreen::class)
-    ->name('platform.main');
+// Route::screen('/main', PlatformScreen::class)
+//     ->name('platform.main');
 
 // Platform > Profile
-Route::screen('profile', UserProfileScreen::class)
-    ->name('platform.profile')
+// Route::screen('profile', UserProfileScreen::class)
+//     ->name('platform.profile')
+//     ->breadcrumbs(fn (Trail $trail) => $trail
+//         ->parent('platform.index')
+//         ->push(__('Profile'), route('platform.profile')));
+
+// Platform > Profile -> update password
+Route::screen('update-password', UserPasswordUpdateScreen::class)
+    ->name('platform.update-password')
     ->breadcrumbs(fn (Trail $trail) => $trail
         ->parent('platform.index')
-        ->push(__('Profile'), route('platform.profile')));
+        ->push(__('Update password'), route('platform.update-password')));
 
 // Platform > System > Users > User
 Route::screen('users/{user}/edit', UserEditScreen::class)

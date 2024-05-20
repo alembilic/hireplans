@@ -7,6 +7,7 @@ use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Fields\SimpleMDE;
 use Orchid\Screen\Field;
 use Orchid\Screen\Layouts\Rows;
+use Illuminate\Support\Facades\Auth;
 
 class CandidateEditLayout extends Rows
 {
@@ -24,7 +25,7 @@ class CandidateEditLayout extends Rows
      */
     protected function fields(): iterable
     {
-        return [
+        $fields = [
             Select::make('candidate.gender')
                 ->title('Gender')
                 ->options(['Male'=>'Male','Female'=>'Female','Other'=>'Other','Prefer not to say'=>'Prefer not to say'])
@@ -60,11 +61,16 @@ class CandidateEditLayout extends Rows
                 ->placeholder(__('Skills'))
                 ->help('Separate skills with a comma. Eg. PHP, Java, Python')
                 ->horizontal(),
-
-            SimpleMDE::make('candidate.notes')
-                ->title(__('Notes'))
-                // ->popover(__('Notes'))
-                ->horizontal(),
         ];
+
+        if (Auth::user()->hasAccess('platform.systems.users')) {
+            $fields[] = SimpleMDE::make('candidate.notes')
+                            ->title(__('Admin Notes'))
+                            // ->popover(__('Notes'))
+                            ->help('These notes are visible to the admins only. They are not visible to the candidate.')
+                            ->horizontal();
+        }
+
+        return $fields;
     }
 }

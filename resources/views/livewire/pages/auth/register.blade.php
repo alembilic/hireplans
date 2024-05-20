@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
+use Orchid\Platform\Models\Role;
 
 new #[Layout('layouts.guest')] class extends Component
 {
@@ -30,9 +31,15 @@ new #[Layout('layouts.guest')] class extends Component
 
         event(new Registered($user = User::create($validated)));
 
+        // Add default roles
+        $role1 = Role::where('slug', 'authenticated_user')->first();
+        $role2 = Role::where('slug', 'candidate')->first();
+        $user->replaceRoles([$role1->id, $role2->id]);
+
         Auth::login($user);
 
-        $this->redirect(route('dashboard', absolute: false), navigate: true);
+        // $this->redirect(route('dashboard', absolute: false), navigate: true);
+        $this->redirect(route('platform.profile', absolute: false), navigate: true);
     }
 }; ?>
 
