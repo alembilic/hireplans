@@ -4,6 +4,10 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Orchid\Platform\Dashboard;
+use App\Models\Candidate;
+use App\Observers\CandidateObserver;
+use App\Models\User;
+use App\Observers\UserObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -39,5 +43,8 @@ class AppServiceProvider extends ServiceProvider
         //     ],
         // ]);
         // ======================
+
+        Candidate::observe(CandidateObserver::class);
+        User::observe(UserObserver::class);
     }
 }
