@@ -22,6 +22,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Hash;
 use Orchid\Screen\Actions\Link;
 use App\Helpers\HelperFunc;
+use Orchid\Attachment\File;
+use App\Orchid\Layouts\Candidate\CandidateAttachmentLayout;
 
 // use Illuminate\Support\Facades\Log;
 
@@ -45,6 +47,12 @@ class CandidateEditScreen extends Screen
     public function query(Candidate $candidate): iterable
     {
         $candidate->load(['user']); // Eager load the user relationship
+        $candidate->load('attachment');
+        $cvAttachments = $candidate->getCvAttachments();
+        $otherDocumentsAttachments = $candidate->getOtherDocumentsAttachments();
+
+
+        // dd($candidate);
 
         // Load the related user if the candidate exists
         $user = $candidate->exists ? $candidate->user : new User();
@@ -52,6 +60,8 @@ class CandidateEditScreen extends Screen
         return [
             'candidate'  => $candidate,
             'user'       => $user,
+            'cv' => $cvAttachments->pluck('id')->toArray(),
+            'other_documents' => $otherDocumentsAttachments->pluck('id')->toArray(),
         ];
     }
 
@@ -104,6 +114,8 @@ class CandidateEditScreen extends Screen
             Layout::block([UserEditLayout::class, UserPasswordLayout::class])->vertical()->title('Personal Details'),
 
             Layout::block([CandidateEditLayout::class])->vertical()->title('Other Information'),
+
+            Layout::block([CandidateAttachmentLayout::class])->vertical()->title('Attachments'),
 
             Layout::rows([
                 Group::make([
@@ -162,6 +174,31 @@ class CandidateEditScreen extends Screen
         $candidateData['candidate_ref'] = HelperFunc::generateReferenceNumber('candidate');
 
         $candidate->fill($candidateData)->save();
+
+        // Sync attachments for "candidate.cv"
+        if ($request->has('candidate.cv')) {
+            $cvAttachments = $request->input('candidate.cv', []);
+            // $this->candidate->attachment()->syncWithoutDetaching($cvAttachments);
+            $currentCvAttachments = $candidate->attachment()->wherePivot('field_name', 'cv')->pluck('attachments.id')->toArray();
+
+            $newCvAttachments = array_diff($cvAttachments, $currentCvAttachments);
+            $candidate->attachment()->attach($newCvAttachments, ['field_name' => 'cv']);
+        }
+
+        // Sync attachments for "candidate.other-documents"
+        if ($request->has('candidate.other-documents')) {
+            $otherDocumentsAttachments = $request->input('candidate.other-documents', []);
+            $currentOtherDocumentsAttachments = $candidate->attachment()
+                ->wherePivot('field_name', 'other-documents')
+                ->pluck('attachments.id')
+                ->toArray();
+
+            $newOtherDocumentsAttachments = array_diff($otherDocumentsAttachments, $currentOtherDocumentsAttachments);
+            $candidate->attachment()->attach($newOtherDocumentsAttachments, ['field_name' => 'other-documents']);
+        }
+        // $candidate->attachment()->syncWithoutDetaching(
+        //     $request->input('candidate.other-documents', [])
+        // );
 
         Toast::info(__('Candidate saved'));
 

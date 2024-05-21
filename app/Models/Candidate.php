@@ -9,10 +9,12 @@ use Orchid\Filters\Filterable;
 use Orchid\Filters\Types\Like;
 use Orchid\Filters\Types\Where;
 use Orchid\Filters\Types\WhereDateStartEnd;
+use Orchid\Attachment\Attachable;
+use Orchid\Attachment\Models\Attachment;
 
 class Candidate extends Model
 {
-    use HasFactory, AsSource, Filterable;
+    use HasFactory, AsSource, Filterable, Attachable;
 
     /**
      * The attributes that are mass assignable.
@@ -29,6 +31,14 @@ class Candidate extends Model
         'skills',
         'notes',
     ];
+
+    /**
+     * Get all of the candidate's attachments.
+     */
+    // public function attachments()
+    // {
+    //     return $this->morphToMany(Attachment::class, 'attachmentable', 'attachmentable');
+    // }
 
     /**
      * The attributes that should be cast to native types.
@@ -71,6 +81,26 @@ class Candidate extends Model
         'updated_at',
         'created_at',
     ];
+
+    /**
+     * Get the CV attachments for the candidate.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getCvAttachments()
+    {
+        return $this->attachment()->wherePivot('field_name', 'cv')->get();
+    }
+
+    /**
+     * Get the other documents attachments for the candidate.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getOtherDocumentsAttachments()
+    {
+        return $this->attachment()->wherePivot('field_name', 'other-documents')->get();
+    }
 
     /**
      * Get the candidate's full name.
