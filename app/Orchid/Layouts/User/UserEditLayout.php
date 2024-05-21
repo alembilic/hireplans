@@ -9,6 +9,7 @@ use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Layouts\Rows;
 use Orchid\Screen\Fields\Select;
 use App\Helpers\CountryHelper;
+use Orchid\Screen\Fields\Picture;
 
 class UserEditLayout extends Rows
 {
@@ -100,6 +101,11 @@ class UserEditLayout extends Rows
                 ->title(__('Date of Birth'))
                 ->placeholder(__('Date of Birth'))
                 ->horizontal(),
+
+            Picture::make('user.avatar')
+                ->title('Avatar')
+                ->horizontal()
+                ->targetRelativeUrl(),
         ];
     }
 }

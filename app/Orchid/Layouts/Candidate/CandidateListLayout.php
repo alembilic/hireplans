@@ -9,6 +9,7 @@ use Orchid\Screen\Actions\DropDown;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Components\Cells\DateTimeSplit;
 use App\Models\Candidate;
+use Orchid\Screen\Layouts\Persona;
 
 class CandidateListLayout extends Table
 {
@@ -30,13 +31,11 @@ class CandidateListLayout extends Table
     protected function columns(): iterable
     {
         return [
-            TD::make('user_name', 'Name')
+            TD::make('user_name', __('Name'))
                 ->sort()
                 ->cantHide()
-                ->render(fn (Candidate $candidate) => Link::make($candidate->user->name)
-                            ->route('platform.candidates.view', $candidate->id))
-                // ->filter(TD::FILTER_TEXT)
-                ,
+                // ->filter(Input::make())
+                ->render(fn (Candidate $candidate) => new Persona($candidate->user->presenter())),
 
             TD::make('candidate_ref', 'Candidate Ref')
                 ->sort()

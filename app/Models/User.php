@@ -7,6 +7,7 @@ use Orchid\Filters\Types\Where;
 use Orchid\Filters\Types\WhereDateStartEnd;
 use Orchid\Platform\Models\User as Authenticatable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Orchid\Presenters\UserPresenter;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -27,6 +28,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'country',
         'nationality',
         'dob',
+        'avatar',
     ];
 
     /**
@@ -75,6 +77,14 @@ class User extends Authenticatable implements MustVerifyEmail
         'updated_at',
         'created_at',
     ];
+
+    /**
+     * @return UserPresenter
+     */
+    public function presenter()
+    {
+        return new UserPresenter($this);
+    }
 
     /**
      * Get the candidate record associated with the user.

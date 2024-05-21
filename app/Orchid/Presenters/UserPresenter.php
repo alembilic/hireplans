@@ -45,7 +45,8 @@ class UserPresenter extends Presenter implements Personable, Searchable
      */
     public function url(): string
     {
-        return route('platform.systems.users.edit', $this->entity);
+        $route = $this->entity->candidate ? route('platform.candidates.view', $this->entity->candidate) : '#';
+        return $route;
     }
 
     /**
@@ -53,11 +54,13 @@ class UserPresenter extends Presenter implements Personable, Searchable
      */
     public function image(): ?string
     {
-        $hash = md5(strtolower(trim($this->entity->email)));
+        // $hash = md5(strtolower(trim($this->entity->email)));
+        // $default = urlencode('https://raw.githubusercontent.com/orchidsoftware/.github/main/web/avatars/gravatar.png');
+        // $defaultImage = "https://www.gravatar.com/avatar/$hash?d=$default";
 
-        $default = urlencode('https://raw.githubusercontent.com/orchidsoftware/.github/main/web/avatars/gravatar.png');
+        $defaultImage = url('/images/hp-logo-avatar.png');
 
-        return "https://www.gravatar.com/avatar/$hash?d=$default";
+        return $this->entity->avatar ? url($this->entity->avatar) : $defaultImage;
     }
 
     /**

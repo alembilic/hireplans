@@ -140,6 +140,7 @@ class CandidateEditScreen extends Screen
                 Rule::unique(User::class, 'email')->ignore($user),
             ],
             'user.name' => 'required',
+            // 'user.avatar' => 'mimes:jpeg,jpg,png,bmp,gif,svg,webp|max:1024',
         ]);
 
         $user->when($request->filled('user.password'), function (Builder $builder) use ($request) {
