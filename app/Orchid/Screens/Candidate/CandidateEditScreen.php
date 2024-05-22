@@ -49,7 +49,7 @@ class CandidateEditScreen extends Screen
         $candidate->load(['user']); // Eager load the user relationship
         $candidate->load('attachment');
         $cvAttachments = $candidate->getCvAttachments();
-        $otherDocumentsAttachments = $candidate->getOtherDocumentsAttachments();
+        $otherDocumentsAttachments = $candidate->getOtherDocAttachments();
 
 
         // dd($candidate);

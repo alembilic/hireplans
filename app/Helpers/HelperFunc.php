@@ -4,6 +4,8 @@ namespace App\Helpers;
 
 use App\Models\Candidate;
 use App\Models\User;
+use Orchid\Attachment\Models\Attachment;
+use stdClass;
 
 class HelperFunc
 {
@@ -57,5 +59,18 @@ class HelperFunc
         } while ($targetClass::where($type.'_ref', $referenceNumber)->exists());
 
         return $referenceNumber;
+    }
+
+    public static function getAttachmentInfo(Attachment $attachment): stdClass
+    {
+        $info = [
+            'id' => $attachment->id,
+            'size' => $attachment->size,
+            'mime' => $attachment->mime,
+            'text' => $attachment->original_name,
+            'url' => $attachment->getRelativeUrlAttribute(),
+        ];
+
+        return (object) $info;
     }
 }

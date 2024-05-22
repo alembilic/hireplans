@@ -11,3 +11,21 @@
         height: 100vh;
     }
 }
+
+/* link color */
+.bg-white a,
+.dropzone .dz-preview a,
+.dropzone-wrapper .dz-preview a,
+.editor-preview-side a,
+.layout a {
+    color: #027bff;
+}
+
+.bg-white a:hover,
+.dropzone .dz-preview a:hover,
+.dropzone-wrapper .dz-preview a:hover,
+.editor-preview-side a:hover,
+.layout a:hover {
+    color: #208aff!important;
+}
+

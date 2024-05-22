@@ -11,6 +11,7 @@ use App\Orchid\Layouts\Candidate\CandidateNavItemsLayout;
 use Orchid\Screen\Actions\Button;
 use Orchid\Support\Color;
 use Orchid\Screen\Fields\Group;
+use App\Helpers\HelperFunc;
 
 class CandidateViewScreen extends Screen
 {
@@ -32,6 +33,11 @@ class CandidateViewScreen extends Screen
     public function query(Candidate $candidate): iterable
     {
         $candidate->load(['user']); // Eager load the user relationship
+        $candidate->load('attachment');
+        // dd($candidate);
+
+        // $cv = $candidate->getCvAttachments();
+        // $otherDocuments = $candidate->getOtherDocAttachments();
 
         return [
             'candidate'  => $candidate,
@@ -67,6 +73,8 @@ class CandidateViewScreen extends Screen
     public function layout(): iterable
     {
         // dd($this->candidate);
+        // dd($this->candidate->getCvAttachmentUrls());
+
         return [
             Layout::block([CandidateNavItemsLayout::class])->vertical(),
 
@@ -93,6 +101,8 @@ class CandidateViewScreen extends Screen
                     Sight::make('skills'),
                     Sight::make('current_company', 'Current Company'),
                     Sight::make('current_job_title', 'Current Job Title'),
+                    Sight::make('', 'CV')->render(fn (Candidate $candidate) => implode('; ', $this->renderAttachmentsLinks($candidate->getCvAttachmentsInfo()))),
+                    Sight::make('', 'Other Documents')->render(fn (Candidate $candidate) => implode('; ', $this->renderAttachmentsLinks($candidate->getOtherDocAttachmentsInfo()))),
                     Sight::make('notes'),
                     Sight::make('')
                         ->render(function () {
@@ -120,5 +130,13 @@ class CandidateViewScreen extends Screen
     public function redirectToListScreen()
     {
         return redirect()->route('platform.candidates.list');
+    }
+
+    private function renderAttachmentsLinks($attachments): array
+    {
+        return array_map(function ($attachment) {
+            $url = htmlspecialchars((string) $attachment->url);
+            return '<a href="'.$url.'" target="_blank">'.$attachment->text.'</a>';
+        }, $attachments);
     }
 }

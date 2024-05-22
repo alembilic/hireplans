@@ -11,6 +11,7 @@ use Orchid\Filters\Types\Where;
 use Orchid\Filters\Types\WhereDateStartEnd;
 use Orchid\Attachment\Attachable;
 use Orchid\Attachment\Models\Attachment;
+use App\Helpers\HelperFunc;
 
 class Candidate extends Model
 {
@@ -93,13 +94,37 @@ class Candidate extends Model
     }
 
     /**
+     * Get the URLs for the CV attachments.
+     *
+     * @return array
+     */
+    public function getCvAttachmentsInfo()
+    {
+        return $this->getCvAttachments()->map(function (Attachment $attachment) {
+            return HelperFunc::getAttachmentInfo($attachment);
+        })->toArray();
+    }
+
+    /**
      * Get the other documents attachments for the candidate.
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getOtherDocumentsAttachments()
+    public function getOtherDocAttachments()
     {
         return $this->attachment()->wherePivot('field_name', 'other-documents')->get();
+    }
+
+    /**
+     * Get the URLs for the CV attachments.
+     *
+     * @return array
+     */
+    public function getOtherDocAttachmentsInfo()
+    {
+        return $this->getOtherDocAttachments()->map(function (Attachment $attachment) {
+            return HelperFunc::getAttachmentInfo($attachment);
+        })->toArray();
     }
 
     /**
