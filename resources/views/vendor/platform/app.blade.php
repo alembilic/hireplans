@@ -50,6 +50,9 @@
     @if(!empty(config('platform.vite', [])))
         @vite(config('platform.vite'))
     @endif
+
+    {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
+
 </head>
 
 <body class="{{ \Orchid\Support\Names::getPageNameClass() }}" data-controller="pull-to-refresh">

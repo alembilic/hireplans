@@ -29,3 +29,12 @@
     color: #208aff!important;
 }
 
+.custom-upload-field {
+    align-items: center!important;
+}
+.custom-upload-field .form-label {
+    /* margin-bottom: 0.5rem; */
+}
+.custom-upload-field .dropzone-wrapper {
+    /* width: 100%; */
+}
