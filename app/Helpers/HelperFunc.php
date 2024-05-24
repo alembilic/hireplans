@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use App\Models\Candidate;
+use App\Models\Employer;
 use App\Models\User;
 use Orchid\Attachment\Models\Attachment;
 use stdClass;
@@ -27,6 +28,7 @@ class HelperFunc
                 $prefix = 'C-';
                 break;
             case 'employer':
+                $targetClass = Employer::class;
                 $prefix = 'E-';
                 break;
             case 'job':
@@ -42,7 +44,7 @@ class HelperFunc
 
         do {
             // Ensure at least one letter and one number
-            $referenceNumber = $prefix;
+            $referenceNumber = '';
             // $referenceNumber .= $numbers[rand(0, strlen($numbers) - 1)];
             for ($i = 0; $i < 3; $i++) {
                 $referenceNumber .= $numbers[rand(0, strlen($numbers) - 1)];
@@ -55,7 +57,7 @@ class HelperFunc
             }
 
             // Shuffle the resulting string (excluding the 'C-' prefix)
-            $referenceNumber = 'C-' . str_shuffle(substr($referenceNumber, 2));
+            $referenceNumber = $prefix . str_shuffle($referenceNumber);
         } while ($targetClass::where($type.'_ref', $referenceNumber)->exists());
 
         return $referenceNumber;

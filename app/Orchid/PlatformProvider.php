@@ -38,7 +38,14 @@ class PlatformProvider extends OrchidServiceProvider
                 ->icon('bs.people')
                 ->route('platform.candidates.list')
                 ->permission('platform.systems.users')
-                ->title(__('Candidates'))
+                ->title(__('Navigation')),
+                // ->divider(),
+
+            Menu::make(__('Employer'))
+                ->icon('bs.buildings')
+                ->route('platform.employers.create')
+                ->permission('platform.systems.users')
+                // ->title(__('Employer'))
                 ->divider(),
 
             // Menu::make(__('Add Candidate'))

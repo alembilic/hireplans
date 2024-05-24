@@ -55,7 +55,7 @@ class UserEditLayout extends Rows
                 ->type('text')
                 ->max(255)
                 ->required()
-                ->title(__('Address line 1'))
+                ->title(__('Address'))
                 ->placeholder(__('Hourse number and street'))
                 ->horizontal(),
 

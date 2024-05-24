@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Route;
 use Tabuna\Breadcrumbs\Trail;
 use App\Orchid\Screens\Candidate\CandidateListScreen;
 use App\Orchid\Screens\Candidate\CandidateViewScreen;
+use App\Orchid\Screens\Employer\EmployerEditScreen;
 
 /*
 |--------------------------------------------------------------------------
@@ -152,3 +153,18 @@ Route::screen('candidates/{candidate?}/view', CandidateViewScreen::class)
     )
     ;
 
+Route::screen('employers/create', EmployerEditScreen::class)
+    ->name('platform.employers.create')
+    // ->breadcrumbs(fn (Trail $trail, $candidate) => $trail
+    //     ->parent('platform.candidates.list')
+    //     ->push(__('Edit candidate'), route('platform.candidates.edit'))
+    // )
+    ;
+
+// Route::screen('employers/{employer?}/edit', EmployerEditScreen::class)
+//     ->name('platform.employers.edit')
+//     // ->breadcrumbs(fn (Trail $trail, $candidate) => $trail
+//     //     ->parent('platform.candidates.list')
+//     //     ->push(__('Edit candidate'), route('platform.candidates.edit'))
+//     // )
+//     ;

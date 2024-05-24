@@ -20,9 +20,9 @@ use Illuminate\Validation\Rule;
 use Orchid\Support\Facades\Toast;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Hash;
-use Orchid\Screen\Actions\Link;
+// use Orchid\Screen\Actions\Link;
 use App\Helpers\HelperFunc;
-use Orchid\Attachment\File;
+// use Orchid\Attachment\File;
 use App\Orchid\Layouts\Candidate\CandidateAttachmentLayout;
 
 // use Illuminate\Support\Facades\Log;
