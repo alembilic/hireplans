@@ -97,7 +97,7 @@ class UserEditLayout extends Rows
 
             Input::make('user.dob')
                 ->type('date')
-                ->required()
+                // ->required()
                 ->title(__('Date of Birth'))
                 ->placeholder(__('Date of Birth'))
                 ->horizontal(),

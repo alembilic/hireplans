@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Orchid\Screens\Candidate\CandidateEditScreen;
+use App\Orchid\Screens\Employer\EmployerListScreen;
 use App\Orchid\Screens\Examples\ExampleActionsScreen;
 use App\Orchid\Screens\Examples\ExampleCardsScreen;
 use App\Orchid\Screens\Examples\ExampleChartsScreen;
@@ -153,12 +154,22 @@ Route::screen('candidates/{candidate?}/view', CandidateViewScreen::class)
     )
     ;
 
+// Platform > employers > List
+Route::screen('employers/list', EmployerListScreen::class)
+    ->name('platform.employers.list')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push(__('Employers'), route('platform.employers.list'))
+    )
+    ;
+
+// Platform > employers > Create
 Route::screen('employers/create', EmployerEditScreen::class)
     ->name('platform.employers.create')
-    // ->breadcrumbs(fn (Trail $trail, $candidate) => $trail
-    //     ->parent('platform.candidates.list')
-    //     ->push(__('Edit candidate'), route('platform.candidates.edit'))
-    // )
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.employers.list')
+        ->push(__('Create employer'), route('platform.employers.create'))
+    )
     ;
 
 // Route::screen('employers/{employer?}/edit', EmployerEditScreen::class)

@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Orchid\Screen\AsSource;
 use Orchid\Filters\Filterable;
+use Orchid\Filters\Types\Like;
+use Orchid\Filters\Types\Where;
+use Orchid\Filters\Types\WhereDateStartEnd;
 
 class Employer extends Model
 {
@@ -62,7 +65,10 @@ class Employer extends Model
      */
     protected $allowedSorts = [
         'id',
-        'name',
+        'employer_name',
+        'employer_ref',
+        'country',
+        'user_name',
         'updated_at',
         'created_at',
     ];

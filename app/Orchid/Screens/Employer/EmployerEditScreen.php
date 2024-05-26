@@ -2,6 +2,8 @@
 
 namespace App\Orchid\Screens\Employer;
 
+use App\Orchid\Layouts\Candidate\CandidateNavItemsLayout;
+use App\Orchid\Layouts\Employer\EmployerNavItemsLayout;
 use Orchid\Screen\Screen;
 use Illuminate\Http\Request;
 use Orchid\Support\Facades\Layout;
@@ -50,6 +52,18 @@ class EmployerEditScreen extends Screen
     }
 
     /**
+     * Get the permissions required to access this screen.
+     *
+     * @return iterable|null The permissions required to access this screen.
+     */
+    public function permission(): ?iterable
+    {
+        return [
+            'platform.systems.users',
+        ];
+    }
+
+    /**
      * The name of the screen displayed in the header.
      *
      * @return string|null
@@ -77,6 +91,7 @@ class EmployerEditScreen extends Screen
     public function layout(): iterable
     {
         return [
+            Layout::block([EmployerNavItemsLayout::class])->vertical(),
 
             Layout::block([UserEditLayout::class, UserPasswordLayout::class])->vertical()->title('Personal Details'),
 
