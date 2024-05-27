@@ -158,4 +158,14 @@ class EmployerEditScreen extends Screen
 
         // return redirect()->route('platform.employers.view', $employer->id);
     }
+
+    /**
+     * Cancel the edit operation and return to the list screen.
+     *
+     * @return void
+     */
+    public function cancel()
+    {
+        return redirect()->route('platform.employers.list');
+    }
 }

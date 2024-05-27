@@ -9,7 +9,9 @@ use App\Orchid\Layouts\Employer\EmployerNavItemsLayout;
 use Orchid\Support\Facades\Layout;
 use Orchid\Screen\Screen;
 use App\Models\Employer;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Orchid\Support\Facades\Toast;
 
 class EmployerListScreen extends Screen
 {
@@ -76,5 +78,20 @@ class EmployerListScreen extends Screen
 
             EmployerListLayout::class
         ];
+    }
+    /**
+     * Delete the employer
+     *
+     * @param Request $request
+     */
+    public function remove(Request $request): void
+    {
+        $employer = Employer::findOrFail($request->get('id'));
+
+        User::findOrFail($employer->user->id)->delete();
+
+        $employer->delete();
+
+        Toast::info(__('Employer was removed'));
     }
 }

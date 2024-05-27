@@ -172,10 +172,11 @@ Route::screen('employers/create', EmployerEditScreen::class)
     )
     ;
 
-// Route::screen('employers/{employer?}/edit', EmployerEditScreen::class)
-//     ->name('platform.employers.edit')
-//     // ->breadcrumbs(fn (Trail $trail, $candidate) => $trail
-//     //     ->parent('platform.candidates.list')
-//     //     ->push(__('Edit candidate'), route('platform.candidates.edit'))
-//     // )
-//     ;
+// Platform > employers > Edit
+Route::screen('employers/{employer?}/edit', EmployerEditScreen::class)
+->name('platform.employers.edit')
+->breadcrumbs(fn (Trail $trail, $employer) => $trail
+    ->parent('platform.employers.list')
+    ->push(__('Edit employer'), route('platform.employers.edit'))
+)
+;
