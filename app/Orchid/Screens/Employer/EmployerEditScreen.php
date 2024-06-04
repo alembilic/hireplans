@@ -70,7 +70,7 @@ class EmployerEditScreen extends Screen
      */
     public function name(): ?string
     {
-        return 'Employer Edit';
+        return $this->employer->exists ? 'Edit employer' : 'Create employer';
     }
 
     /**

@@ -2,8 +2,10 @@
 
 namespace App\Helpers;
 
+use Illuminate\Support\Str;
 use App\Models\Candidate;
 use App\Models\Employer;
+use App\Models\Job;
 use App\Models\User;
 use Orchid\Attachment\Models\Attachment;
 use stdClass;
@@ -32,6 +34,7 @@ class HelperFunc
                 $prefix = 'E-';
                 break;
             case 'job':
+                $targetClass = Job::class;
                 $prefix = 'J-';
                 break;
             case 'application':
@@ -74,5 +77,65 @@ class HelperFunc
         ];
 
         return (object) $info;
+    }
+
+    public static function getJobTypes(): array
+    {
+        return [
+            'full_time' => 'Full Time',
+            'part_time' => 'Part Time',
+            'contract' => 'Contract',
+            'temporary' => 'Temporary',
+            'internship' => 'Internship',
+            'volunteer' => 'Volunteer',
+            // 'remote' => 'Remote',
+            'other' => 'Other',
+        ];
+    }
+
+    public static function getJobCategories(): array
+    {
+        return [
+            'engineering' => 'Engineering',
+            'marketing' => 'Marketing',
+            'sales' => 'Sales',
+            'customer_service' => 'Customer Service',
+            'design' => 'Design',
+            'product' => 'Product',
+            'data' => 'Data',
+            'finance' => 'Finance',
+            'legal' => 'Legal',
+            'hr' => 'HR',
+            'it' => 'IT',
+            'operations' => 'Operations',
+            'other' => 'Other',
+        ];
+    }
+
+    public static function getExperienceLevels(): array
+    {
+        return [
+            'entry' => 'Entry Level',
+            'mid' => 'Mid Level',
+            'senior' => 'Senior Level',
+        ];
+    }
+
+    public static function generateUniqueJobSlug(string $title): string
+    {
+        // Convert the title to a slug
+        $slug = Str::slug($title);
+
+        // Check for existing slugs
+        $originalSlug = $slug;
+        $count = 1;
+
+        while (Job::where('slug', $slug)->exists()) {
+            // Append the count to the slug if it already exists
+            $slug = $originalSlug . '-' . $count;
+            $count++;
+        }
+
+        return $slug;
     }
 }
