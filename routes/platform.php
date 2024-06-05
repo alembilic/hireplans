@@ -204,8 +204,8 @@ Route::screen('jobs/create', JobEditScreen::class)
 // Platform > jobs > Edit
 Route::screen('jobs/{job?}/edit', JobEditScreen::class)
     ->name('platform.jobs.edit')
-    // ->breadcrumbs(fn (Trail $trail, $employer) => $trail
-    //     ->parent('platform.employers.list')
-    //     ->push(__('Edit employer'), route('platform.employers.edit'))
-    // )
+    ->breadcrumbs(fn (Trail $trail, $employer) => $trail
+        ->parent('platform.jobs.list')
+        ->push(__('Edit job'), route('platform.jobs.edit'))
+    )
 ;

@@ -8,6 +8,8 @@ use App\Orchid\Layouts\Job\JobNavItemslayout;
 use Orchid\Screen\Screen;
 use App\Orchid\Layouts\Job\JobFiltersLayout;
 use Orchid\Support\Facades\Layout;
+use Illuminate\Http\Request;
+use Orchid\Support\Facades\Toast;
 
 class JobListScreen extends Screen
 {
@@ -61,5 +63,19 @@ class JobListScreen extends Screen
             JobFiltersLayout::class,
             JobListLayout::class
         ];
+    }
+
+    /**
+     * Delete the job
+     *
+     * @param Request $request
+     */
+    public function remove(Request $request): void
+    {
+        $job = Job::findOrFail($request->get('id'));
+
+        $job->delete();
+
+        Toast::info(__('Job was removed'));
     }
 }

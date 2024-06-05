@@ -102,7 +102,7 @@ class JobEditLayout extends Rows
 
             SimpleMDE::make('job.details')
                 ->title(__('Details'))
-                ->required()
+                // ->required()
                 ->horizontal(),
 
         ];

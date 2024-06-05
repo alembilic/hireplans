@@ -120,11 +120,16 @@ class JobEditScreen extends Screen
         $jobData['slug'] = HelperFunc::generateUniqueJobSlug($jobData['title']);
         $jobData['is_active'] = (isset($jobData['is_active']) && $jobData['is_active'] === 'on') ? 1 : 0;
 
+        // ToDo: should not allow empty details. But there is a bug when editing the job details.
+        if (!$jobData['details']) {
+            $jobData['details'] = '';
+        }
+
         $job->fill($jobData)->save();
 
         Toast::info(__('Job saved'));
 
-        // return redirect()->route('platform.jobs.list');
+        return redirect()->route('platform.jobs.list');
     }
 
     /**
