@@ -3,6 +3,7 @@
 namespace App\Orchid\Screens\Job;
 
 use App\Helpers\HelperFunc;
+use App\Orchid\Layouts\Job\JobNavItemslayout;
 use Illuminate\Http\Request;
 use App\Models\Job;
 use App\Models\Employer;
@@ -81,6 +82,7 @@ class JobEditScreen extends Screen
     public function layout(): iterable
     {
         return [
+            Layout::block([JobNavItemslayout::class])->vertical(),
             Layout::block([JobEditLayout::class])->vertical()->title('Job Details'),
 
             Layout::rows([

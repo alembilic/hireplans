@@ -14,6 +14,7 @@ use App\Orchid\Screens\Examples\ExampleLayoutsScreen;
 use App\Orchid\Screens\Examples\ExampleScreen;
 use App\Orchid\Screens\Examples\ExampleTextEditorsScreen;
 use App\Orchid\Screens\Job\JobEditScreen;
+use App\Orchid\Screens\Job\JobListScreen;
 use App\Orchid\Screens\PlatformScreen;
 use App\Orchid\Screens\Role\RoleEditScreen;
 use App\Orchid\Screens\Role\RoleListScreen;
@@ -182,14 +183,22 @@ Route::screen('employers/{employer?}/edit', EmployerEditScreen::class)
 )
 ;
 
+// Platform > jobs > List
+Route::screen('jobs/list', JobListScreen::class)
+    ->name('platform.jobs.list')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push(__('Jobs'), route('platform.jobs.list'))
+    )
+    ;
 
 // Platform > jobs > Create
 Route::screen('jobs/create', JobEditScreen::class)
     ->name('platform.jobs.create')
-    // ->breadcrumbs(fn (Trail $trail) => $trail
-    //     ->parent('platform.employers.list')
-    //     ->push(__('Create employer'), route('platform.employers.create'))
-    // )
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.jobs.list')
+        ->push(__('Create job'), route('platform.jobs.create'))
+    )
     ;
 
 // Platform > jobs > Edit

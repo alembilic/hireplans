@@ -31,6 +31,12 @@ class EmployerListLayout extends Table
     protected function columns(): iterable
     {
         return [
+            TD::make('employer_ref', 'Employer Ref')
+                ->sort()
+                ->cantHide()
+                // ->filter(TD::FILTER_TEXT)
+                ,
+
             TD::make('employer_name', __('Employer'))
                 ->sort()
                 ->cantHide()
@@ -38,12 +44,6 @@ class EmployerListLayout extends Table
                     ->route('platform.employers.edit', $employer->id)
                     ->class('text-primary')),
                 // ->filter(Input::make())
-
-            TD::make('employer_ref', 'Employer Ref')
-                ->sort()
-                ->cantHide()
-                // ->filter(TD::FILTER_TEXT)
-                ,
 
             TD::make('country', 'Country')
                 ->sort()

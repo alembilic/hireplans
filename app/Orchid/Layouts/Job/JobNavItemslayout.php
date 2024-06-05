@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Orchid\Layouts\Employer;
+namespace App\Orchid\Layouts\Job;
 
 use Orchid\Screen\Actions\Menu;
 use Orchid\Screen\Layouts\TabMenu;
 
-class EmployerNavItemsLayout extends TabMenu
+class JobNavItemslayout extends TabMenu
 {
     /**
      * Get the menu elements to be displayed.
@@ -18,12 +18,12 @@ class EmployerNavItemsLayout extends TabMenu
             // Menu::make('Home')
             //     ->route(config('platform.index')),
 
-            Menu::make('Employers List')
-                ->route('platform.employers.list')
+            Menu::make('Job Listings')
+                ->route('platform.jobs.list')
                 ->icon('bs.list'),
 
-            Menu::make('Create Employer')
-                ->route('platform.employers.create')
+            Menu::make('Create Job')
+                ->route('platform.jobs.create')
                 ->icon('bs.plus-circle'),
         ];
     }
