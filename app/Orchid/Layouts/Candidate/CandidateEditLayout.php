@@ -6,6 +6,7 @@ use Orchid\Screen\Fields\Select;
 use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Fields\SimpleMDE;
 use Orchid\Screen\Field;
+use Orchid\Screen\Fields\TextArea;
 use Orchid\Screen\Layouts\Rows;
 use Illuminate\Support\Facades\Auth;
 
@@ -64,9 +65,15 @@ class CandidateEditLayout extends Rows
         ];
 
         if (Auth::user()->hasAccess('platform.systems.users')) {
-            $fields[] = SimpleMDE::make('candidate.notes')
+            // $fields[] = SimpleMDE::make('candidate.notes')
+            //                 ->title(__('Admin Notes'))
+            //                 // ->popover(__('Notes'))
+            //                 ->help('These notes are visible to the admins only. They are not visible to the candidate.')
+            //                 ->horizontal();
+            $fields[] = TextArea::make('candidate.notes')
                             ->title(__('Admin Notes'))
                             // ->popover(__('Notes'))
+                            ->rows(10)
                             ->help('These notes are visible to the admins only. They are not visible to the candidate.')
                             ->horizontal();
         }

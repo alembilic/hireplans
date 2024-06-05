@@ -4,6 +4,7 @@ namespace App\Orchid\Layouts\Job;
 
 use Orchid\Screen\Field;
 use Orchid\Screen\Fields\CheckBox;
+use Orchid\Screen\Fields\Quill;
 use Orchid\Screen\Layouts\Rows;
 use Orchid\Screen\Fields\Select;
 use Orchid\Screen\Fields\Input;
@@ -100,9 +101,13 @@ class JobEditLayout extends Rows
                 ->placeholder(__('Is Active'))
                 ->horizontal(),
 
-            SimpleMDE::make('job.details')
-                ->title(__('Details'))
-                // ->required()
+            // SimpleMDE::make('job.details')
+            //     ->title(__('Details'))
+            //     // ->required()
+            //     ->horizontal(),
+
+            Quill::make('job.details')
+                ->title('Details')
                 ->horizontal(),
 
         ];

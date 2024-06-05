@@ -15,6 +15,7 @@ use App\Orchid\Screens\Examples\ExampleScreen;
 use App\Orchid\Screens\Examples\ExampleTextEditorsScreen;
 use App\Orchid\Screens\Job\JobEditScreen;
 use App\Orchid\Screens\Job\JobListScreen;
+use App\Orchid\Screens\Job\JobViewScreen;
 use App\Orchid\Screens\PlatformScreen;
 use App\Orchid\Screens\Role\RoleEditScreen;
 use App\Orchid\Screens\Role\RoleListScreen;
@@ -144,8 +145,7 @@ Route::screen('candidates/{candidate?}/edit', CandidateEditScreen::class)
     ->breadcrumbs(fn (Trail $trail, $candidate) => $trail
         ->parent('platform.candidates.list')
         ->push(__('Edit candidate'), route('platform.candidates.edit'))
-    )
-    ;
+    );
 
 // Platform > Candidates > View
 Route::screen('candidates/{candidate?}/view', CandidateViewScreen::class)
@@ -153,8 +153,7 @@ Route::screen('candidates/{candidate?}/view', CandidateViewScreen::class)
     ->breadcrumbs(fn (Trail $trail, $candidate) => $trail
         ->parent('platform.candidates.list')
         ->push(__('Candidate details'), route('platform.candidates.view'))
-    )
-    ;
+    );
 
 // Platform > employers > List
 Route::screen('employers/list', EmployerListScreen::class)
@@ -162,8 +161,7 @@ Route::screen('employers/list', EmployerListScreen::class)
     ->breadcrumbs(fn (Trail $trail) => $trail
         ->parent('platform.index')
         ->push(__('Employers'), route('platform.employers.list'))
-    )
-    ;
+    );
 
 // Platform > employers > Create
 Route::screen('employers/create', EmployerEditScreen::class)
@@ -171,17 +169,15 @@ Route::screen('employers/create', EmployerEditScreen::class)
     ->breadcrumbs(fn (Trail $trail) => $trail
         ->parent('platform.employers.list')
         ->push(__('Create employer'), route('platform.employers.create'))
-    )
-    ;
+    );
 
 // Platform > employers > Edit
 Route::screen('employers/{employer?}/edit', EmployerEditScreen::class)
 ->name('platform.employers.edit')
-->breadcrumbs(fn (Trail $trail, $employer) => $trail
-    ->parent('platform.employers.list')
-    ->push(__('Edit employer'), route('platform.employers.edit'))
-)
-;
+    ->breadcrumbs(fn (Trail $trail, $employer) => $trail
+        ->parent('platform.employers.list')
+        ->push(__('Edit employer'), route('platform.employers.edit'))
+    );
 
 // Platform > jobs > List
 Route::screen('jobs/list', JobListScreen::class)
@@ -189,8 +185,7 @@ Route::screen('jobs/list', JobListScreen::class)
     ->breadcrumbs(fn (Trail $trail) => $trail
         ->parent('platform.index')
         ->push(__('Jobs'), route('platform.jobs.list'))
-    )
-    ;
+    );
 
 // Platform > jobs > Create
 Route::screen('jobs/create', JobEditScreen::class)
@@ -198,8 +193,7 @@ Route::screen('jobs/create', JobEditScreen::class)
     ->breadcrumbs(fn (Trail $trail) => $trail
         ->parent('platform.jobs.list')
         ->push(__('Create job'), route('platform.jobs.create'))
-    )
-    ;
+    );
 
 // Platform > jobs > Edit
 Route::screen('jobs/{job?}/edit', JobEditScreen::class)
@@ -207,5 +201,12 @@ Route::screen('jobs/{job?}/edit', JobEditScreen::class)
     ->breadcrumbs(fn (Trail $trail, $employer) => $trail
         ->parent('platform.jobs.list')
         ->push(__('Edit job'), route('platform.jobs.edit'))
-    )
-;
+    );
+
+// Platform > jobs > View
+Route::screen('jobs/{job?}/view', JobViewScreen::class)
+    ->name('platform.jobs.view')
+    ->breadcrumbs(fn (Trail $trail, $job) => $trail
+        ->parent('platform.jobs.list')
+        ->push(__('Job details'), route('platform.jobs.view'))
+    );

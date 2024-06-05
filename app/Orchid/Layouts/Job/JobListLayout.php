@@ -38,10 +38,10 @@ class JobListLayout extends Table
 
             TD::make('title', __('Job Title'))
                 ->sort()
-                ->cantHide(),
-                // ->render(fn (Employer $employer) => Link::make($employer->employer_name)
-                //     ->route('platform.employers.edit', $employer->id)
-                //     ->class('text-primary')),
+                ->cantHide()
+                ->render(fn (Job $job) => Link::make($job->title)
+                    ->route('platform.jobs.view', $job->id)
+                    ->class('text-primary')),
                 // ->filter(Input::make())
 
             TD::make('location', 'Location')

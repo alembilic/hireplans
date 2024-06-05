@@ -129,7 +129,7 @@ class JobEditScreen extends Screen
 
         Toast::info(__('Job saved'));
 
-        return redirect()->route('platform.jobs.list');
+        return redirect()->route('platform.jobs.view', $job->id);
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Orchid\Layouts\Employer;
 
 use Orchid\Screen\Field;
+use Orchid\Screen\Fields\TextArea;
 use Orchid\Screen\Layouts\Rows;
 use Orchid\Screen\Fields\Select;
 use Orchid\Screen\Fields\Input;
@@ -62,10 +63,14 @@ class EmployerEditLayout extends Rows
                 ->placeholder(__('Enter your website URL'))
                 ->horizontal(),
 
-            SimpleMDE::make('employer.details')
+            // SimpleMDE::make('employer.details')
+            //     ->title(__('Details'))
+            //     // ->popover(__('Details'))
+            //     // ->help('These notes are visible to the admins only. They are not visible to the candidate.')
+            //     ->horizontal(),
+            TextArea::make('employer.details')
                 ->title(__('Details'))
-                // ->popover(__('Details'))
-                // ->help('These notes are visible to the admins only. They are not visible to the candidate.')
+                ->rows(10)
                 ->horizontal(),
         ];
     }
