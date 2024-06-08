@@ -12,6 +12,7 @@ use Orchid\Screen\Screen;
 use App\Models\Job;
 use App\Helpers\HelperFunc;
 use \Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 class JobViewScreen extends Screen
 {
@@ -62,39 +63,46 @@ class JobViewScreen extends Screen
      */
     public function layout(): iterable
     {
-        return [
-            Layout::block([JobNavItemslayout::class])->vertical(),
-            Layout::legend(
-                'job',
-                [
-                    Sight::make('title', 'Job title'),
-                    Sight::make('employer.name', 'Employer'),
-                    Sight::make('location', 'Location'),
-                    Sight::make('salary', 'Salary'),
-                    Sight::make('job_type', 'Job Type')->render(fn(Job $job) => HelperFunc::getJobTypes()[$job->job_type] ?? $job->job_type),
-                    Sight::make('category', 'Category')->render(fn(Job $job) => HelperFunc::getJobCategories()[$job->category] ?? $job->category),
-                    Sight::make('experience_level', 'Experience Level')->render(fn(Job $job) => HelperFunc::getExperienceLevels()[$job->experience_level] ?? $job->experience_level),
-                    Sight::make('application_deadline', 'Application Deadline')->render(fn(Job $job) => $job->application_deadline
-                        ? \Carbon\Carbon::parse($job->application_deadline)->format('d/m/Y') : ''),
-                    Sight::make('is_active', 'Is Active')->render(fn(Job $job) => $job->is_active ? 'Yes' : 'No'),
-                    Sight::make('details', 'Details')->render(fn(Job $job) => nl2br(Str::markdown($job->details))),
-                    // Sight::make('details', 'Details')->render(fn(Job $job) => Str::markdown($job->details)),
-                    Sight::make('')
-                        ->render(function () {
-                            return Group::make([
-                                Button::make('Edit')
-                                    ->type(Color::INFO)
-                                    ->icon('bs.pencil')
-                                    ->method('redirectToEditScreen'),
-                                Button::make('Close')
-                                    ->type(Color::DEFAULT)
-                                    ->icon('bs.x-circle')
-                                    ->method('redirectToListScreen'),
-                            ])->autoWidth()->alignCenter();
-                        }),
-                ]
-            )->title('Job Details: '. $this->job->title),
+        $legendItems = [
+            Sight::make('title', 'Job title'),
+            Sight::make('employer.name', 'Employer'),
+            Sight::make('location', 'Location'),
+            Sight::make('salary', 'Salary'),
+            Sight::make('job_type', 'Job Type')->render(fn(Job $job) => HelperFunc::getJobTypes()[$job->job_type] ?? $job->job_type),
+            Sight::make('category', 'Category')->render(fn(Job $job) => HelperFunc::getJobCategories()[$job->category] ?? $job->category),
+            Sight::make('experience_level', 'Experience Level')->render(fn(Job $job) => HelperFunc::getExperienceLevels()[$job->experience_level] ?? $job->experience_level),
+            Sight::make('application_deadline', 'Application Deadline')->render(fn(Job $job) => $job->application_deadline ? \Carbon\Carbon::parse($job->application_deadline)->format('d/m/Y') : ''),
+            Sight::make('is_active', 'Is Active')->render(fn(Job $job) => $job->is_active ? 'Yes' : 'No'),
+            Sight::make('details', 'Details')->render(fn(Job $job) => nl2br(Str::markdown($job->details))),
         ];
+
+        $buttons = [];
+
+        if (Auth::user()->hasAccess('platform.systems.users')) {
+            $buttons = [
+                Button::make('Edit')
+                    ->type(Color::INFO)
+                    ->icon('bs.pencil')
+                    ->method('redirectToEditScreen'),
+            ];
+        }
+
+        $buttons[] = Button::make('Close')
+                        ->type(Color::DEFAULT)
+                        ->icon('bs.x-circle')
+                        ->method('redirectToListScreen');
+
+        $legendItems[] = Sight::make('')
+            ->render(function () use ($buttons) {
+                return Group::make($buttons)->autoWidth()->alignCenter();
+            });
+
+        $out = [
+            Layout::block([JobNavItemslayout::class])->vertical(),
+            Layout::legend('job', $legendItems)->title('Job Details: ' . $this->job->title),
+        ];
+
+        return $out;
     }
 
     public function redirectToEditScreen($job)

@@ -9,6 +9,7 @@ use Orchid\Screen\Components\Cells\DateTimeSplit;
 use Orchid\Screen\Layouts\Table;
 use Orchid\Screen\TD;
 use App\Models\Job;
+use Illuminate\Support\Facades\Auth;
 
 class JobListLayout extends Table
 {
@@ -29,7 +30,7 @@ class JobListLayout extends Table
      */
     protected function columns(): iterable
     {
-        return [
+        $out = [
             TD::make('job_ref', 'Job Ref')
                 ->sort()
                 ->cantHide()
@@ -61,24 +62,45 @@ class JobListLayout extends Table
                 // ->align(TD::ALIGN_RIGHT)
                 // ->defaultHidden()
                 ->sort(),
+        ];
 
-            TD::make(__('Actions'))
+        if (Auth::user()->hasAccess('platform.systems.users')) {
+            $out[] = TD::make(__('Actions'))
                 ->align(TD::ALIGN_CENTER)
                 ->width('100px')
-                ->render(fn (Job $job) => DropDown::make()
-                    ->icon('bs.three-dots-vertical')
-                    ->list([
-                        Link::make(__('Edit'))
-                            ->route('platform.jobs.edit', $job->id)
-                            ->icon('bs.pencil'),
+                ->render(function (Job $job) {
+                    $actions = self::getActionsList($job);
+                    if (!empty($actions)) {
+                        return DropDown::make()
+                            ->icon('bs.three-dots-vertical')
+                            ->list($actions);
+                    }
+                    return '';
+                });
+        }
 
-                        Button::make(__('Delete'))
-                            ->icon('bs.trash3')
-                            ->confirm(__('Once this job is deleted, all of its resources and data will be permanently deleted. Before deleting this job, please download any data or information that you wish to retain.'))
-                            ->method('remove', [
-                                'id' => $job->id,
-                            ]),
-                    ])),
-        ];
+        return $out;
+    }
+
+    public static function getActionsList(Job $job)
+    {
+        $actions = [];
+
+        // if (Auth::user()->hasAccess('platform.systems.users')) {
+            $actions = [
+                Link::make(__('Edit'))
+                    ->route('platform.jobs.edit', $job->id)
+                    ->icon('bs.pencil'),
+
+                Button::make(__('Delete'))
+                    ->icon('bs.trash3')
+                    ->confirm(__('Once this job is deleted, all of its resources and data will be permanently deleted. Before deleting this job, please download any data or information that you wish to retain.'))
+                    ->method('remove', [
+                        'id' => $job->id,
+                    ]),
+            ];
+        // }
+
+        return $actions;
     }
 }

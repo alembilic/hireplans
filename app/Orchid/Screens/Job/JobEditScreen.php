@@ -14,6 +14,7 @@ use Orchid\Screen\Fields\Group;
 use Orchid\Screen\Actions\Button;
 use Orchid\Support\Color;
 use Orchid\Support\Facades\Toast;
+// use Illuminate\Support\Facades\Auth;
 
 class JobEditScreen extends Screen
 {
@@ -81,7 +82,7 @@ class JobEditScreen extends Screen
      */
     public function layout(): iterable
     {
-        return [
+        $out=  [
             Layout::block([JobNavItemslayout::class])->vertical(),
             Layout::block([JobEditLayout::class])->vertical()->title('Job Details'),
 
@@ -99,6 +100,8 @@ class JobEditScreen extends Screen
                 ])->autoWidth()->alignCenter(),
             ]),
         ];
+
+        return $out;
     }
 
     /**
