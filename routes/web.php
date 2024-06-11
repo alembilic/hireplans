@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Livewire\Pages\Jobs\JobDetails;
+use App\Models\Job;
 
 Route::view('/', 'welcome');
 
@@ -17,3 +19,14 @@ Route::view('/', 'welcome');
 //     ->name('profile');
 
 require __DIR__.'/auth.php';
+
+Route::get('/jobs', function () {
+    return view('job-listings');
+})->name('jobs.listings');
+
+// Route::get('/jobs/{id}', JobDetails::class)->name('job.details');
+
+Route::get('/jobs/{id}', function ($id) {
+    $job = Job::findOrFail($id);
+    return view('job-details', ['job' => $job]);
+})->name('jobs.details');
