@@ -34,5 +34,7 @@
                 <a href="{{ route('jobs.details', $job->id) }}" class="bg-blue-500 text-white p-2 rounded mt-4 lg:mt-0 ml-0 lg:ml-6">View job details</a>
             </div>
         @endforeach
+
+        {{ $jobs->links() }}
     </div>
 </div>

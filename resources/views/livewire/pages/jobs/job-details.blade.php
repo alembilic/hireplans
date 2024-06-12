@@ -9,7 +9,7 @@
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
             @include('livewire.pages.jobs.job-details-content', ['job' => $job])
             <div class="mt-5 text-center">
-                <a href="{{ route('jobs.listings') }}" class="bg-blue-500 text-white p-2 rounded mt-4 lg:mt-0 ml-0 lg:ml-6">Back to job listing</a>
+                <a href="{{ route('jobs.listings', ['page' => session('page', 1)]) }}" class="bg-blue-500 text-white p-2 rounded mt-4 lg:mt-0 ml-0 lg:ml-6">Back to job listing</a>
             </div>
         </div>
     </div>

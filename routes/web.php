@@ -21,15 +21,18 @@ Route::view('/', 'welcome');
 
 require __DIR__.'/auth.php';
 
-Route::get('/jobs', function () {
-    return view('job-listings');
+Route::get('/jobs/listings', function () {
+    $page = request()->get('page', 1);
+    session(['page' => $page]);
+
+    return view('job-listings', ['page' => $page]);
 })->name('jobs.listings');
 
 // Route::get('/jobs/{id}', function ($id) {
 //     $job = Job::findOrFail($id);
 //     return view('job-details', ['job' => $job]);
 // })->name('jobs.details');
-Route::get('/jobs/{id}', JobDetails::class)->name('jobs.details');
+Route::get('/jobs/details/{id}', JobDetails::class)->name('jobs.details');
 
 // Route::get('/jobs/{id}', 'JobController@showDetails')->name('jobs.details');
 // Route::get('/jobs/{id}', [JobController::class, 'showDetails'])->name('jobs.details');
