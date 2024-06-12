@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreJobRequest;
 use App\Http\Requests\UpdateJobRequest;
 use App\Models\Job;
+use App\Helpers\HelperFunc;
 
 class JobController extends Controller
 {
@@ -38,6 +39,15 @@ class JobController extends Controller
     public function show(Job $job)
     {
         //
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function showDetails(int $id)
+    {
+        // This is handled by Livewire
+        // return view('job-details', ['job' => $job]);
     }
 
     /**

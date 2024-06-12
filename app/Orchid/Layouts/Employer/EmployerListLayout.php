@@ -2,6 +2,7 @@
 
 namespace App\Orchid\Layouts\Employer;
 
+use App\Orchid\Presenters\EmployerPresenter;
 use Orchid\Screen\Components\Cells\DateTimeSplit;
 use Orchid\Screen\Layouts\Table;
 use Orchid\Screen\TD;
@@ -31,19 +32,24 @@ class EmployerListLayout extends Table
     protected function columns(): iterable
     {
         return [
-            TD::make('employer_ref', 'Employer Ref')
-                ->sort()
-                ->cantHide()
-                // ->filter(TD::FILTER_TEXT)
-                ,
-
             TD::make('employer_name', __('Employer'))
                 ->sort()
                 ->cantHide()
-                ->render(fn (Employer $employer) => Link::make($employer->employer_name)
-                    ->route('platform.employers.edit', $employer->id)
-                    ->class('text-primary')),
                 // ->filter(Input::make())
+                // ->render(fn (Employer $employer) => Link::make($employer->employer_name)
+                //     ->route('platform.employers.edit', $employer->id)
+                //     ->class('text-primary')),
+                // ->render(fn (Employer $employer) => new EmployerPresenter($employer->presenter())),
+                ->render(function (Employer $employer) {
+                        $presenter = new EmployerPresenter($employer);
+                        return $presenter->nameWithLogo(); // Use the new method
+                    }), // Ensure that the output is treated as raw HTML
+
+            TD::make('employer_ref', 'Employer Ref')
+            ->sort()
+            ->cantHide()
+            // ->filter(TD::FILTER_TEXT)
+            ,
 
             TD::make('country', 'Country')
                 ->sort()

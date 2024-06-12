@@ -3,6 +3,7 @@
 namespace App\Orchid\Layouts\Employer;
 
 use Orchid\Screen\Field;
+use Orchid\Screen\Fields\Picture;
 use Orchid\Screen\Fields\TextArea;
 use Orchid\Screen\Layouts\Rows;
 use Orchid\Screen\Fields\Select;
@@ -61,6 +62,11 @@ class EmployerEditLayout extends Rows
                 ->max(255)
                 ->title(__('Website'))
                 ->placeholder(__('Enter your website URL'))
+                ->horizontal(),
+
+            Picture::make('employer.logo')
+                ->title(__('Employer Logo'))
+                ->targetRelativeUrl()
                 ->horizontal(),
 
             // SimpleMDE::make('employer.details')

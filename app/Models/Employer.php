@@ -27,6 +27,7 @@ class Employer extends Model
         'city',
         'country',
         'website',
+        'logo',
         'details',
     ];
 

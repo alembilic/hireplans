@@ -25,6 +25,7 @@ class EmployerFactory extends Factory
             'city' => fake()->city(),
             'country' => fake()->country(),
             'website' => fake()->url(),
+            'logo' => fake()->imageUrl(),
             'details' => fake()->sentence(),
         ];
     }
