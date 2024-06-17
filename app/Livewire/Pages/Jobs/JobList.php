@@ -91,7 +91,10 @@ class JobList extends Component
                     $query->where('title', 'like', '%' . $this->search . '%')
                         ->orWhere('details', 'like', '%' . $this->search . '%')
                         ->orWhere('category', 'like', '%' . $this->search . '%')
-                        ->orWhere('job_ref', 'like', '%' . $this->search . '%');
+                        ->orWhere('job_ref', 'like', '%' . $this->search . '%')
+                        ->orWhereHas('employer', function ($query) {
+                            $query->where('name', 'like', '%' . $this->search . '%');
+                        });
                 });
             })
             ->when($this->location, function($query) {
