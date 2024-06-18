@@ -79,6 +79,20 @@ class HelperFunc
         return (object) $info;
     }
 
+    public static function renderAttachmentsLinks($attachmentsInfo): array
+    {
+        // return array_map(function ($attachment) {
+        //     $url = htmlspecialchars((string) $attachment->url);
+        //     return '<a href="'.$url.'" target="_blank">'.$attachment->text.'</a>';
+        // }, $attachmentsInfo);
+        $result = [];
+        foreach ($attachmentsInfo as $attachment) {
+            $url = htmlspecialchars((string) $attachment->url);
+            $result[$attachment->id] = '<a href="'.$url.'" target="_blank">'.$attachment->text.'</a>';
+        }
+        return $result;
+    }
+
     public static function getJobTypes(): array
     {
         return [

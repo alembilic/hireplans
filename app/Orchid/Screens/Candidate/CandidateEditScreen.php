@@ -48,11 +48,15 @@ class CandidateEditScreen extends Screen
     {
         $candidate->load(['user']); // Eager load the user relationship
         $candidate->load('attachment');
-        $cvAttachments = $candidate->getCvAttachments();
-        $otherDocumentsAttachments = $candidate->getOtherDocAttachments();
 
+        $cvAttachments = $candidate->getCvAttachments();
+        $cvAttachmentsInfo = $cvAttachments ? $candidate->getCvAttachmentsInfo() : null;
+
+        $otherDocumentsAttachments = $candidate->getOtherDocAttachments();
+        $otherDocumentsAttachmentsInfo = $otherDocumentsAttachments ? $candidate->getOtherDocAttachmentsInfo() : null;
 
         // dd($candidate);
+        // dd($candidate->renderAttachmentsLinks());
 
         // Load the related user if the candidate exists
         $user = $candidate->exists ? $candidate->user : new User();
@@ -62,6 +66,8 @@ class CandidateEditScreen extends Screen
             'user'       => $user,
             'cv' => $cvAttachments->pluck('id')->toArray(),
             'other_documents' => $otherDocumentsAttachments->pluck('id')->toArray(),
+            'cv_links' => $cvAttachmentsInfo ? HelperFunc::renderAttachmentsLinks($cvAttachmentsInfo) : [],
+            'other_documents_links' => $otherDocumentsAttachmentsInfo ? HelperFunc::renderAttachmentsLinks($otherDocumentsAttachmentsInfo) : [],
         ];
     }
 
@@ -144,6 +150,7 @@ class CandidateEditScreen extends Screen
      */
     public function saveCandidate(Candidate $candidate, Request $request)
     {
+        // dd($request->all());
         $user = $candidate->user ?? new User();
 
         $request->validate([

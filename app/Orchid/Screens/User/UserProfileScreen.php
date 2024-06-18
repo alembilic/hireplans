@@ -36,14 +36,21 @@ class UserProfileScreen extends Screen
     {
         $user = $request->user()->load('candidate');
         $user->candidate->load('attachment');
+
         $cvAttachments = $user->candidate->getCvAttachments();
+        $cvAttachmentsInfo = $cvAttachments ? $user->candidate->getCvAttachmentsInfo() : null;
+
         $otherDocumentsAttachments = $user->candidate->getOtherDocAttachments();
+        $otherDocumentsAttachmentsInfo = $otherDocumentsAttachments ? $user->candidate->getOtherDocAttachmentsInfo() : null;
+
 
         return [
             'user' => $request->user(),
             'candidate' => $user->candidate ?? new Candidate(),
             'cv' => $cvAttachments->pluck('id')->toArray(),
             'other_documents' => $otherDocumentsAttachments->pluck('id')->toArray(),
+            'cv_links' => $cvAttachmentsInfo ? HelperFunc::renderAttachmentsLinks($cvAttachmentsInfo) : [],
+            'other_documents_links' => $otherDocumentsAttachmentsInfo ? HelperFunc::renderAttachmentsLinks($otherDocumentsAttachmentsInfo) : [],
         ];
     }
 
@@ -140,6 +147,7 @@ class UserProfileScreen extends Screen
      */
     public function saveProfile(Request $request)
     {
+        // dd($request->all());
         $user = Auth::user()->load('candidate');
         $candidate = $user->candidate ?? new Candidate();
 
