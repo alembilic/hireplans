@@ -16,6 +16,7 @@ use App\Orchid\Screens\Examples\ExampleTextEditorsScreen;
 use App\Orchid\Screens\Job\JobEditScreen;
 use App\Orchid\Screens\Job\JobListScreen;
 use App\Orchid\Screens\Job\JobViewScreen;
+use App\Orchid\Screens\JobApplication\JobApplicationEditScreen;
 use App\Orchid\Screens\PlatformScreen;
 use App\Orchid\Screens\Role\RoleEditScreen;
 use App\Orchid\Screens\Role\RoleListScreen;
@@ -210,3 +211,21 @@ Route::screen('jobs/{job?}/view', JobViewScreen::class)
         ->parent('platform.jobs.list')
         ->push(__('Job details'), route('platform.jobs.view'))
     );
+
+// Platform > job_applications > Create
+Route::screen('job_application/{job}/create', JobApplicationEditScreen::class)
+    ->name('platform.job_application.create')
+    // ->breadcrumbs(fn (Trail $trail) => $trail
+    //     ->parent('platform.job_applications.list')
+    //     ->push(__('New job application'), route('platform.job_application.create'))
+    // )
+    ;
+
+// Platform > job_applications > Edit
+Route::screen('job_application/{application?}/edit', JobApplicationEditScreen::class)
+    ->name('platform.job_application.edit')
+    // ->breadcrumbs(fn (Trail $trail, $employer) => $trail
+    //     ->parent('platform.job_applications.list')
+    //     ->push(__('Edit job'), route('platform.job_applications.edit'))
+    // )
+    ;

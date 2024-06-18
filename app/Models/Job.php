@@ -39,6 +39,20 @@ class Job extends Model
         return $this->belongsTo(Employer::class);
     }
 
+    public function jobApplications()
+    {
+        return $this->hasMany(JobApplication::class);
+    }
+
+    /**
+     * Check if the user can apply for a job.
+     */
+    public function canApply() {
+        $candidateId = auth()->user()->candidate->id;
+
+        return !$this->jobApplications()->where('candidate_id', $candidateId)->exists();
+    }
+
     /**
      * The attributes for which you can use filters in url.
      *

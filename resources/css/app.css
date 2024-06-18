@@ -24,11 +24,11 @@
     color: #027bff;
 }
 
-.bg-white a:hover,
-.dropzone .dz-preview a:hover,
-.dropzone-wrapper .dz-preview a:hover,
-.editor-preview-side a:hover,
-.layout a:hover {
+.bg-white a.text-primary:hover,
+.dropzone .dz-preview a.text-primary:hover,
+.dropzone-wrapper .dz-preview a.text-primary:hover,
+.editor-preview-side a.text-primary:hover,
+.layout a.text-primary:hover {
     color: #208aff!important;
 }
 

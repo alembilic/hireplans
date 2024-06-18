@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use App\Models\JobApplication;
 use Illuminate\Support\Str;
 use App\Models\Candidate;
 use App\Models\Employer;
@@ -38,6 +39,7 @@ class HelperFunc
                 $prefix = 'J-';
                 break;
             case 'application':
+                $targetClass = JobApplication::class;
                 $prefix = 'A-';
                 break;
             default:
@@ -133,6 +135,19 @@ class HelperFunc
             'mid' => 'Mid Level',
             'senior' => 'Senior Level',
         ];
+    }
+
+    public static function getUserCvs(): array
+    {
+        $user = auth()->user();
+        $user->load(['candidate']);
+        $user->candidate->load('attachment');
+        $cvs = $user->candidate->getCvAttachmentsInfo();
+        $result = [];
+        foreach ($cvs as $cv) {
+            $result[$cv->id] = $cv->text;
+        }
+        return $result;
     }
 
     public static function generateUniqueJobSlug(string $title): string
