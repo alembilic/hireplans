@@ -149,4 +149,9 @@ class Candidate extends Model
     // {
     //     return $this->belongsToMany(Attachment::class);
     // }
+
+    public function references()
+    {
+        return $this->hasMany(Reference::class);
+    }
 }

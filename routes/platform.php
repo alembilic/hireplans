@@ -20,6 +20,7 @@ use App\Orchid\Screens\JobApplication\JobApplicationEditScreen;
 use App\Orchid\Screens\JobApplication\JobApplicationListScreen;
 use App\Orchid\Screens\JobApplication\JobApplicationViewScreen;
 use App\Orchid\Screens\PlatformScreen;
+use App\Orchid\Screens\Reference\ReferenceEditScreen;
 use App\Orchid\Screens\Role\RoleEditScreen;
 use App\Orchid\Screens\Role\RoleListScreen;
 use App\Orchid\Screens\User\UserEditScreen;
@@ -247,4 +248,13 @@ Route::screen('job_application/{application?}/view', JobApplicationViewScreen::c
         ->parent('platform.job_applications.list')
         ->push(__('Application Details'), route('platform.job_application.view'))
     )
+    ;
+
+// Platform > Reference > Create
+Route::screen('references/{candidate}/create', ReferenceEditScreen::class)
+    ->name('platform.references.create')
+    // ->breadcrumbs(fn (Trail $trail) => $trail
+    //     ->parent('platform.job_applications.list')
+    //     ->push(__('New job application'), route('platform.job_application.create'))
+    // )
     ;

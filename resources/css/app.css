@@ -53,3 +53,9 @@
     /* background-color: rgb(59 130 246 / var(--tw-bg-opacity))!important; */
     color: rgb(255 255 255 / var(--tw-text-opacity))!important;
 }
+
+
+.page-platform-profile .picture-preview {
+    height: 100px;
+    width: auto;
+}
