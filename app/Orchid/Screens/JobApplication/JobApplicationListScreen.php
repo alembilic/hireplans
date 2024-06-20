@@ -69,4 +69,18 @@ class JobApplicationListScreen extends Screen
             JobApplicationListLayout::class,
         ];
     }
+
+    /**
+     * Delete the job
+     *
+     * @param Request $request
+     */
+    public function remove(Request $request): void
+    {
+        $application = JobApplication::findOrFail($request->get('id'));
+
+        $application->delete();
+
+        Toast::info(__('Job Application was removed'));
+    }
 }

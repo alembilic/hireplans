@@ -100,12 +100,12 @@ class JobApplicationListLayout extends Table
                 ->route('platform.job_application.view', $jobApplication->id)
                 ->icon('bs.pencil'),
 
-            // Button::make(__('Delete'))
-            //     ->icon('bs.trash3')
-            //     ->confirm(__('Once this job is deleted, all of its resources and data will be permanently deleted. Before deleting this job, please download any data or information that you wish to retain.'))
-            //     ->method('remove', [
-            //         'id' => $job->id,
-            //     ]),
+            Button::make(__('Delete'))
+                ->icon('bs.trash3')
+                ->confirm(__('Once this job application is deleted, all of its resources and data will be permanently deleted. Before deleting this job, please download any data or information that you wish to retain.'))
+                ->method('remove', [
+                    'id' => $jobApplication->id,
+                ]),
         ];
 
         return $actions;
