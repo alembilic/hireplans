@@ -39,10 +39,21 @@ class JobApplicationEditScreen extends Screen
     {
         $user = Auth::user();
         $user->load(['candidate']);
-        $user->candidate->load('attachment');
-        $defaultCv = $user->candidate->getCvAttachments()->last() ?? null;
-        $defaultCvPath = $defaultCv->getRelativeUrlAttribute() ?? null;
-        $defaultCvId = $defaultCv->id ?? null;
+        // if (!$user->candidate) {
+        //     Toast::error(__('You need to create a candidate profile before you can apply for a job.'));
+        //     return redirect()->route('platform.candidate.edit');
+        // }
+
+        $defaultCvPath = null;
+        $defaultCvId = null;
+
+        if ($user->candidate) {
+            $user->candidate->load('attachment');
+            $defaultCv = $user->candidate->getCvAttachments()->last() ?? null;
+            $defaultCvPath = $defaultCv ? $defaultCv->getRelativeUrlAttribute() : null;
+            $defaultCvId = $defaultCv->id ?? null;
+        }
+
 
         // dd($defaultCv);
         return [

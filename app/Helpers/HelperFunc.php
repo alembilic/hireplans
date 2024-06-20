@@ -137,16 +137,27 @@ class HelperFunc
         ];
     }
 
-    public static function getUserCvs(): array
+    public static function getUserCvs($user = null): array
     {
-        $user = auth()->user();
-        $user->load(['candidate']);
-        $user->candidate->load('attachment');
-        $cvs = $user->candidate->getCvAttachmentsInfo();
         $result = [];
+
+        if (!$user) {
+            $user = auth()->user();
+        }
+
+        $user->load(['candidate']);
+
+        if (!$user->candidate
+            || !$user->candidate->load('attachment')) {
+            return [];
+        }
+
+        $cvs = $user->candidate->getCvAttachmentsInfo();
+
         foreach ($cvs as $cv) {
             $result[$cv->id] = $cv->text;
         }
+
         return $result;
     }
 

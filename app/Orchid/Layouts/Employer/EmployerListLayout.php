@@ -32,6 +32,12 @@ class EmployerListLayout extends Table
     protected function columns(): iterable
     {
         return [
+            TD::make('employer_ref', 'Employer Ref')
+            ->sort()
+            ->cantHide()
+            // ->filter(TD::FILTER_TEXT)
+            ,
+
             TD::make('employer_name', __('Employer'))
                 ->sort()
                 ->cantHide()
@@ -44,12 +50,6 @@ class EmployerListLayout extends Table
                         $presenter = new EmployerPresenter($employer);
                         return $presenter->nameWithLogo(); // Use the new method
                     }), // Ensure that the output is treated as raw HTML
-
-            TD::make('employer_ref', 'Employer Ref')
-            ->sort()
-            ->cantHide()
-            // ->filter(TD::FILTER_TEXT)
-            ,
 
             TD::make('country', 'Country')
                 ->sort()

@@ -35,20 +35,33 @@ class UserProfileScreen extends Screen
     public function query(Request $request): iterable
     {
         $user = $request->user()->load('candidate');
-        $user->candidate->load('attachment');
 
-        $cvAttachments = $user->candidate->getCvAttachments();
-        $cvAttachmentsInfo = $cvAttachments ? $user->candidate->getCvAttachmentsInfo() : null;
+        $cvAttachments = null;
+        $cvAttachmentsInfo = null;
+        $otherDocumentsAttachments = null;
+        $otherDocumentsAttachmentsInfo = null;
+        $cv = null;
+        $otherDocuments = null;
 
-        $otherDocumentsAttachments = $user->candidate->getOtherDocAttachments();
-        $otherDocumentsAttachmentsInfo = $otherDocumentsAttachments ? $user->candidate->getOtherDocAttachmentsInfo() : null;
+        if ($user->candidate) {
+            $user->candidate->load('attachment');
+
+            $cvAttachments = $user->candidate->getCvAttachments();
+            $cvAttachmentsInfo = $cvAttachments ? $user->candidate->getCvAttachmentsInfo() : null;
+
+            $otherDocumentsAttachments = $user->candidate->getOtherDocAttachments();
+            $otherDocumentsAttachmentsInfo = $otherDocumentsAttachments ? $user->candidate->getOtherDocAttachmentsInfo() : null;
+
+            $cv = $cvAttachments->pluck('id')->toArray();
+            $otherDocuments = $otherDocumentsAttachments->pluck('id')->toArray();
+        }
 
 
         return [
             'user' => $request->user(),
             'candidate' => $user->candidate ?? new Candidate(),
-            'cv' => $cvAttachments->pluck('id')->toArray(),
-            'other_documents' => $otherDocumentsAttachments->pluck('id')->toArray(),
+            'cv' => $cv,
+            'other_documents' => $otherDocuments,
             'cv_links' => $cvAttachmentsInfo ? HelperFunc::renderAttachmentsLinks($cvAttachmentsInfo) : [],
             'other_documents_links' => $otherDocumentsAttachmentsInfo ? HelperFunc::renderAttachmentsLinks($otherDocumentsAttachmentsInfo) : [],
         ];

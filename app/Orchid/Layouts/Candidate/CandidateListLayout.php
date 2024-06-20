@@ -31,17 +31,17 @@ class CandidateListLayout extends Table
     protected function columns(): iterable
     {
         return [
-            TD::make('user_name', __('Name'))
-                ->sort()
-                ->cantHide()
-                // ->filter(Input::make())
-                ->render(fn (Candidate $candidate) => new Persona($candidate->user->presenter())),
-
             TD::make('candidate_ref', 'Candidate Ref')
                 ->sort()
                 ->cantHide()
                 // ->filter(TD::FILTER_TEXT)
                 ,
+
+            TD::make('user_name', __('Name'))
+                ->sort()
+                ->cantHide()
+                // ->filter(Input::make())
+                ->render(fn (Candidate $candidate) => new Persona($candidate->user->presenter())),
 
             TD::make('user.email', 'Email')
                 // ->sort()

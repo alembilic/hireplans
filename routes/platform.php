@@ -17,6 +17,7 @@ use App\Orchid\Screens\Job\JobEditScreen;
 use App\Orchid\Screens\Job\JobListScreen;
 use App\Orchid\Screens\Job\JobViewScreen;
 use App\Orchid\Screens\JobApplication\JobApplicationEditScreen;
+use App\Orchid\Screens\JobApplication\JobApplicationListScreen;
 use App\Orchid\Screens\PlatformScreen;
 use App\Orchid\Screens\Role\RoleEditScreen;
 use App\Orchid\Screens\Role\RoleListScreen;
@@ -212,6 +213,14 @@ Route::screen('jobs/{job?}/view', JobViewScreen::class)
         ->push(__('Job details'), route('platform.jobs.view'))
     );
 
+// Platform > job_applications > List
+Route::screen('job_applications/list', JobApplicationListScreen::class)
+    ->name('platform.job_applications.list')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push(__('Job Applications'), route('platform.job_applications.list'))
+    );
+
 // Platform > job_applications > Create
 Route::screen('job_application/{job}/create', JobApplicationEditScreen::class)
     ->name('platform.job_application.create')
@@ -222,8 +231,17 @@ Route::screen('job_application/{job}/create', JobApplicationEditScreen::class)
     ;
 
 // Platform > job_applications > Edit
-Route::screen('job_application/{application?}/edit', JobApplicationEditScreen::class)
-    ->name('platform.job_application.edit')
+// Route::screen('job_application/{application}/edit', JobApplicationEditScreen::class)
+//     ->name('platform.job_application.edit')
+//     ->breadcrumbs(fn (Trail $trail, $employer) => $trail
+//         ->parent('platform.job_applications.list')
+//         ->push(__('Edit job'), route('platform.job_applications.edit'))
+//     )
+//     ;
+
+// Platform > job_applications > Edit
+Route::screen('job_application/{application}/view', JobApplicationEditScreen::class)
+    ->name('platform.job_application.view')
     // ->breadcrumbs(fn (Trail $trail, $employer) => $trail
     //     ->parent('platform.job_applications.list')
     //     ->push(__('Edit job'), route('platform.job_applications.edit'))

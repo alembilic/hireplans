@@ -63,7 +63,7 @@ class Job extends Model
         'title'      => Like::class,
         'updated_at' => WhereDateStartEnd::class,
         'created_at' => WhereDateStartEnd::class,
- ];
+    ];
 
     /**
      * The attributes for which can use sort in url.

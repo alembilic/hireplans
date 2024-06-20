@@ -53,6 +53,7 @@ class JobApplicationEditLayout extends Rows
                 ->required()
                 // ->empty('Select a CV...')
                 ->horizontal()
+                ->help('You can add or update your CV from your <a href="/portal/profile">profile page</a>.')
                 ->hr(),
 
             Upload::make('job_application.cover_letter')

@@ -144,4 +144,9 @@ class Candidate extends Model
     public function getEmailAttribute() {
         return $this->user->email;
     }
+
+    // public function attachments()
+    // {
+    //     return $this->belongsToMany(Attachment::class);
+    // }
 }

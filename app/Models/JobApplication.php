@@ -42,6 +42,24 @@ class JobApplication extends Model
     ];
 
     /**
+     * The attributes for which can use sort in url.
+    *
+    * @var array
+    */
+    protected $allowedSorts = [
+        'id',
+        'job_id',
+        'candidate_id',
+        'updated_at',
+        'created_at',
+        'job_title',
+        'candidate_name',
+        'application_ref',
+        // 'country',
+        // 'user_name',
+    ];
+
+    /**
      * Get the job that owns the job application.
      */
     public function job() {
