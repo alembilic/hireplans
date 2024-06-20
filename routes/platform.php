@@ -18,6 +18,7 @@ use App\Orchid\Screens\Job\JobListScreen;
 use App\Orchid\Screens\Job\JobViewScreen;
 use App\Orchid\Screens\JobApplication\JobApplicationEditScreen;
 use App\Orchid\Screens\JobApplication\JobApplicationListScreen;
+use App\Orchid\Screens\JobApplication\JobApplicationViewScreen;
 use App\Orchid\Screens\PlatformScreen;
 use App\Orchid\Screens\Role\RoleEditScreen;
 use App\Orchid\Screens\Role\RoleListScreen;
@@ -240,10 +241,10 @@ Route::screen('job_application/{job}/create', JobApplicationEditScreen::class)
 //     ;
 
 // Platform > job_applications > Edit
-Route::screen('job_application/{application}/view', JobApplicationEditScreen::class)
+Route::screen('job_application/{application?}/view', JobApplicationViewScreen::class)
     ->name('platform.job_application.view')
-    // ->breadcrumbs(fn (Trail $trail, $employer) => $trail
-    //     ->parent('platform.job_applications.list')
-    //     ->push(__('Edit job'), route('platform.job_applications.edit'))
-    // )
+    ->breadcrumbs(fn (Trail $trail, $employer) => $trail
+        ->parent('platform.job_applications.list')
+        ->push(__('Application Details'), route('platform.job_application.view'))
+    )
     ;

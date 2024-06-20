@@ -48,6 +48,13 @@ class Employer extends Model
     }
 
     /**
+     * Get all of the employer's jobs.
+     */
+    public function jobs() {
+        return $this->hasMany(Job::class);
+    }
+
+    /**
      * The attributes for which you can use filters in url.
      *
      * @var array

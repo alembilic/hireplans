@@ -48,7 +48,11 @@ class Job extends Model
      * Check if the user can apply for a job.
      */
     public function canApply() {
-        $candidateId = auth()->user()->candidate->id;
+        $candidateId = auth()->user()->candidate->id ?? null;
+
+        if (!$candidateId) {
+            return false;
+        }
 
         return !$this->jobApplications()->where('candidate_id', $candidateId)->exists();
     }
