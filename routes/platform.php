@@ -22,6 +22,7 @@ use App\Orchid\Screens\JobApplication\JobApplicationViewScreen;
 use App\Orchid\Screens\PlatformScreen;
 use App\Orchid\Screens\Reference\ReferenceEditScreen;
 use App\Orchid\Screens\Reference\ReferenceListScreen;
+use App\Orchid\Screens\Reference\ReferenceMyScreen;
 use App\Orchid\Screens\Role\RoleEditScreen;
 use App\Orchid\Screens\Role\RoleListScreen;
 use App\Orchid\Screens\User\UserEditScreen;
@@ -256,12 +257,20 @@ Route::screen('job_application/{application?}/view', JobApplicationViewScreen::c
 // Platform > References
 Route::middleware([ReferenceAccessControl::class])->group(function () {
     // Platform > References > List
-    // Route::screen('references/list', ReferenceListScreen::class)
-    // ->name('platform.references.list')
-    // ->breadcrumbs(fn (Trail $trail) => $trail
-    //     ->parent('platform.index')
-    //     ->push(__('References'), route('platform.references.list'))
-    // );
+    Route::screen('references/list', ReferenceListScreen::class)
+    ->name('platform.references.list')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push(__('References'), route('platform.references.list'))
+    );
+
+    // Platform > References > My references
+    Route::screen('references/my', ReferenceMyScreen::class)
+        ->name('platform.references.my')
+        ->breadcrumbs(fn (Trail $trail) => $trail
+            ->parent('platform.index')
+            ->push(__('References'), route('platform.references.my'))
+        );
 
     // Platform > References > Create
     Route::screen('references/create', ReferenceEditScreen::class)

@@ -54,6 +54,16 @@ class PlatformProvider extends OrchidServiceProvider
             Menu::make(__('Job Applications'))
                 ->icon('bs.card-list')
                 ->route('platform.job_applications.list')
+                ->permission('platform.systems.users'),
+
+            Menu::make(__('My References'))
+                ->icon('bs.person-fill-check')
+                ->route('platform.references.my')
+                ->permission('reference.view.my'),
+
+            Menu::make(__('References'))
+                ->icon('bs.person-fill-check')
+                ->route('platform.references.list')
                 ->permission('platform.systems.users')
                 ->divider(),
 
