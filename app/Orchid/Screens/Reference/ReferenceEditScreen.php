@@ -121,7 +121,7 @@ class ReferenceEditScreen extends Screen
             'reference.relationship' => 'required|string',
         ]);
 
-        $candidate->references()->create($request->input('reference'));
+        $this->candidate->references()->create($request->input('reference'));
 
         // $referenceData = $request->collect('reference')->except([])->toArray();
         // $candidate->references()->fill($referenceData)->save();

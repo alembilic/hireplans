@@ -28,7 +28,14 @@ class ReferenceEditLayout extends Rows
      */
     protected function fields(): iterable
     {
+        // dd($this->query->get('candidate')->id);
+
         return [
+            // Input::make('reference.candidate_id')
+            //     ->type('hidden')
+            //     ->value($this->query->get('candidate')->id)
+            //     ->horizontal(),
+
             HtmlField::make('referee_details')
                 ->label('<h2 class="fw-boldx text-xl">Referee details</h2>')
                 ->horizontal()
