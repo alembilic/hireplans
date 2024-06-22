@@ -21,6 +21,7 @@ use App\Orchid\Screens\JobApplication\JobApplicationListScreen;
 use App\Orchid\Screens\JobApplication\JobApplicationViewScreen;
 use App\Orchid\Screens\PlatformScreen;
 use App\Orchid\Screens\Reference\ReferenceEditScreen;
+use App\Orchid\Screens\Reference\ReferenceListScreen;
 use App\Orchid\Screens\Role\RoleEditScreen;
 use App\Orchid\Screens\Role\RoleListScreen;
 use App\Orchid\Screens\User\UserEditScreen;
@@ -32,6 +33,8 @@ use Tabuna\Breadcrumbs\Trail;
 use App\Orchid\Screens\Candidate\CandidateListScreen;
 use App\Orchid\Screens\Candidate\CandidateViewScreen;
 use App\Orchid\Screens\Employer\EmployerEditScreen;
+
+use App\Http\Middleware\ReferenceAccessControl;
 
 /*
 |--------------------------------------------------------------------------
@@ -250,11 +253,33 @@ Route::screen('job_application/{application?}/view', JobApplicationViewScreen::c
     )
     ;
 
-// Platform > Reference > Create
-Route::screen('references/{candidate}/create', ReferenceEditScreen::class)
+// Platform > References
+Route::middleware([ReferenceAccessControl::class])->group(function () {
+    // Platform > References > List
+    // Route::screen('references/list', ReferenceListScreen::class)
+    // ->name('platform.references.list')
+    // ->breadcrumbs(fn (Trail $trail) => $trail
+    //     ->parent('platform.index')
+    //     ->push(__('References'), route('platform.references.list'))
+    // );
+
+    // Platform > References > Create
+    Route::screen('references/create', ReferenceEditScreen::class)
     ->name('platform.references.create')
     // ->breadcrumbs(fn (Trail $trail) => $trail
     //     ->parent('platform.job_applications.list')
     //     ->push(__('New job application'), route('platform.job_application.create'))
     // )
     ;
+
+    // Platform > References > Create
+    Route::screen('references/{candidate}/create', ReferenceEditScreen::class)
+    ->name('platform.references.candidate.create')
+    // ->breadcrumbs(fn (Trail $trail) => $trail
+    //     ->parent('platform.job_applications.list')
+    //     ->push(__('New job application'), route('platform.job_application.create'))
+    // )
+    ;
+});
+
+

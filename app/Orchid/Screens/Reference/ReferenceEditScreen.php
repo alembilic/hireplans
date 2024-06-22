@@ -6,6 +6,7 @@ use App\Orchid\Layouts\Reference\ReferenceEditLayout;
 use App\Models\Candidate;
 use App\Models\Reference;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Screen;
 use Orchid\Support\Facades\Layout;
 use Orchid\Screen\Fields\Group;
@@ -30,6 +31,14 @@ class ReferenceEditScreen extends Screen
      */
     public function query(Candidate $candidate): iterable
     {
+        if (!$candidate->exists) {
+            $candidate = Auth::user()->candidate ?? abort(404);
+        }
+
+        $this->candidate = $candidate;
+
+        // dd($this->candidate);
+
         return [
             'candidate' => $candidate,
         ];
@@ -53,6 +62,20 @@ class ReferenceEditScreen extends Screen
     public function commandBar(): iterable
     {
         return [];
+    }
+
+    /**
+     * Get the permissions required to access this screen.
+     *
+     * @return iterable|null The permissions required to access this screen.
+     */
+    public function permission(): ?iterable
+    {
+        // return [
+        //     'platform.systems.users',
+        // ];
+
+        return null;
     }
 
     /**
