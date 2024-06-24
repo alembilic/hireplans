@@ -23,6 +23,7 @@ use App\Orchid\Screens\PlatformScreen;
 use App\Orchid\Screens\Reference\ReferenceEditScreen;
 use App\Orchid\Screens\Reference\ReferenceListScreen;
 use App\Orchid\Screens\Reference\ReferenceMyScreen;
+use App\Orchid\Screens\Reference\ReferenceViewScreen;
 use App\Orchid\Screens\Role\RoleEditScreen;
 use App\Orchid\Screens\Role\RoleListScreen;
 use App\Orchid\Screens\User\UserEditScreen;
@@ -288,6 +289,15 @@ Route::middleware([ReferenceAccessControl::class])->group(function () {
     //     ->parent('platform.job_applications.list')
     //     ->push(__('New job application'), route('platform.job_application.create'))
     // )
+    ;
+
+
+    Route::screen('references/{reference?}/view', ReferenceViewScreen::class)
+    ->name('platform.reference.view')
+    ->breadcrumbs(fn (Trail $trail, $employer) => $trail
+        ->parent('platform.references.list')
+        ->push(__('Reference Details'), route('platform.reference.view'))
+    )
     ;
 });
 

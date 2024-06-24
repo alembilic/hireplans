@@ -3,6 +3,7 @@
 namespace App\Orchid\Layouts\Reference;
 
 use App\Models\Reference;
+use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Components\Cells\DateTimeSplit;
 use Orchid\Screen\Layouts\Table;
 use Orchid\Screen\TD;
@@ -31,6 +32,11 @@ class ReferenceListLayout extends Table
                 ->sort()
                 ->cantHide()
                 // ->filter(TD::FILTER_TEXT)
+                ->render(function (Reference $reference) {
+                    return Link::make($reference->name)
+                        ->route('platform.reference.view', $reference->id)
+                        ->class('text-primary');
+                })
                 ,
 
             TD::make('position', 'Position')
