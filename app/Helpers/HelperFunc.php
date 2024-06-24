@@ -178,4 +178,24 @@ class HelperFunc
 
         return $slug;
     }
+
+    public static function feedbackScoreOptions(): array
+    {
+        return [
+            1 => 'Poor',
+            2 => 'Fair',
+            3 => 'Good',
+            4 => 'Very Good',
+            5 => 'Outstanding',
+        ];
+    }
+    public static function feedbackDisclosureOptions(): array
+    {
+        return [
+            1 => 'Maybe',
+            2 => 'Yes',
+            3 => 'No',
+            4 => 'Prefer not to answer',
+        ];
+    }
 }

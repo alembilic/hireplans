@@ -28,7 +28,12 @@ class ReferenceEditLayout extends Rows
      */
     protected function fields(): iterable
     {
-        // dd($this->query->get('candidate')->id);
+        // dd(\Carbon\Carbon::parse($this->query['reference']->candidate_employed_from)->format('Y/m/d'));
+
+        // Convert to DateTime objects and format
+        // $employedFromDateFormatted = (new \DateTime($candidateEmployedFrom))->format('Y-m-d');
+        // $employedToDateFormatted = (new \DateTime($candidateEmployedTo))->format('Y-m-d');
+
 
         return [
             // Input::make('reference.candidate_id')
@@ -99,7 +104,7 @@ class ReferenceEditLayout extends Rows
                 ->hr(),
 
             HtmlField::make('my_details')
-                ->label('<h2 class="fw-boldx text-xl">My details</h2>')
+                ->label('<h2 class="fw-boldx text-xl">Candidate details</h2>')
                 ->horizontal()
                 ->html(''),
 
@@ -116,6 +121,7 @@ class ReferenceEditLayout extends Rows
                 // ->required()
                 ->title(__('Employed From'))
                 ->placeholder(__('Employed From'))
+                ->value($this->query['reference']->candidate_employed_from ? \Carbon\Carbon::parse($this->query['reference']->candidate_employed_from)->format('Y-m-d') : null)
                 ->horizontal(),
 
             Input::make('reference.candidate_employed_to')
@@ -123,6 +129,7 @@ class ReferenceEditLayout extends Rows
                 // ->required()
                 ->title(__('Employed To'))
                 ->placeholder(__('Employed To'))
+                ->value($this->query['reference']->candidate_employed_to ? \Carbon\Carbon::parse($this->query['reference']->candidate_employed_to)->format('Y-m-d') : null)
                 ->horizontal(),
 
             Select::make('reference.candidate_job_type')

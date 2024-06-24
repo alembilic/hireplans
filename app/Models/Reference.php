@@ -12,6 +12,7 @@ use Orchid\Filters\Types\WhereDateStartEnd;
 use Orchid\Attachment\Attachable;
 use Orchid\Attachment\Models\Attachment;
 use App\Helpers\HelperFunc;
+use Carbon;
 
 class Reference extends Model
 {
@@ -90,11 +91,39 @@ class Reference extends Model
         'candidate_job_type',
     ];
 
+
+    /**
+     * Get the candidate's employed from date in the required format.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getCandidateEmployedFromAttribute($value)
+    {
+        return $value ? Carbon\Carbon::parse($value)->format('Y-m-d') : null;
+    }
+
+    /**
+     * Get the candidate's employed to date in the required format.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getCandidateEmployedToAttribute($value)
+    {
+        return $value ? Carbon\Carbon::parse($value)->format('Y-m-d') : null;
+    }
+
     /**
      * Get the candidate that owns the reference.
      */
     public function candidate()
     {
         return $this->belongsTo(Candidate::class);
+    }
+
+    public function feedback()
+    {
+        return $this->hasOne(ReferenceCandidateFeedback::class);
     }
 }

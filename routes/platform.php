@@ -21,6 +21,7 @@ use App\Orchid\Screens\JobApplication\JobApplicationListScreen;
 use App\Orchid\Screens\JobApplication\JobApplicationViewScreen;
 use App\Orchid\Screens\PlatformScreen;
 use App\Orchid\Screens\Reference\ReferenceEditScreen;
+use App\Orchid\Screens\Reference\ReferenceFeedbackEditScreen;
 use App\Orchid\Screens\Reference\ReferenceListScreen;
 use App\Orchid\Screens\Reference\ReferenceMyScreen;
 use App\Orchid\Screens\Reference\ReferenceViewScreen;
@@ -275,30 +276,39 @@ Route::middleware([ReferenceAccessControl::class])->group(function () {
 
     // Platform > References > Create
     Route::screen('references/create', ReferenceEditScreen::class)
-    ->name('platform.references.create')
-    // ->breadcrumbs(fn (Trail $trail) => $trail
-    //     ->parent('platform.job_applications.list')
-    //     ->push(__('New job application'), route('platform.job_application.create'))
-    // )
-    ;
+        ->name('platform.references.create')
+        // ->breadcrumbs(fn (Trail $trail) => $trail
+        //     ->parent('platform.job_applications.list')
+        //     ->push(__('New job application'), route('platform.job_application.create'))
+        // )
+        ;
 
     // Platform > References > Create
     Route::screen('references/{candidate}/create', ReferenceEditScreen::class)
-    ->name('platform.references.candidate.create')
-    // ->breadcrumbs(fn (Trail $trail) => $trail
-    //     ->parent('platform.job_applications.list')
-    //     ->push(__('New job application'), route('platform.job_application.create'))
-    // )
-    ;
+        ->name('platform.references.candidate.create')
+        // ->breadcrumbs(fn (Trail $trail) => $trail
+        //     ->parent('platform.job_applications.list')
+        //     ->push(__('New job application'), route('platform.job_application.create'))
+        // )
+        ;
 
+    // Platform > References > Feedback edit
+    Route::screen('references/{reference?}/edit', ReferenceFeedbackEditScreen::class)
+        ->name('platform.reference.feedback.edit')
+        // ->breadcrumbs(fn (Trail $trail) => $trail
+        //     ->parent('platform.job_applications.list')
+        //     ->push(__('New job application'), route('platform.job_application.create'))
+        // )
+        ;
 
     Route::screen('references/{reference?}/view', ReferenceViewScreen::class)
-    ->name('platform.reference.view')
-    ->breadcrumbs(fn (Trail $trail, $employer) => $trail
-        ->parent('platform.references.list')
-        ->push(__('Reference Details'), route('platform.reference.view'))
-    )
-    ;
+        ->name('platform.reference.view')
+        ->breadcrumbs(fn (Trail $trail, $employer) => $trail
+            ->parent('platform.references.list')
+            ->push(__('Reference Details'), route('platform.reference.view'))
+        )
+        ;
 });
+
 
 
