@@ -14,29 +14,53 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-        {{-- @livewireStyles --}}
+        @livewireStyles
 
+        <!-- Custom Styles -->
+        <style>
+            .navbar-shrink {
+                height: 50px;
+            }
+            .navbar-expand {
+                height: 80px;
+            }
+            .bg-cover {
+                background-size: cover;
+                background-attachment: fixed;
+            }
+            .content-wrapper {
+                position: relative;
+                z-index: 1;
+                background-color: rgba(255, 255, 255, 0.8);
+                /* padding-top: 80px; */
+            }
+        </style>
+        <!-- Custom Scripts -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                window.addEventListener('scroll', function() {
+                    const navbar = document.querySelector('.navbar');
+                    if (window.scrollY > 100) {
+                        navbar.classList.add('navbar-shrink');
+                        navbar.classList.remove('navbar-expand');
+                    } else {
+                        navbar.classList.add('navbar-expand');
+                        navbar.classList.remove('navbar-shrink');
+                    }
+                });
+            });
+        </script>
     </head>
     <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
+        <div class="min-h-screen bg-gray-100 relative">
             <livewire:layout.navigation />
 
-            <!-- Page Heading -->
-            @if (isset($header))
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endif
-
             <!-- Page Content -->
-            <main>
+            <main class="content-wrapper">
                 {{ $slot }}
             </main>
 
-            {{-- @livewireScripts --}}
-
+            @livewireScripts
         </div>
     </body>
 </html>

@@ -2,11 +2,15 @@
 
 use App\Http\Controllers\JobController;
 // use App\Orchid\Screens\Reference\PublicReferenceFeedbackEditScreen;
+use App\Livewire\AboutPage;
+use App\Livewire\HomePage;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Pages\Jobs\JobDetails;
 use App\Models\Job;
 
-Route::view('/', 'welcome');
+// Route::view('/', 'welcome');
+Route::get('/', HomePage::class)->name('home');
+Route::get('/about', AboutPage::class)->name('about');
 
 // Route::view('dashboard', 'dashboard')
 //     ->middleware(['auth', 'verified'])

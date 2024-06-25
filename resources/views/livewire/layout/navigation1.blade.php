@@ -16,38 +16,47 @@ new class extends Component
     }
 }; ?>
 
+{{-- <nav x-data="{ open: false }" class="sticky top-0 z-50 shadow-md bg-white border-b border-gray-100 mb-3"> --}}
 <nav x-data="{ open: false }" class="navbar navbar-expand transition-all duration-300 block sticky top-0 z-50 shadow-md bg-white border-b border-gray-100 mb-3">
     <!-- Primary Navigation Menu -->
     <div class="y-2 flex justify-between items-center h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16 w-full">
-            <!-- Logo -->
-            <div class="shrink-0 flex items-center py-1">
-                <a href="{{ route('home') }}" wire:navigate>
-                    <x-application-logo class="block h-12 w-auto fill-current text-gray-800" />
-                </a>
-            </div>
+        <div class="flex justify-between xxxh-16">
+            <div class="flex">
+                <!-- Logo -->
+                <div class="shrink-0 flex items-center py-1">
+                    <a href="{{ route('home') }}" wire:navigate>
+                        <x-application-logo class="block h-12 w-auto fill-current text-gray-800" />
+                    </a>
+                </div>
 
-            <!-- Navigation Links -->
-            <div class="hidden sm:flex sm:items-center sm:space-x-8 w-full justify-center">
-                @if (auth()->user())
-                    <x-nav-link :href="route('platform.index')" :active="request()->routeIs('platform.index')" wire:navigate>
-                        {{ __('Dashboard') }}
+                <!-- Navigation Links -->
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    @if (auth()->user())
+                        <x-nav-link :href="route('platform.index')" :active="request()->routeIs('platform.index')" wire:navigate>
+                            {{ __('Dashboard') }}
+                        </x-nav-link>
+                    @endif
+                </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('home')" :active="request()->routeIs('home')" wire:navigate>
+                        {{ __('Home') }}
                     </x-nav-link>
-                @endif
-                <x-nav-link :href="route('home')" :active="request()->routeIs('home')" wire:navigate>
-                    {{ __('Home') }}
-                </x-nav-link>
-                <x-nav-link :href="route('about')" :active="request()->routeIs('about')" wire:navigate>
-                    {{ __('About us') }}
-                </x-nav-link>
-                <x-nav-link :href="route('jobs.listings')" :active="request()->routeIs('jobs.listings')" wire:navigate>
-                    {{ __('Jobs') }}
-                </x-nav-link>
+                </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('about')" :active="request()->routeIs('about')" wire:navigate>
+                        {{ __('About us') }}
+                    </x-nav-link>
+                </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('jobs.listings')" :active="request()->routeIs('jobs.listings')" wire:navigate>
+                        {{ __('Jobs') }}
+                    </x-nav-link>
+                </div>
             </div>
 
-            <!-- Settings Dropdown / Login and Register Links -->
+            <!-- Settings Dropdown -->
             @if (auth()->user())
-                <div class="hidden sm:flex sm:items-center sm:ms-6">
+                <div class="hidden flex-grow sm:flex sm:items-center sm:ms-6">
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
                             <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
@@ -80,18 +89,35 @@ new class extends Component
                     </x-dropdown>
                 </div>
             @else
-                <div class="hidden sm:flex sm:items-center sm:space-x-8 ms-auto whitespace-nowrap">
-                    <x-nav-link :href="route('login')" :active="request()->routeIs('login')" wire:navigate>
-                        {{ __('Log in') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('register')" :active="request()->routeIs('register')" wire:navigate>
-                        {{ __('Register') }}
-                    </x-nav-link>
+                <div class="hidden flex-grow sm:flex sm:items-center sm:ms-6">
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-nav-link :href="route('login')" :active="request()->routeIs('login')" wire:navigate>
+                            {{ __('Log in') }}
+                        </x-nav-link>
+                    </div>
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-nav-link :href="route('register')" :active="request()->routeIs('register')" wire:navigate>
+                            {{ __('Register') }}
+                        </x-nav-link>
+                    </div>
+                    {{-- <a
+                        href="{{ route('login') }}"
+                        class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
+                    >
+                        Log in
+                    </a>
+
+                    <a
+                        href="{{ route('register') }}"
+                        class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
+                    >
+                        Register
+                    </a> --}}
                 </div>
             @endif
 
             <!-- Hamburger -->
-            <div class="-me-2 flex items-center sm:hidden">
+            <div class="-me-2 flex flex-grow items-center sm:hidden">
                 <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                         <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -105,12 +131,23 @@ new class extends Component
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden bg-gray-100">
         <div class="pt-2 pb-3 space-y-1">
+            @if (auth()->user())
+                <x-responsive-nav-link :href="route('platform.index')" :active="request()->routeIs('platform.index')" wire:navigate>
+                    {{ __('Dashboard') }}
+                </x-responsive-nav-link>
+            @endif
+        </div>
+        <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('home')" :active="request()->routeIs('home')" wire:navigate>
                 {{ __('Home') }}
             </x-responsive-nav-link>
+        </div>
+        <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('about')" :active="request()->routeIs('about')" wire:navigate>
                 {{ __('About us') }}
             </x-responsive-nav-link>
+        </div>
+        <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('jobs.listings')" :active="request()->routeIs('jobs.listings')" wire:navigate>
                 {{ __('Jobs') }}
             </x-responsive-nav-link>
