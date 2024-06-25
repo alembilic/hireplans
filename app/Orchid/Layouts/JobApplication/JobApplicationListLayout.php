@@ -2,6 +2,7 @@
 
 namespace App\Orchid\Layouts\JobApplication;
 
+use App\Helpers\HelperFunc;
 use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Layouts\Table;
 use Orchid\Screen\TD;
@@ -60,17 +61,23 @@ class JobApplicationListLayout extends Table
                     ->class('text-primary')
                 ),
 
+            TD::make('status', __('Status'))
+                ->sort()
+                ->render(function (JobApplication $jobApplication) {
+                    return HelperFunc::getApplicationStatus($jobApplication);
+                }),
+
             TD::make('created_at', __('Created'))
                 ->usingComponent(DateTimeSplit::class)
                 // ->align(TD::ALIGN_RIGHT)
                 // ->defaultHidden()
                 ->sort(),
 
-            TD::make('updated_at', __('Last edit'))
-                ->usingComponent(DateTimeSplit::class)
-                // ->align(TD::ALIGN_RIGHT)
-                ->defaultHidden()
-                ->sort(),
+            // TD::make('updated_at', __('Last edit'))
+            //     ->usingComponent(DateTimeSplit::class)
+            //     // ->align(TD::ALIGN_RIGHT)
+            //     ->defaultHidden()
+            //     ->sort(),
         ];
 
         if (Auth::user()->hasAccess('platform.systems.users')) {

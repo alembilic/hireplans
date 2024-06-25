@@ -29,6 +29,8 @@ class JobApplication extends Model
         'cv',
         'cover_letter',
         'notes',
+        'status',
+        'viewed_at',
     ];
 
     /**
@@ -58,6 +60,8 @@ class JobApplication extends Model
         'job_title',
         'candidate_name',
         'application_ref',
+        'status',
+        'employer_name',
         // 'country',
         // 'user_name',
     ];

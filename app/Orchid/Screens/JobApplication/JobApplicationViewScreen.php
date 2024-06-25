@@ -33,6 +33,13 @@ class JobApplicationViewScreen extends Screen
         $application->load(['job', 'candidate']); // Eager load the employer relationship
 
         // dd($application);
+        $this->jobApplication = $application;
+
+        $user = Auth::user();
+        if ($user->id != $this->jobApplication->candidate->user_id
+            && !$user->hasAccess('platform.systems.users')) {
+            abort(403, 'Unauthorized');
+        }
 
         return [
             'jobApplication' => $application,
@@ -50,6 +57,16 @@ class JobApplicationViewScreen extends Screen
     public function name(): ?string
     {
         return 'Job Application';
+    }
+
+    /**
+     * Get the permissions required to access this screen.
+     *
+     * @return iterable|null The permissions required to access this screen.
+     */
+    public function permission(): ?iterable
+    {
+        return [];
     }
 
     /**
@@ -138,6 +155,8 @@ class JobApplicationViewScreen extends Screen
                 }),
 
             Sight::make('created_at', 'Submitted At')->render(fn(jobApplication $application) => \Carbon\Carbon::parse($application->created_at)->format('d/m/Y H:i:s')),
+
+            Sight::make('status', 'Status')->render(fn(jobApplication $application) => HelperFunc::getApplicationStatus($application)),
 
         ];
 

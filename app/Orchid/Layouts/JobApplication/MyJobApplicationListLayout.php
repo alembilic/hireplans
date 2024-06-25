@@ -2,6 +2,7 @@
 
 namespace App\Orchid\Layouts\JobApplication;
 
+use App\Helpers\HelperFunc;
 use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\Layouts\Table;
 use Orchid\Screen\TD;
@@ -40,7 +41,7 @@ class MyJobApplicationListLayout extends Table
                 ->cantHide()
                 ->render(function (JobApplication $jobApplication) {
                     return Link::make($jobApplication->job_title)
-                        ->route('platform.jobs.view', $jobApplication->job->id)
+                        ->route('platform.job_application.view', $jobApplication->id)
                         ->class('text-primary');
                 }),
 
@@ -56,6 +57,12 @@ class MyJobApplicationListLayout extends Table
             //         ->route('platform.candidates.view', $jobApplication->candidate->id)
             //         ->class('text-primary')
             //     ),
+
+            TD::make('status', __('Status'))
+                ->sort()
+                ->render(function (JobApplication $jobApplication) {
+                    return HelperFunc::getApplicationStatus($jobApplication);
+                }),
 
             TD::make('created_at', __('Created'))
                 ->usingComponent(DateTimeSplit::class)
