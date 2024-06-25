@@ -48,7 +48,7 @@ class PlatformProvider extends OrchidServiceProvider
             Menu::make(__('Jobs'))
                 ->icon('bs.person-workspace')
                 ->route('platform.jobs.list')
-                // ->permission('platform.systems.users')
+                ->permission('platform.systems.users')
                 ,
 
             Menu::make(__('Job Applications'))
@@ -56,16 +56,26 @@ class PlatformProvider extends OrchidServiceProvider
                 ->route('platform.job_applications.list')
                 ->permission('platform.systems.users'),
 
-            Menu::make(__('My References'))
-                ->icon('bs.person-fill-check')
-                ->route('platform.references.my')
-                ->permission('reference.view.my'),
-
             Menu::make(__('References'))
                 ->icon('bs.person-fill-check')
                 ->route('platform.references.list')
                 ->permission('platform.systems.users')
                 ->divider(),
+
+            Menu::make(__('My Profile'))
+                ->icon('bs.person')
+                ->route('platform.profile'),
+                // ->permission('job.application.view.my'),
+
+            Menu::make(__('My Applications'))
+                ->icon('bs.person-workspace')
+                ->route('platform.job_applications.my')
+                ->permission('job.application.view.my'),
+
+            Menu::make(__('My References'))
+                ->icon('bs.person-fill-check')
+                ->route('platform.references.my')
+                ->permission('reference.view.my'),
 
             // Menu::make(__('Add Candidate'))
             //     ->icon('bs.people')

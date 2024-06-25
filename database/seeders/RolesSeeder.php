@@ -59,6 +59,8 @@ class RolesSeeder extends Seeder
                 'platform.systems.attachment' => 1,
                 'reference.view.my' => 1,
                 'job.apply' => 1,
+                'job.application.view.my' => 1,
+
             ],
         ]);
 

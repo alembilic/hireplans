@@ -19,6 +19,7 @@ use App\Orchid\Screens\Job\JobViewScreen;
 use App\Orchid\Screens\JobApplication\JobApplicationEditScreen;
 use App\Orchid\Screens\JobApplication\JobApplicationListScreen;
 use App\Orchid\Screens\JobApplication\JobApplicationViewScreen;
+use App\Orchid\Screens\JobApplication\MyJobApplicationListScreen;
 use App\Orchid\Screens\PlatformScreen;
 use App\Orchid\Screens\Reference\ReferenceEditScreen;
 use App\Orchid\Screens\Reference\ReferenceFeedbackEditScreen;
@@ -227,6 +228,14 @@ Route::screen('job_applications/list', JobApplicationListScreen::class)
     ->breadcrumbs(fn (Trail $trail) => $trail
         ->parent('platform.index')
         ->push(__('Job Applications'), route('platform.job_applications.list'))
+    );
+
+// Platform > job_applications > My
+Route::screen('job_applications/my', MyJobApplicationListScreen::class)
+    ->name('platform.job_applications.my')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push(__('My Job Applications'), route('platform.job_applications.my'))
     );
 
 // Platform > job_applications > Create
