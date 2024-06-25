@@ -5,7 +5,19 @@
     <!-- Main Content -->
     <div class="xxxmin-h-screen h-96 flex flex-col items-center justify-center text-white bg-black bg-opacity-50">
         <h1 class="text-4xl font-bold mb-6">Let's Find Your Next Job</h1>
-        <input type="text" placeholder="Web Developer..." class="px-4 py-2 border border-gray-300 rounded-md shadow-sm w-1/2">
+        {{-- <input type="text" placeholder="Web Developer..." class="px-4 py-2 border border-gray-300 rounded-md shadow-sm w-1/2"> --}}
+        <script>
+            function handleSearch(event) {
+                event.preventDefault(); // Prevent the form from submitting traditionally
+                const searchQuery = document.getElementById('searchInput').value;
+                window.location.href = `/jobs/listings?search=${encodeURIComponent(searchQuery)}`; // Redirect with query
+            }
+        </script>
+
+        <form onsubmit="handleSearch(event)">
+            <input type="text" id="searchInput" placeholder="English Teacher..." class="px-4 py-2 border border-gray-300 text-gray-700 rounded-md shadow-sm w-96">
+            <button type="submit" class="hidden">Search</button> <!-- Hidden submit button for form -->
+        </form>
     </div>
 
     <!-- Additional Content -->

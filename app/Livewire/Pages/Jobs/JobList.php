@@ -19,6 +19,7 @@ class JobList extends Component
 
     public function mount()
     {
+        $this->search = request()->query('search', $this->search);
         // $this->jobs = Job::with('employer')->where('is_active', 1)->paginate(10);
         $this->jobTypes = $this->getJobTypes();
         // $this->currentPage = request()->query('page', 1);
