@@ -163,7 +163,7 @@ return [
      */
 
     'template' => [
-        'header' => '',
+        'header' => 'orchid.brand.header',
         'footer' => '',
     ],
 

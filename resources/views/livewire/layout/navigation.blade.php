@@ -23,7 +23,11 @@ new class extends Component
             <!-- Logo -->
             <div class="shrink-0 flex items-center py-1">
                 <a href="{{ route('home') }}" wire:navigate>
-                    <x-application-logo class="block h-12 w-auto fill-current text-gray-800" />
+                    @if(request()->is('portal*'))
+                        <x-application-logo-portal class="block h-12 w-auto fill-current text-gray-800" />
+                    @else
+                        <x-application-logo class="block h-12 w-auto fill-current text-gray-800" />
+                    @endif
                 </a>
             </div>
 
