@@ -18,26 +18,28 @@
     </head>
 
     <body class="flex flex-col min-h-screen font-sans text-gray-900 antialiased bg-cover bg-center" style="background-image: url('/images/skyscrapers-3850732_1920.jpg');">
-        <div class="nav-container w-full bg-gray-100 relative">
+        {{-- <div class="nav-container w-full bg-gray-100 relative"> --}}
             <livewire:layout.navigation />
-        </div>
+        {{-- </div> --}}
 
-        <div class="main-content flex-grow">
-            <div class="flex flex-col sm:justify-center items-center md:pt-20 sm:pt-3 w-full">
-                {{-- <div>
-                    <a href="/" wire:navigate>
-                        <x-application-logo class="w-100 h-20 fill-current text-gray-500" />
-                    </a>
-                </div> --}}
-
-                <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
-                    <div class="flex justify-center items-center pb-6">
+        <div class="main-content-container flex-grow xxxmin-h-screen xxxh-96 flex flex-col items-center justify-center text-white bg-black bg-opacity-50">
+            <div class="main-content flex-grow">
+                <div class="flex flex-col sm:justify-center items-center md:pt-20 sm:pt-3 w-full">
+                    {{-- <div>
                         <a href="/" wire:navigate>
                             <x-application-logo class="w-100 h-20 fill-current text-gray-500" />
                         </a>
-                    </div>
+                    </div> --}}
 
-                    {{ $slot }}
+                    <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
+                        <div class="flex justify-center items-center pb-6">
+                            <a href="/" wire:navigate>
+                                <x-application-logo class="w-100 h-20 fill-current text-gray-500" />
+                            </a>
+                        </div>
+
+                        {{ $slot }}
+                    </div>
                 </div>
             </div>
         </div>

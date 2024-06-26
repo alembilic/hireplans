@@ -16,7 +16,7 @@ new class extends Component
     }
 }; ?>
 
-<nav x-data="{ open: false }" class="navbar navbar-expand transition-all duration-300 block sticky top-0 z-50 shadow-md bg-white border-b border-gray-100 mb-3">
+<nav x-data="{ open: false }" class="navbar navbar-expand transition-all duration-300 block sticky top-0 z-50 shadow-md bg-white border-b border-gray-100 xxxmb-3">
     <!-- Primary Navigation Menu -->
     <div class="y-2 flex justify-between items-center h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16 w-full">

@@ -8,6 +8,9 @@
     <!-- Navbar wrapper with full width background and centered content -->
         {{-- <div class="mx-auto"> --}}
             <livewire:layout.navigation />
+
+            <div class="mb-3">
+            </div>
         {{-- </div> --}}
 
     <div class="max-w-7xl xw-full mx-auto p-0 h-100">
