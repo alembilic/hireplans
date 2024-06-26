@@ -23,7 +23,7 @@
         </div>
 
         <div class="main-content flex-grow">
-            <div class="flex flex-col sm:justify-center items-center pt-6 sm:pt-0 w-full">
+            <div class="flex flex-col sm:justify-center items-center md:pt-20 sm:pt-3 w-full">
                 {{-- <div>
                     <a href="/" wire:navigate>
                         <x-application-logo class="w-100 h-20 fill-current text-gray-500" />
