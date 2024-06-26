@@ -5,6 +5,9 @@ namespace App\Orchid\Screens\Reference;
 use App\Orchid\Layouts\Reference\ReferenceEditLayout;
 use App\Orchid\Layouts\Reference\ReferenceFeedbackEditLayout;
 use Illuminate\Http\Request;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Orchid\Screen\Repository;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Fields\Group;
 use Orchid\Support\Facades\Layout;
@@ -46,7 +49,7 @@ class PublicReferenceFeedbackEditScreen extends Screen
 
         $this->feedback = $reference->feedback ?? new Feedback;
 
-        // dd($this->feedback);
+        // dd($this->reference);
         // $this->reference->candidate_employed_from = $this->reference->candidate_employed_from ? \Carbon\Carbon::parse($this->reference->candidate_employed_from)->format('Y/m/d') : null;
 
         return [
@@ -62,7 +65,7 @@ class PublicReferenceFeedbackEditScreen extends Screen
      */
     public function name(): ?string
     {
-        return 'RefereneFeedbackEditScreen';
+        return 'Referene Feedback';
     }
 
     /**
@@ -105,6 +108,28 @@ class PublicReferenceFeedbackEditScreen extends Screen
         ];
     }
 
+    public function view(Repository|array $httpQueryArguments = []): Factory|View
+    {
+        // return view('layouts.custom-platform-layout', [
+        //     'content' => $this->layout(), // Pass the layout components as data to the view
+        // ]);
+
+        $repository = is_a($httpQueryArguments, Repository::class)
+            ? $httpQueryArguments
+            : $this->buildQueryRepository($httpQueryArguments);
+
+        return view('layouts.custom-platform-layout', [
+            'name' => $this->name(),
+            'description' => $this->description(),
+            'commandBar' => $this->buildCommandBar($repository),
+            'layouts' => $this->build($repository),
+            'formValidateMessage' => $this->formValidateMessage(),
+            'needPreventsAbandonment' => $this->needPreventsAbandonment(),
+            'state' => $this->serializeStateWithPublicProperties($repository),
+        ]);
+
+    }
+
     /**
      * @param \Illuminate\Http\Request $request
      *
@@ -113,6 +138,8 @@ class PublicReferenceFeedbackEditScreen extends Screen
     public function saveFeedback(Request $request)
     {
         // dd($request->all());
+        // dd($request->input('reference.id'));
+        // dd($this->reference);
 
         $request->validate([
             'reference.name' => 'required|string',
@@ -122,16 +149,26 @@ class PublicReferenceFeedbackEditScreen extends Screen
             'feedback.declaration' => 'required',
         ]);
 
+        // \DB::enableQueryLog();
+        if (empty($this->reference) && !empty($request->input('reference.id'))) {
+            $this->reference = Reference::findOrFail($request->input('reference.id'));
+        }
+
+        // save reference data
+        $referenceData = collect($request->input('reference'))->except(['id', 'candidate_id'])->toArray();
+        $referenceData['completed_at'] = now();
+        $this->reference->updateOrCreate(['id' => $this->reference->id], $referenceData);
+        // dd(\DB::getQueryLog());
+
+        if (empty($this->feedback)) {
+            $this->feedback = $this->reference->feedback ?? new Feedback;
+        }
+
         // save feedback data
         $feedbackData = collect($request->input('feedback'))->except(['declaration'])->toArray();
         $feedbackData['candidate_id'] = $this->reference->candidate_id;
         $feedbackData['signed_at'] = now();
         $this->feedback->updateOrCreate(['reference_id' => $this->reference->id], $feedbackData);
-
-        // save reference data
-        $referenceData = collect($request->input('reference'))->except([])->toArray();
-        $referenceData['completed_at'] = now();
-        $this->reference->updateOrCreate(['candidate_id' => $this->reference->candidate_id], $referenceData);
 
         Toast::info('Reference feedback saved successfully.');
 

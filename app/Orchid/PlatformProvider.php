@@ -64,8 +64,8 @@ class PlatformProvider extends OrchidServiceProvider
 
             Menu::make(__('My Profile'))
                 ->icon('bs.person')
-                ->route('platform.profile'),
-                // ->permission('job.application.view.my'),
+                ->route('platform.profile')
+                ->permission('platform.index'),
 
             Menu::make(__('My Applications'))
                 ->icon('bs.person-workspace')

@@ -63,7 +63,7 @@
 
     <livewire:layout.navigation />
 
-    @if (!Auth::user()->hasVerifiedEmail())
+    @if (Auth::check() && !Auth::user()->hasVerifiedEmail())
         @livewire('components.email-verification-notice')
     @endif
 

@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\JobController;
-// use App\Orchid\Screens\Reference\PublicReferenceFeedbackEditScreen;
+use App\Orchid\Screens\Reference\PublicReferenceFeedbackEditScreen;
 use App\Livewire\AboutPage;
 use App\Livewire\HomePage;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +23,9 @@ Route::get('/about', AboutPage::class)->name('about');
 // Route::view('profile', 'profile')
 //     ->middleware(['auth'])
 //     ->name('profile');
+
+// Redefine the route for public access
+Route::screen('feedback/{reference?}/edit', PublicReferenceFeedbackEditScreen::class)->name('feedback.edit');
 
 require __DIR__.'/auth.php';
 

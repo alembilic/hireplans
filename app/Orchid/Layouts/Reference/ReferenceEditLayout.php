@@ -36,10 +36,15 @@ class ReferenceEditLayout extends Rows
 
 
         return [
-            // Input::make('reference.candidate_id')
-            //     ->type('hidden')
-            //     ->value($this->query->get('candidate')->id)
-            //     ->horizontal(),
+            Input::make('reference.id')
+                ->type('hidden')
+                ->value($this->query->get('referece')->id ?? null)
+                ->horizontal(),
+
+            Input::make('reference.candidate_id')
+                ->type('hidden')
+                ->value($this->query->get('candidate')->id ?? null)
+                ->horizontal(),
 
             HtmlField::make('referee_details')
                 ->label('<h2 class="fw-boldx text-xl">Referee details</h2>')
