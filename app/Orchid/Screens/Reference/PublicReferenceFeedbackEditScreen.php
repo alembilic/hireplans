@@ -20,6 +20,8 @@ use Illuminate\Validation\Rule;
 use Orchid\Support\Facades\Toast;
 use Illuminate\Database\Eloquent\Builder;
 use App\Models\ReferenceCandidateFeedback as Feedback;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ReferenceRequestMail;
 
 class PublicReferenceFeedbackEditScreen extends Screen
 {
@@ -190,6 +192,9 @@ class PublicReferenceFeedbackEditScreen extends Screen
         $feedbackData['candidate_id'] = $this->reference->candidate_id;
         $feedbackData['signed_at'] = now();
         $this->feedback->updateOrCreate(['reference_id' => $this->reference->id], $feedbackData);
+
+        // Mail::to($this->reference->email)->send(new ReferenceRequestMail($this->reference));
+        // Mail::to($this->reference->email)->cc(config('company.email'))->send(new ReferenceRequestMail($this->reference));
 
         // Toast::info('Reference feedback submitted successfully.');
         session()->flash('feedback_submitted', 'Reference feedback submitted successfully. <br>Thank you for your time.');

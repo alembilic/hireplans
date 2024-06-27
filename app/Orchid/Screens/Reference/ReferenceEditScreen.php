@@ -16,6 +16,8 @@ use Orchid\Support\Color;
 use Illuminate\Validation\Rule;
 use Orchid\Support\Facades\Toast;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ReferenceRequestMail;
 
 class ReferenceEditScreen extends Screen
 {
@@ -126,10 +128,16 @@ class ReferenceEditScreen extends Screen
         $referenceData = $request->input('reference');
         $referenceData['code'] = HelperFunc::generateRandomCode(8);
 
-        $this->candidate->references()->create($referenceData);
+        $reference = $this->candidate->references()->create($referenceData);
 
         // $referenceData = $request->collect('reference')->except([])->toArray();
         // $candidate->references()->fill($referenceData)->save();
+
+
+        // Mail::to($this->reference->email)->send(new ReferenceRequestMail($this->reference));
+        if ($reference->email) {
+            Mail::to($reference->email)->cc(config('mail.company.email'))->send(new ReferenceRequestMail($reference));
+        }
 
         Toast::info('Reference added successfully.');
 
