@@ -12,6 +12,8 @@
             <div class="mt-5 text-center">
                 @if (!auth()->check())
                     <a href="{{ route('login') }}" class="bg-yellow-600 text-white p-2 px-4 rounded mt-4 lg:mt-0 ml-0 lg:ml-6">Login/Register to apply</a>
+                @elseif ($job->candidateProfileRequired())
+                    <a href="{{ route('platform.profile') }}" class="bg-yellow-600 text-white p-2 px-4 rounded mt-4 lg:mt-0 ml-0 lg:ml-6">Complete your profile to apply</a>
                 @elseif ($job->canApply())
                     <a href="{{ route('platform.job_application.create', ['job' => $job]) }}" target="_blank" class="bg-yellow-600 text-white p-2 px-4 rounded mt-4 lg:mt-0 ml-0 lg:ml-6">Apply</a>
                 @endif

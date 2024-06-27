@@ -51,16 +51,22 @@
             });
         </script>
     </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100 relative">
+    <body class="font-sans antialiased flex flex-col min-h-screen">
+        <div class="flex flex-col flex-grow">
             <livewire:layout.navigation />
 
             <!-- Page Content -->
-            <main class="content-wrapper">
+            <main class="flex-grow content-wrapper">
                 {{ $slot }}
             </main>
 
-            @livewireScripts
         </div>
+
+        <footer class="bg-gray-800 text-white text-center py-3">
+            <p>&copy; {{date('Y')}} {{ config('app.name') }}. All rights reserved.</p>
+            <a href="https://barasoft.co.uk" target="_blank" rel="noopener" class="m-5">
+                Developed by BaraSoft
+            </a>
+        </footer>
     </body>
 </html>

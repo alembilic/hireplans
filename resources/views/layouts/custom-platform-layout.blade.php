@@ -14,7 +14,7 @@
         {{-- </div> --}}
 
     <div class="max-w-7xl xw-full mx-auto p-0 h-100">
-        <div class="workspace workspace-limit xw-full pt-0 pt-md-0 mb-4 mb-md-0 d-flex flex-column h-100">
+        <div class="workspace workspace-limit xw-full pt-0 pt-md-0 mb-4 mb-md-0 d-flex flex-column xh-100">
             {{-- <livewire:layout.navigation /> --}}
 
             <div class="container mx-auto">

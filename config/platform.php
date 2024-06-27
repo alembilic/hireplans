@@ -164,7 +164,7 @@ return [
 
     'template' => [
         'header' => 'orchid.brand.header',
-        'footer' => '',
+        'footer' => 'partials.footer',
     ],
 
     /*
@@ -224,7 +224,8 @@ return [
      */
 
     'notifications' => [
-        'enabled'  => true,
+        // 'enabled'  => true,
+        'enabled'  => false,
         'interval' => 60,
     ],
 

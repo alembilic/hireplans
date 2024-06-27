@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Orchid\Screen\AsSource;
 use Orchid\Filters\Filterable;
 use Orchid\Filters\Types\Like;
@@ -48,13 +49,28 @@ class Job extends Model
      * Check if the user can apply for a job.
      */
     public function canApply() {
-        $candidateId = auth()->user()->candidate->id ?? null;
+        $candidateId = Auth::user()->candidate->id ?? null;
 
         if (!$candidateId) {
             return false;
         }
 
+        if (!Auth::user()->hasAccess('job.apply')) {
+            return false;
+        }
+
         return !$this->jobApplications()->where('candidate_id', $candidateId)->exists();
+    }
+
+    /**
+     *
+     */
+    public function candidateProfileRequired() {
+        if (!Auth::user()->hasAccess('job.apply')) {
+            return false;
+        }
+
+        return (bool) !Auth::user()->candidate;
     }
 
     /**
