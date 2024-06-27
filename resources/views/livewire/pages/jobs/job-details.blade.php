@@ -8,9 +8,12 @@
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
             @include('livewire.pages.jobs.job-details-content', ['job' => $job])
+
             <div class="mt-5 text-center">
-                @if ($job->canApply())
-                    <a href="{{ route('platform.job_application.create', ['job' => $job]) }}" target="_blank" class="bg-blue-500 text-white p-2 px-4 rounded mt-4 lg:mt-0 ml-0 lg:ml-6">Apply</a>
+                @if (!auth()->check())
+                    <a href="{{ route('login') }}" class="bg-yellow-600 text-white p-2 px-4 rounded mt-4 lg:mt-0 ml-0 lg:ml-6">Login/Register to apply</a>
+                @elseif ($job->canApply())
+                    <a href="{{ route('platform.job_application.create', ['job' => $job]) }}" target="_blank" class="bg-yellow-600 text-white p-2 px-4 rounded mt-4 lg:mt-0 ml-0 lg:ml-6">Apply</a>
                 @endif
                 <a href="{{ route('jobs.listings', ['page' => session('page', 1)]) }}" class="bg-gray-500 text-white p-2 rounded mt-4 lg:mt-0 ml-0 lg:ml-6">Back to job listing</a>
             </div>

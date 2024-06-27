@@ -11,7 +11,7 @@
     <!-- Additional Content -->
     <div class="bg-white py-12">
         <div class="container max-w-7xl mx-auto px-4">
-            <h2 class="text-3xl font-bold mb-4">Hello, great seeing you here!</h2>
+            <h2 class="text-3xl font-bold text-yellow-700 mb-4">Hello, great seeing you here!</h2>
             <p class="text-lg mb-6">
                 <p class="mb-4">We're a team of associates, ex-colleagues, and now colleagues again, who have a passion for helping others with their dream of working overseas. It's our way of giving back after over 20 years of teaching and working internationally, particularly in the Gulf region.</p>
                 <p class="mb-4">HirePlans prides itself as a boutique search firm, connecting outstanding talents with premium international schools, as well as leading engineering and construction companies in Saudi Arabia and beyond.</p>

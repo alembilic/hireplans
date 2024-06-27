@@ -7,6 +7,10 @@
 
 /* Path: resources/css/custom.css */
 
+:root {
+    --bs-dark-rgb: 40, 40, 40;
+}
+
 /* This CSS ensures that the height: 100vh; is only applied on screens wider than 1024px */
 /* @media (min-width: 1024px) { */
 @media (min-width: 1200px) {
@@ -16,20 +20,22 @@
 }
 
 /* link color */
-.bg-white a,
-.dropzone .dz-preview a,
-.dropzone-wrapper .dz-preview a,
-.editor-preview-side a,
-.layout a {
-    color: #027bff;
+.custom-workspace-container .bg-white a,
+.custom-workspace-container .dropzone .dz-preview a,
+.custom-workspace-container .dropzone-wrapper .dz-preview a,
+.custom-workspace-container .editor-preview-side a,
+.custom-workspace-container .layout a {
+    /* color: #0052ab; */
+    /* color: #ab9600; */
+    color: #ca8a03;
 }
 
-.bg-white a.text-primary:hover,
-.dropzone .dz-preview a.text-primary:hover,
-.dropzone-wrapper .dz-preview a.text-primary:hover,
-.editor-preview-side a.text-primary:hover,
-.layout a.text-primary:hover {
-    color: #208aff!important;
+.custom-workspace-container .bg-white a.text-primary:hover,
+.custom-workspace-container .dropzone .dz-preview a.text-primary:hover,
+.custom-workspace-container .dropzone-wrapper .dz-preview a.text-primary:hover,
+.custom-workspace-container .editor-preview-side a.text-primary:hover,
+.custom-workspace-container .layout a.text-primary:hover {
+    color: #ca8a03!important;
 }
 
 .custom-upload-field {

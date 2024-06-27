@@ -23,7 +23,7 @@
     <!-- Additional Content -->
     <div class="bg-white py-12">
         <div class="container max-w-7xl mx-auto px-4">
-            <h2 class="text-3xl font-bold mb-4">Our Mission Statement</h2>
+            <h2 class="text-3xl font-bold text-yellow-700 mb-4">Our Mission Statement</h2>
             <p class="text-lg mb-6">Our mission is to connect talented individuals with rewarding career opportunities across the globe. We strive to provide a platform that enables job seekers to find their ideal roles and helps employers to discover exceptional talent.</p>
         </div>
     </div>
