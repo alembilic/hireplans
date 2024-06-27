@@ -126,7 +126,11 @@ class ReferenceEditLayout extends Rows
                 // ->required()
                 ->title(__('Employed From'))
                 ->placeholder(__('Employed From'))
-                ->value($this->query['reference']->candidate_employed_from ? \Carbon\Carbon::parse($this->query['reference']->candidate_employed_from)->format('Y-m-d') : null)
+                // ->value($this->query['reference']->candidate_employed_from ? \Carbon\Carbon::parse($this->query['reference']->candidate_employed_from)->format('Y-m-d') : null)
+                ->value(function () {
+                    $reference = $this->query->get('referece');
+                    return $reference && $reference->candidate_employed_from ? \Carbon\Carbon::parse($reference->candidate_employed_from)->format('Y-m-d') : null;
+                })
                 ->horizontal(),
 
             Input::make('reference.candidate_employed_to')
@@ -134,7 +138,11 @@ class ReferenceEditLayout extends Rows
                 // ->required()
                 ->title(__('Employed To'))
                 ->placeholder(__('Employed To'))
-                ->value($this->query['reference']->candidate_employed_to ? \Carbon\Carbon::parse($this->query['reference']->candidate_employed_to)->format('Y-m-d') : null)
+                // ->value($this->query['reference']->candidate_employed_to ? \Carbon\Carbon::parse($this->query['reference']->candidate_employed_to)->format('Y-m-d') : null)
+                ->value(function () {
+                    $reference = $this->query->get('referece');
+                    return $reference && $this->query->get('referece')->candidate_employed_to ? \Carbon\Carbon::parse($this->query->get('referece')->candidate_employed_to)->format('Y-m-d') : null;
+                })
                 ->horizontal(),
 
             Select::make('reference.candidate_job_type')

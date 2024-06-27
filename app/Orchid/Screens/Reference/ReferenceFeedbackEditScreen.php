@@ -36,15 +36,24 @@ class ReferenceFeedbackEditScreen extends Screen
      *
      * @return array
      */
-    public function query(Reference $reference): iterable
+    public function query(Reference $reference, Request $request): iterable
     {
         $reference->load('candidate');
         $reference->load('candidate.user');
         $reference->load('feedback');
 
         $this->reference = $reference;
-
         $this->feedback = $reference->feedback ?? new Feedback;
+
+        // dd($this->reference);
+
+        // Retrieve the "code" parameter from the query string
+        $code = $request->query('code');
+
+        // Validate the code (example validation logic)
+        if (empty($code) || $code !== $this->reference->code) {
+            abort(403, 'Unauthorized.');
+        }
 
         // dd($this->feedback);
         // $this->reference->candidate_employed_from = $this->reference->candidate_employed_from ? \Carbon\Carbon::parse($this->reference->candidate_employed_from)->format('Y/m/d') : null;

@@ -39,15 +39,28 @@ class PublicReferenceFeedbackEditScreen extends Screen
      *
      * @return array
      */
-    public function query(Reference $reference): iterable
+    public function query(Reference $reference, Request $request): iterable
     {
         $reference->load('candidate');
         $reference->load('candidate.user');
         $reference->load('feedback');
 
         $this->reference = $reference;
-
         $this->feedback = $reference->feedback ?? new Feedback;
+
+        // dd($this->reference);
+
+        // Retrieve the "code" parameter from the query string
+        $code = $request->query('code');
+
+        // Validate the code (example validation logic)
+        if (empty($code) || $code !== $this->reference->code) {
+            abort(403, 'Unauthorized.');
+        }
+
+        if (!empty($this->feedback->signed_at)) {
+            abort(403, 'This feedback already submitted.');
+        }
 
         // dd($this->reference);
         // $this->reference->candidate_employed_from = $this->reference->candidate_employed_from ? \Carbon\Carbon::parse($this->reference->candidate_employed_from)->format('Y/m/d') : null;
@@ -85,6 +98,14 @@ class PublicReferenceFeedbackEditScreen extends Screen
      */
     public function layout(): iterable
     {
+        if (session()->has('feedback_submitted')) {
+            return [
+                Layout::view('partials.notification_message', [
+                    'message' => session('feedback_submitted'),
+                ]),
+            ];
+        }
+
         return [
             Layout::block([ReferenceEditLayout::class])->vertical()->title('Professional Reference Information'),
             Layout::block([ReferenceFeedbackEditLayout::class])->vertical()->title('Feedback Details'),
@@ -170,9 +191,9 @@ class PublicReferenceFeedbackEditScreen extends Screen
         $feedbackData['signed_at'] = now();
         $this->feedback->updateOrCreate(['reference_id' => $this->reference->id], $feedbackData);
 
-        Toast::info('Reference feedback saved successfully.');
-
-        // return redirect()->route('platform.candidates.list');
+        // Toast::info('Reference feedback submitted successfully.');
+        session()->flash('feedback_submitted', 'Reference feedback submitted successfully. <br>Thank you for your time.');
+        // return redirect()->route('home');
     }
 
 

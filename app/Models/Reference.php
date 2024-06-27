@@ -27,6 +27,7 @@ class Reference extends Model
         'candidate_id',
         'name',
         'email',
+        'code',
         'phone',
         'relationship',
         'position',

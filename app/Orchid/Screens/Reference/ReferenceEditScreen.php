@@ -2,6 +2,7 @@
 
 namespace App\Orchid\Screens\Reference;
 
+use App\Helpers\HelperFunc;
 use App\Orchid\Layouts\Reference\ReferenceEditLayout;
 use App\Models\Candidate;
 use App\Models\Reference;
@@ -121,7 +122,11 @@ class ReferenceEditScreen extends Screen
             'reference.relationship' => 'required|string',
         ]);
 
-        $this->candidate->references()->create($request->input('reference'));
+
+        $referenceData = $request->input('reference');
+        $referenceData['code'] = HelperFunc::generateRandomCode(8);
+
+        $this->candidate->references()->create($referenceData);
 
         // $referenceData = $request->collect('reference')->except([])->toArray();
         // $candidate->references()->fill($referenceData)->save();
