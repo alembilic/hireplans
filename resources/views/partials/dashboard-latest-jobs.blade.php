@@ -13,7 +13,7 @@
             @endforeach
         </ul>
         <div class="card-footer">
-            <a href="{{ route('jobs.listings') }}" class="btn btn-default">View All Jobs</a>
+            <a href="{{ route('jobs.listings') }}" class="btn btn-default w-fit">View All Jobs</a>
         </div>
     </div>
 </div>
