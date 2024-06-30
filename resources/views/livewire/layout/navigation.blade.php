@@ -22,7 +22,7 @@ new class extends Component
         <div class="flex justify-between h-16 w-full">
             <!-- Logo -->
             <div class="shrink-0 flex items-center py-1">
-                <a href="{{ route('home') }}" wire:navigate>
+                <a href="{{ route('home') }}" >
                     @if(request()->is('portal*'))
                         <x-application-logo-portal class="block h-12 w-auto fill-current text-gray-800" />
                     @else
@@ -34,17 +34,17 @@ new class extends Component
             <!-- Navigation Links -->
             <div class="hidden sm:flex sm:items-center sm:space-x-8 w-full justify-center">
                 @if (auth()->user())
-                    <x-nav-link :href="route('platform.index')" :active="request()->routeIs('platform.index')" wire:navigate>
+                    <x-nav-link :href="route('platform.index')" :active="request()->routeIs('platform.index')" >
                         {{ __('Dashboard') }}
                     </x-nav-link>
                 @endif
-                <x-nav-link :href="route('home')" :active="request()->routeIs('home')" wire:navigate>
+                <x-nav-link :href="route('home')" :active="request()->routeIs('home')" >
                     {{ __('Home') }}
                 </x-nav-link>
-                <x-nav-link :href="route('about')" :active="request()->routeIs('about')" wire:navigate>
+                <x-nav-link :href="route('about')" :active="request()->routeIs('about')" >
                     {{ __('About us') }}
                 </x-nav-link>
-                <x-nav-link :href="route('jobs.listings')" :active="request()->routeIs('jobs.listings')" wire:navigate>
+                <x-nav-link :href="route('jobs.listings')" :active="request()->routeIs('jobs.listings')" >
                     {{ __('Jobs') }}
                 </x-nav-link>
             </div>
@@ -66,11 +66,11 @@ new class extends Component
                         </x-slot>
 
                         <x-slot name="content">
-                            <x-dropdown-link :href="route('platform.profile')" wire:navigate>
+                            <x-dropdown-link :href="route('platform.profile')" >
                                 {{ __('Profile') }}
                             </x-dropdown-link>
 
-                            <x-dropdown-link :href="route('platform.update-password')" wire:navigate>
+                            <x-dropdown-link :href="route('platform.update-password')" >
                                 {{ __('Update password') }}
                             </x-dropdown-link>
 
@@ -85,10 +85,10 @@ new class extends Component
                 </div>
             @else
                 <div class="hidden sm:flex sm:items-center sm:space-x-8 ms-auto whitespace-nowrap">
-                    <x-nav-link :href="route('login')" :active="request()->routeIs('login')" wire:navigate>
+                    <x-nav-link :href="route('login')" :active="request()->routeIs('login')" >
                         {{ __('Log in') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('register')" :active="request()->routeIs('register')" wire:navigate>
+                    <x-nav-link :href="route('register')" :active="request()->routeIs('register')" >
                         {{ __('Register') }}
                     </x-nav-link>
                 </div>
@@ -109,13 +109,13 @@ new class extends Component
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden bg-gray-100">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('home')" :active="request()->routeIs('home')" wire:navigate>
+            <x-responsive-nav-link :href="route('home')" :active="request()->routeIs('home')" >
                 {{ __('Home') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('about')" :active="request()->routeIs('about')" wire:navigate>
+            <x-responsive-nav-link :href="route('about')" :active="request()->routeIs('about')" >
                 {{ __('About us') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('jobs.listings')" :active="request()->routeIs('jobs.listings')" wire:navigate>
+            <x-responsive-nav-link :href="route('jobs.listings')" :active="request()->routeIs('jobs.listings')" >
                 {{ __('Jobs') }}
             </x-responsive-nav-link>
         </div>
@@ -131,11 +131,11 @@ new class extends Component
 
             <div class="mt-3 space-y-1">
                 @if (auth()->user())
-                    <x-responsive-nav-link :href="route('platform.profile')" wire:navigate>
+                    <x-responsive-nav-link :href="route('platform.profile')" >
                         {{ __('Profile') }}
                     </x-responsive-nav-link>
 
-                    <x-responsive-nav-link :href="route('platform.update-password')" wire:navigate>
+                    <x-responsive-nav-link :href="route('platform.update-password')" >
                         {{ __('Update password') }}
                     </x-responsive-nav-link>
 
@@ -146,11 +146,11 @@ new class extends Component
                         </x-responsive-nav-link>
                     </button>
                 @else
-                    <x-responsive-nav-link :href="route('login')" wire:navigate>
+                    <x-responsive-nav-link :href="route('login')" >
                         {{ __('Log in') }}
                     </x-responsive-nav-link>
 
-                    <x-responsive-nav-link :href="route('register')" wire:navigate>
+                    <x-responsive-nav-link :href="route('register')" >
                         {{ __('Register') }}
                     </x-responsive-nav-link>
                 @endif
