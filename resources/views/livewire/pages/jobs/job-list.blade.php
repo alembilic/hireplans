@@ -16,7 +16,7 @@
         @foreach($jobs as $job)
             <div class="job-item border p-6 rounded shadow flex flex-col lg:flex-row items-center">
                 <img src="{{ $job->employer->logo }}" alt="Company Logo" class="w-20 h-20 mr-0 lg:mr-6 mb-4 lg:mb-0"> <!-- Replace with actual image source -->
-                <div class="flex-1 text-center lg:text-left">
+                <div class="flex-1 xxxtext-center lg:text-left">
                     <h3 class="text-2xl font-bold text-yellow-600">{{ $job->title }}</h3>
                     <p class="text-gray-600">{{ $job->employer->name }}</p>
                     <div class="flex flex-col lg:flex-row items-center lg:items-center text-gray-600 mt-2">
