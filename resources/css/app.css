@@ -1,0 +1,98 @@
+@import "bootstrap-icons/font/bootstrap-icons.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* Path: resources/css/custom.css */
+
+:root {
+    --bs-dark-rgb: 40, 40, 40;
+}
+
+/* This CSS ensures that the height: 100vh; is only applied on screens wider than 1024px */
+/* @media (min-width: 1024px) { */
+@media (min-width: 1200px) {
+    .aside.position-sticky {
+        height: 100vh;
+    }
+}
+
+/* link color */
+.custom-workspace-container .bg-white a,
+.custom-workspace-container .dropzone .dz-preview a,
+.custom-workspace-container .dropzone-wrapper .dz-preview a,
+.custom-workspace-container .editor-preview-side a,
+.custom-workspace-container .layout a {
+    /* color: #0052ab; */
+    /* color: #ab9600; */
+    color: #ca8a03;
+}
+
+.custom-workspace-container .bg-white a.text-primary:hover,
+.custom-workspace-container .dropzone .dz-preview a.text-primary:hover,
+.custom-workspace-container .dropzone-wrapper .dz-preview a.text-primary:hover,
+.custom-workspace-container .editor-preview-side a.text-primary:hover,
+.custom-workspace-container .layout a.text-primary:hover {
+    color: #ca8a03!important;
+}
+
+.custom-upload-field {
+    align-items: center!important;
+}
+.custom-upload-field .form-label {
+    /* margin-bottom: 0.5rem; */
+}
+.custom-upload-field .dropzone-wrapper {
+    /* width: 100%; */
+}
+
+
+.text-white {
+    --tw-text-opacity: 1!important;
+    color: rgb(255 255 255 / var(--tw-text-opacity))!important;
+}
+.bg-blue-500.text-white:hover {
+    --tw-bg-opacity: 0.8!important;
+    --tw-text-opacity: 1!important;
+    /* background-color: rgb(59 130 246 / var(--tw-bg-opacity))!important; */
+    color: rgb(255 255 255 / var(--tw-text-opacity))!important;
+}
+
+
+.page-platform-profile .picture-preview {
+    height: 100px;
+    width: auto;
+}
+
+
+@media (min-width: 768px) {
+    .feedback-details .form-group.row > .form-label {
+        width: 50%;
+    }
+
+    .feedback-details .form-group.row > .col.col-md-8 {
+        width: 50%;
+    }
+}
+.btn-default:not([disabled]):not(.disabled).active,
+.dropzone .dz-preview .btn-remove:not([disabled]):not(.disabled).active,
+.dropzone .dz-preview .show>.dropdown-toggle.btn-remove,
+.dropzone-wrapper .dz-preview .btn-remove:not([disabled]):not(.disabled).active,
+.dropzone-wrapper .dz-preview .show>.dropdown-toggle.btn-remove,
+.show>.btn-default.dropdown-toggle {
+    /* background-color: #f0f2f4!important;
+    border-color: #d1d8de!important; */
+    box-shadow: inset 0 3px 5px rgba(0,0,0,.125)!important;
+    /* color: #394247!important; */
+    /* cursor: default!important; */
+    background-color: #17a2b8!important;
+    border-color: #17a2b8!important;
+    color: #fff!important;
+}
+
+
+input {
+    color: #495057;
+}
