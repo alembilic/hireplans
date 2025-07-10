@@ -127,8 +127,18 @@
             </div>
         </footer>
 
-
-
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Hide empty Orchid command bar/title block if it contains no text
+                document.querySelectorAll('.command-bar-wrapper').forEach(function(wrapper) {
+                    console.log(wrapper);
+                    const header = wrapper.querySelector('header h1');
+                    if (header && header.textContent.trim() === '') {
+                        wrapper.style.display = 'none';
+                    }
+                });
+            });
+        </script>
 
     </body>
 </html>

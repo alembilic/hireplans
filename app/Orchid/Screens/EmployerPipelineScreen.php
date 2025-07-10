@@ -24,7 +24,7 @@ class EmployerPipelineScreen extends Screen
      */
     public function name(): ?string
     {
-        return 'Employer Pipeline';
+        return null;
     }
 
     /**

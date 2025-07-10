@@ -24,7 +24,7 @@ class JobPipelineScreen extends Screen
      */
     public function name(): ?string
     {
-        return 'Job Pipeline';
+        return null;
     }
 
     /**

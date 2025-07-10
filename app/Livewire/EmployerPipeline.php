@@ -70,6 +70,21 @@ class EmployerPipeline extends Component
         ]);
     }
 
+    public function deleteEmployer($employerId)
+    {
+        $employer = Employer::findOrFail($employerId);
+        // Optionally delete related user and jobs if needed
+        if ($employer->user) {
+            $employer->user->delete();
+        }
+        $employer->delete();
+        $this->loadEmployers();
+        $this->dispatch('status-updated', [
+            'message' => 'Employer deleted successfully!',
+            'employerId' => $employerId,
+        ]);
+    }
+
     public function getFilteredEmployers()
     {
         $employers = $this->employers;
