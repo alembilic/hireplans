@@ -42,6 +42,11 @@ class EmployerEditScreen extends Screen
     {
         $employer->load(['user']); // Eager load the user relationship
 
+        // Set default status for new employers
+        if (!$employer->exists) {
+            $employer->status = 1; // In Progress
+        }
+
         // Load the related user if the employer exists
         $user = $employer->exists ? $employer->user : new User();
 
@@ -151,12 +156,17 @@ class EmployerEditScreen extends Screen
         $employerData = $request->collect('employer')->except([])->toArray();
         $employerData['user_id'] = $user->id;
         $employerData['employer_ref'] = HelperFunc::generateReferenceNumber('employer');
+        
+        // Set default status to In Progress (1) if not provided
+        if (!isset($employerData['status'])) {
+            $employerData['status'] = 1;
+        }
 
         $employer->fill($employerData)->save();
 
-        Toast::info(__('Candidate saved'));
+        Toast::info(__('Employer saved'));
 
-        // return redirect()->route('platform.employers.view', $employer->id);
+        return redirect()->route('platform.employers.view', $employer->id);
     }
 
     /**

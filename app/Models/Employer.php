@@ -29,6 +29,7 @@ class Employer extends Model
         'website',
         'logo',
         'details',
+        'status',
     ];
 
     /**
@@ -38,6 +39,7 @@ class Employer extends Model
      */
     protected $casts = [
         'user_id' => 'integer',
+        'status' => 'integer',
     ];
 
     /**
@@ -62,6 +64,7 @@ class Employer extends Model
     protected $allowedFilters = [
            'id'         => Where::class,
            'name'  => Like::class,
+           'status'     => Where::class,
            'updated_at' => WhereDateStartEnd::class,
            'created_at' => WhereDateStartEnd::class,
     ];
@@ -75,6 +78,7 @@ class Employer extends Model
         'id',
         'employer_name',
         'employer_ref',
+        'status',
         'country',
         'user_name',
         'updated_at',

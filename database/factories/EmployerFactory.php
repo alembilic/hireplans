@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\User;
+use App\Enums\EmployerStatus;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Employer>
@@ -27,6 +28,7 @@ class EmployerFactory extends Factory
             'website' => fake()->url(),
             'logo' => fake()->imageUrl(),
             'details' => fake()->sentence(),
+            'status' => EmployerStatus::IN_PROGRESS->value, // Default to In Progress
         ];
     }
 }

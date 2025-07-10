@@ -127,157 +127,96 @@
 
             @if($selectedJobId)
                 <!-- Status Tabs -->
-                <div class="border-b border-gray-200 bg-gray-50 px-6">
-                    <nav class="-mb-px flex flex-wrap space-x-4 overflow-x-auto" aria-label="Tabs">
-                        <!-- All Tab -->
-                        <button wire:click="selectStatus(-1)"
-                            class="whitespace-nowrap py-3 px-2 border-b-2 font-medium text-sm transition-colors {{ $selectedStatus == -1 ? 'border-brand text-brand' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
-                            All
-                            <span
-                                class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $selectedStatus == -1 ? 'bg-brand/10 text-brand' : 'bg-gray-100 text-gray-800' }}">
-                                {{ $this->applications->count() }}
-                            </span>
-                        </button>
-                        @foreach(\App\Enums\JobApplicationStatus::cases() as $status)
-                            <button wire:click="selectStatus({{ $status->value }})"
-                                class="whitespace-nowrap py-3 px-2 border-b-2 font-medium text-sm transition-colors {{ $selectedStatus == $status->value ? 'border-brand text-brand' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
-                                {{ $status->label() }}
-                                <span
-                                    class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $selectedStatus == $status->value ? 'bg-brand/10 text-brand' : 'bg-gray-100 text-gray-800' }}">
-                                    {{ $statusCounts[$status->value] ?? 0 }}
-                                </span>
-                            </button>
-                        @endforeach
-                    </nav>
-                </div>
+                <x-status-tabs
+                    :statuses="\App\Enums\JobApplicationStatus::cases()"
+                    :selectedStatus="$selectedStatus"
+                    :statusCounts="$statusCounts"
+                    onStatusClick="selectStatus"
+                />
 
                 <!-- Applications Table -->
-                <div class="px-0 py-0">
-                    <div class="px-6 pt-4 pb-2">
-                        <h3 class="text-base font-semibold text-gray-900">
-                            @if($selectedStatus != -1)
-                                {{ \App\Enums\JobApplicationStatus::fromValue($selectedStatus)?->label() ?? 'Unknown' }}
-                                Applications
-                            @else
-                                All Applications
-                            @endif
-                            ({{ $this->getFilteredApplications()->count() }})
-                        </h3>
-                    </div>
-                    <div class="overflow-x-auto">
-                        @if($this->getFilteredApplications()->count() > 0)
-                            <table class="min-w-full w-full divide-y divide-gray-200">
-                                <thead class="bg-gray-50">
-                                    <tr>
-                                        <th
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Candidate</th>
-                                        <th
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Languages</th>
-                                        <th
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Skills</th>
-                                        <th
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Applied Date</th>
-                                        <th
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Status</th>
-                                        <th
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="bg-white divide-y divide-gray-200">
-                                    @foreach($this->getFilteredApplications() as $application)
-                                        <tr class="hover:bg-gray-50">
-                                            <td class="px-3 py-2 whitespace-nowrap">
-                                                <a href="{{ route('platform.candidates.view', $application->candidate->id) }}"
-                                                    class="flex items-center inline-flex items-center px-3 py-1.5 text-xs font-medium text-gray-700 rounded-md hover:bg-gray-200 transition-colors duration-200"
-                                                    title="View Candidate Profile">
-                                                    <div class="flex-shrink-0 h-10 w-10">
-                                                        <div
-                                                            class="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
-                                                            <span class="text-sm font-medium text-gray-700">
-                                                                {{ strtoupper(substr($application->candidate->user->name, 0, 2)) }}
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="ml-4">
-                                                        <div class="text-sm font-medium text-gray-900">
-                                                            {{ $application->candidate->user->name }}
-                                                        </div>
-                                                        <div class="text-sm text-gray-500">
-                                                            {{ $application->candidate->user->email }}
-                                                        </div>
-                                                    </div>
-                                                </a>
-
-                                            </td>
-                                            <td class="px-3 py-2 text-sm text-gray-900">
-                                                {{ $application->candidate->languages }}
-                                            </td>
-                                            <td class="px-3 py-2 text-sm text-gray-900">
-                                                {{ $application->candidate->skills }}
-                                            </td>
-                                            <td class="px-3 py-2 text-sm text-gray-500">
-                                                {{ $application->created_at->format('M d, Y') }}
-                                            </td>
-                                            <td class="px-3 py-2 whitespace-nowrap">
-                                                <!-- Status Dropdown -->
-                                                <select
-                                                    wire:change="updateApplicationStatus({{ $application->id }}, $event.target.value)"
-                                                    class="pl-2 pr-7 py-1 border border-gray-300 rounded-md text-xs focus:outline-none focus:ring-brand focus:border-brand">
-                                                    @foreach(\App\Enums\JobApplicationStatus::cases() as $statusOption)
-                                                        <option value="{{ $statusOption->value }}"
-                                                            @if($application->status == $statusOption->value) selected @endif>
-                                                            {{ $statusOption->label() }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            </td>
-                                            <td class="px-3 py-2 whitespace-nowrap text-sm font-medium">
-                                                <div class="flex items-center space-x-3">
-                                                    <a href="{{ route('platform.job_application.view', $application->id) }}"
-                                                        class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors duration-200"
-                                                        title="View Application Details">
-                                                        <i class="bi bi-file-earmark-text mr-1.5 text-base"></i>
-                                                        Application
-                                                    </a>
-                                                    <a href="{{ $application->getCv()?->path ?? '#' }}" target="_blank"
-                                                        class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors duration-200"
-                                                        title="View CV">
-                                                        <i class="bi bi-file-earmark-person mr-1.5 text-base"></i>
-                                                        CV
-                                                    </a>
-                                                    <a href="{{ $application->getCoverLetter()?->path ?? '#' }}" target="_blank"
-                                                        class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors duration-200"
-                                                        title="View Cover Letter">
-                                                        <i class="bi bi-envelope-paper mr-1.5 text-base"></i>
-                                                        Cover Letter
-                                                    </a>
-                                                </div>
-                                            </td>
-                                        </tr>
+                <x-base-table
+                    :columns="[
+                        ['label' => 'Candidate'],
+                        ['label' => 'Languages'],
+                        ['label' => 'Skills'],
+                        ['label' => 'Applied Date'],
+                        ['label' => 'Status'],
+                        ['label' => 'Actions'],
+                    ]"
+                    :emptyMessage="'No applications'"
+                    :emptyDescription="'No applications found in this status.'"
+                >
+                    @foreach($this->getFilteredApplications() as $application)
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-3 py-2 whitespace-nowrap">
+                                <a href="{{ route('platform.candidates.view', $application->candidate->id) }}"
+                                    class="flex items-center inline-flex items-center px-3 py-1.5 text-xs font-medium text-gray-700 rounded-md hover:bg-gray-200 transition-colors duration-200"
+                                    title="View Candidate Profile">
+                                    <div class="flex-shrink-0 h-10 w-10">
+                                        <div class="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
+                                            <span class="text-sm font-medium text-gray-700">
+                                                {{ strtoupper(substr($application->candidate->user->name, 0, 2)) }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="ml-4">
+                                        <div class="text-sm font-medium text-gray-900">
+                                            {{ $application->candidate->user->name }}
+                                        </div>
+                                        <div class="text-sm text-gray-500">
+                                            {{ $application->candidate->user->email }}
+                                        </div>
+                                    </div>
+                                </a>
+                            </td>
+                            <td class="px-3 py-2 text-sm text-gray-900">
+                                {{ $application->candidate->languages }}
+                            </td>
+                            <td class="px-3 py-2 text-sm text-gray-900">
+                                {{ $application->candidate->skills }}
+                            </td>
+                            <td class="px-3 py-2 text-sm text-gray-500">
+                                {{ $application->created_at->format('M d, Y') }}
+                            </td>
+                            <td class="px-3 py-2 whitespace-nowrap">
+                                <!-- Status Dropdown -->
+                                <select
+                                    wire:change="updateApplicationStatus({{ $application->id }}, $event.target.value)"
+                                    class="pl-2 pr-7 py-1 border border-gray-300 rounded-md text-xs focus:outline-none focus:ring-brand focus:border-brand">
+                                    @foreach(\App\Enums\JobApplicationStatus::cases() as $statusOption)
+                                        <option value="{{ $statusOption->value }}"
+                                            @if($application->status == $statusOption->value) selected @endif>
+                                            {{ $statusOption->label() }}
+                                        </option>
                                     @endforeach
-                                </tbody>
-                            </table>
-                        @else
-                            <div class="px-6 py-12 text-center">
-                                <div class="text-gray-500">
-                                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24"
-                                        stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                    </svg>
-                                    <h3 class="mt-2 text-sm font-medium text-gray-900">No applications</h3>
-                                    <p class="mt-1 text-sm text-gray-500">No applications found in this status.</p>
+                                </select>
+                            </td>
+                            <td class="px-3 py-2 whitespace-nowrap text-sm font-medium">
+                                <div class="flex items-center space-x-3">
+                                    <a href="{{ route('platform.job_application.view', $application->id) }}"
+                                        class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors duration-200"
+                                        title="View Application Details">
+                                        <i class="bi bi-file-earmark-text mr-1.5 text-base"></i>
+                                        Application
+                                    </a>
+                                    <a href="{{ $application->getCv()?->path ?? '#' }}" target="_blank"
+                                        class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors duration-200"
+                                        title="View CV">
+                                        <i class="bi bi-file-earmark-person mr-1.5 text-base"></i>
+                                        CV
+                                    </a>
+                                    <a href="{{ $application->getCoverLetter()?->path ?? '#' }}" target="_blank"
+                                        class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors duration-200"
+                                        title="View Cover Letter">
+                                        <i class="bi bi-envelope-paper mr-1.5 text-base"></i>
+                                        Cover Letter
+                                    </a>
                                 </div>
-                            </div>
-                        @endif
-                    </div>
-                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                </x-base-table>
             @else
                 <div class="px-6 py-12 text-center">
                     <div class="text-gray-500">

@@ -2,34 +2,17 @@
 
 namespace App\Orchid\Screens\Employer;
 
-use App\Orchid\Layouts\Candidate\CandidateNavItemsLayout;
-use App\Orchid\Layouts\Employer\EmployerFiltersLayout;
-use App\Orchid\Layouts\Employer\EmployerListLayout;
-use App\Orchid\Layouts\Employer\EmployerNavItemsLayout;
-use Orchid\Support\Facades\Layout;
 use Orchid\Screen\Screen;
-use App\Models\Employer;
-use App\Models\User;
-use Illuminate\Http\Request;
-use Orchid\Support\Facades\Toast;
+use Illuminate\Http\RedirectResponse;
 
 class EmployerListScreen extends Screen
 {
     /**
-     * Fetch data to be displayed on the screen.
-     *
-     * @return array
+     * Redirect to the employer pipeline instead of showing the old list
      */
     public function query(): iterable
     {
-        return [
-            'employers' => Employer::with('user')
-                ->leftJoin('users', 'employers.user_id', '=', 'users.id')
-                ->select('employers.*', 'employers.name as employer_name', 'users.name as user_name', 'users.email as user_email')
-                ->filters(EmployerFiltersLayout::class)
-                ->defaultSort('id', 'desc')
-                ->paginate(),
-        ];
+        return [];
     }
 
     /**
@@ -55,9 +38,7 @@ class EmployerListScreen extends Screen
     }
 
     /**
-     * The screen's action buttons.
-     *
-     * @return \Orchid\Screen\Action[]
+     * Redirect to the pipeline
      */
     public function commandBar(): iterable
     {
@@ -65,33 +46,19 @@ class EmployerListScreen extends Screen
     }
 
     /**
-     * The screen's layout elements.
-     *
-     * @return \Orchid\Screen\Layout[]|string[]
+     * Redirect to the pipeline
      */
     public function layout(): iterable
     {
-        return [
-            Layout::block([EmployerNavItemsLayout::class])->vertical(),
-
-            EmployerFiltersLayout::class,
-
-            EmployerListLayout::class
-        ];
+        return [];
     }
+
     /**
-     * Delete the employer
-     *
-     * @param Request $request
+     * Redirect to the employer pipeline
      */
-    public function remove(Request $request): void
+    public function mount()
     {
-        $employer = Employer::findOrFail($request->get('id'));
-
-        User::findOrFail($employer->user->id)->delete();
-
-        $employer->delete();
-
-        Toast::info(__('Employer was removed'));
+        // Redirect to the pipeline instead of showing the old list
+        redirect()->route('platform.employers.pipeline')->send();
     }
 }

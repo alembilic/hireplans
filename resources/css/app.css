@@ -392,3 +392,15 @@ html body .bg-secondary * {
 input {
     color: #495057;
 }
+
+.container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+    max-width: 1440px;
+}
+
+@media (min-width: 1200px) {
+    .aside {
+        max-width: 200px;
+        min-height: 100vh;
+        min-width: 16em;
+    }
+}

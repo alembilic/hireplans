@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Orchid\Screens\Candidate\CandidateEditScreen;
 use App\Orchid\Screens\Employer\EmployerListScreen;
+use App\Orchid\Screens\EmployerPipelineScreen;
 use App\Orchid\Screens\Examples\ExampleActionsScreen;
 use App\Orchid\Screens\Examples\ExampleCardsScreen;
 use App\Orchid\Screens\Examples\ExampleChartsScreen;
@@ -38,6 +39,7 @@ use Tabuna\Breadcrumbs\Trail;
 use App\Orchid\Screens\Candidate\CandidateListScreen;
 use App\Orchid\Screens\Candidate\CandidateViewScreen;
 use App\Orchid\Screens\Employer\EmployerEditScreen;
+use App\Orchid\Screens\Employer\EmployerViewScreen;
 
 use App\Http\Middleware\ReferenceAccessControl;
 
@@ -168,19 +170,19 @@ Route::screen('candidates/{candidate?}/view', CandidateViewScreen::class)
         ->push(__('Candidate details'), route('platform.candidates.view'))
     );
 
-// Platform > employers > List
+// Platform > employers > List (redirects to pipeline)
 Route::screen('employers/list', EmployerListScreen::class)
     ->name('platform.employers.list')
     ->breadcrumbs(fn (Trail $trail) => $trail
         ->parent('platform.index')
-        ->push(__('Employers'), route('platform.employers.list'))
+        ->push(__('Employers'), route('platform.employers.pipeline'))
     );
 
 // Platform > employers > Create
 Route::screen('employers/create', EmployerEditScreen::class)
     ->name('platform.employers.create')
     ->breadcrumbs(fn (Trail $trail) => $trail
-        ->parent('platform.employers.list')
+        ->parent('platform.employers.pipeline')
         ->push(__('Create employer'), route('platform.employers.create'))
     );
 
@@ -188,8 +190,24 @@ Route::screen('employers/create', EmployerEditScreen::class)
 Route::screen('employers/{employer?}/edit', EmployerEditScreen::class)
 ->name('platform.employers.edit')
     ->breadcrumbs(fn (Trail $trail, $employer) => $trail
-        ->parent('platform.employers.list')
+        ->parent('platform.employers.pipeline')
         ->push(__('Edit employer'), route('platform.employers.edit'))
+    );
+
+// Platform > employers > View
+Route::screen('employers/{employer?}/view', EmployerViewScreen::class)
+    ->name('platform.employers.view')
+    ->breadcrumbs(fn (Trail $trail, $employer) => $trail
+        ->parent('platform.employers.pipeline')
+        ->push(__('Employer details'), route('platform.employers.view'))
+    );
+
+// Platform > employers > Pipeline (main employers page)
+Route::screen('employer-pipeline', \App\Orchid\Screens\EmployerPipelineScreen::class)
+    ->name('platform.employers.pipeline')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push(__('Employers'), route('platform.employers.pipeline'))
     );
 
 // Platform > jobs > List

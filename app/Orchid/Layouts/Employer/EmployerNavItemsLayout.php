@@ -18,9 +18,9 @@ class EmployerNavItemsLayout extends TabMenu
             // Menu::make('Home')
             //     ->route(config('platform.index')),
 
-            Menu::make('Employers List')
-                ->route('platform.employers.list')
-                ->icon('bs.list'),
+            Menu::make('Employers')
+                ->route('platform.employers.pipeline')
+                ->icon('bs.funnel'),
 
             Menu::make('Create Employer')
                 ->route('platform.employers.create')
