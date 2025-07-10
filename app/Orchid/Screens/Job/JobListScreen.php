@@ -21,7 +21,7 @@ class JobListScreen extends Screen
     public function query(): iterable
     {
         return [
-            'jobs' => Job::with('employer')
+            'jobs' => Job::with(['employer', 'createdBy'])
                 ->leftJoin('employers', 'jobs.employer_id', '=', 'employers.id')
                 ->leftJoin('users', 'employers.user_id', '=', 'users.id')
                 ->select('jobs.*', 'employers.name AS employer_name',)

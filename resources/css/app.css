@@ -4,11 +4,38 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * CUSTOM BRAND STYLES - LOADS LAST TO OVERRIDE ALL OTHER STYLES
+ * This file contains custom brand colors and overrides for Orchid Platform
+ * All styles use !important to ensure they take precedence over Bootstrap and Orchid defaults
+ */
+
+@layer utilities {
+    /* Force highest priority for brand overrides */
+}
 
 /* Path: resources/css/custom.css */
 
 :root {
     --bs-dark-rgb: 40, 40, 40;
+    /* Custom Bootstrap Color Variables */
+    --bs-primary: #a16207;
+    --bs-primary-rgb: 202, 138, 3;
+    --bs-secondary: #2563eb;
+    --bs-secondary-rgb: 37, 99, 235;
+    /* Brand Colors from Tailwind Config */
+    --brand: #a16207;
+    --brand-rgb: 202, 138, 3;
+    --brand-dark: #a16207;
+    --brand-hover: #ca8a03;
+    --brand-light: rgba(202, 138, 3, 0.1);
+    --brand-lighter: rgba(202, 138, 3, 0.05);
+    --brand-focus: rgba(202, 138, 3, 0.25);
+    --secondary: #2563eb;
+    --secondary-rgb: 37, 99, 235;
+    --secondary-dark: #1d4ed8;
+    --secondary-light: rgba(37, 99, 235, 0.1);
+    --secondary-focus: rgba(37, 99, 235, 0.25);
 }
 
 /* This CSS ensures that the height: 100vh; is only applied on screens wider than 1024px */
@@ -19,15 +46,286 @@
     }
 }
 
+/* Orchid Color Palette Customization */
+/* Primary Color - Brand */
+.btn-primary,
+.btn-primary:not([disabled]):not(.disabled),
+.btn-primary:not([disabled]):not(.disabled):active,
+.btn-primary:not([disabled]):not(.disabled).active,
+.show > .btn-primary.dropdown-toggle {
+    background-color: var(--brand) !important;
+    border-color: var(--brand) !important;
+    color: #ffffff !important;
+}
+
+.btn-primary:hover,
+.btn-primary:not([disabled]):not(.disabled):hover {
+    background-color: var(--brand-dark) !important;
+    border-color: var(--brand-dark) !important;
+    color: #ffffff !important;
+}
+
+.btn-primary:focus,
+.btn-primary:not([disabled]):not(.disabled):focus {
+    box-shadow: 0 0 0 0.2rem var(--brand-focus) !important;
+}
+
+/* Secondary Color */
+.btn-secondary,
+.btn-secondary:not([disabled]):not(.disabled),
+.btn-secondary:not([disabled]):not(.disabled):active,
+.btn-secondary:not([disabled]):not(.disabled).active,
+.show > .btn-secondary.dropdown-toggle {
+    background-color: var(--secondary) !important;
+    border-color: var(--secondary) !important;
+    color: #ffffff !important;
+}
+
+.btn-secondary:hover,
+.btn-secondary:not([disabled]):not(.disabled):hover {
+    background-color: var(--secondary-dark) !important;
+    border-color: var(--secondary-dark) !important;
+    color: #ffffff !important;
+}
+
+.btn-secondary:focus,
+.btn-secondary:not([disabled]):not(.disabled):focus {
+    box-shadow: 0 0 0 0.2rem var(--secondary-focus) !important;
+}
+
+/* Navigation and Sidebar */
+.navbar-nav .nav-link.active,
+.navbar-nav .nav-link:hover,
+.navbar-nav .show > .nav-link {
+    color: var(--brand) !important;
+}
+
+.navbar-nav .nav-link.active::after {
+    background-color: var(--brand) !important;
+}
+
+/* Sidebar Navigation */
+.aside .nav-link.active,
+.aside .nav-link:hover {
+    color: var(--brand) !important;
+    background-color: var(--brand-light) !important;
+}
+
+.aside .nav-link.active::before {
+    background-color: var(--brand) !important;
+}
+
+/* Form Controls */
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--brand) !important;
+    box-shadow: 0 0 0 0.2rem var(--brand-focus) !important;
+}
+
+/* Checkboxes and Radio Buttons */
+.form-check-input:checked {
+    background-color: var(--brand) !important;
+    border-color: var(--brand) !important;
+}
+
+.form-check-input:focus {
+    box-shadow: 0 0 0 0.2rem var(--brand-focus) !important;
+}
+
+/* Dropdown Menus */
+.dropdown-item.active,
+.dropdown-item:active {
+    background-color: var(--brand) !important;
+    color: #ffffff !important;
+}
+
+.dropdown-item:hover {
+    background-color: var(--brand-light) !important;
+    color: var(--brand) !important;
+}
+
+/* Pagination */
+.page-link {
+    color: var(--brand) !important;
+    border-color: #dee2e6 !important;
+}
+
+.page-link:hover {
+    color: var(--brand-dark) !important;
+    background-color: #e9ecef !important;
+    border-color: #dee2e6 !important;
+}
+
+.page-item.active .page-link {
+    background-color: var(--brand) !important;
+    border-color: var(--brand) !important;
+    color: #ffffff !important;
+}
+
+/* Badges */
+.badge.bg-primary {
+    background-color: var(--brand) !important;
+}
+
+.badge.bg-secondary {
+    background-color: var(--secondary) !important;
+}
+
+/* Progress Bars */
+.progress-bar {
+    background-color: var(--brand) !important;
+}
+
+/* Alert Colors */
+.alert-primary {
+    color: #744700 !important;
+    background-color: var(--brand-light) !important;
+    border-color: rgba(202, 138, 3, 0.2) !important;
+}
+
+.alert-secondary {
+    color: #1e40af !important;
+    background-color: var(--secondary-light) !important;
+    border-color: rgba(37, 99, 235, 0.2) !important;
+}
+
+/* Table Styling */
+.table-hover tbody tr:hover {
+    background-color: var(--brand-lighter) !important;
+}
+
+/* Card Headers */
+.card-header {
+    background-color: var(--brand-lighter) !important;
+    border-bottom-color: var(--brand-light) !important;
+}
+
+/* Modal Headers */
+.modal-header {
+    background-color: var(--brand-lighter) !important;
+    border-bottom-color: var(--brand-light) !important;
+}
+
+/* Tooltips */
+.tooltip-inner {
+    background-color: var(--brand) !important;
+}
+
+.bs-tooltip-auto[data-popper-placement^=top] .tooltip-arrow::before,
+.bs-tooltip-top .tooltip-arrow::before {
+    border-top-color: var(--brand) !important;
+}
+
+/* Popovers */
+.popover-header {
+    background-color: var(--brand-light) !important;
+    border-bottom-color: rgba(202, 138, 3, 0.2) !important;
+}
+
+/* Breadcrumbs */
+.breadcrumb-item.active {
+    color: var(--brand) !important;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    color: #6c757d !important;
+}
+
+/* List Group */
+.list-group-item.active {
+    background-color: var(--brand) !important;
+    border-color: var(--brand) !important;
+    color: #ffffff !important;
+}
+
+/* Bootstrap Overrides - High Specificity to Override All */
+html body .text-primary,
+html body .text-primary * {
+    color: var(--brand) !important;
+}
+
+html body .text-secondary,
+html body .text-secondary * {
+    color: var(--secondary) !important;
+}
+
+html body .border-primary,
+html body .border-primary * {
+    border-color: var(--brand) !important;
+}
+
+html body .border-secondary,
+html body .border-secondary * {
+    border-color: var(--secondary) !important;
+}
+
+html body .bg-primary,
+html body .bg-primary * {
+    background-color: var(--brand) !important;
+}
+
+html body .bg-secondary,
+html body .bg-secondary * {
+    background-color: var(--secondary) !important;
+}
+
+/* Custom Orchid Specific Styles */
+/* Platform specific buttons */
+.btn.btn-primary,
+.btn.btn-primary:not([disabled]):not(.disabled) {
+    background-color: var(--brand) !important;
+    border-color: var(--brand) !important;
+    color: #ffffff !important;
+}
+
+.btn.btn-primary:hover {
+    background-color: var(--brand-dark) !important;
+    border-color: var(--brand-dark) !important;
+}
+
+.btn.btn-secondary,
+.btn.btn-secondary:not([disabled]):not(.disabled) {
+    background-color: var(--secondary) !important;
+    border-color: var(--secondary) !important;
+    color: #ffffff !important;
+}
+
+.btn.btn-secondary:hover {
+    background-color: var(--secondary-dark) !important;
+    border-color: var(--secondary-dark) !important;
+}
+
+/* Platform navigation */
+.platform-nav .nav-link.active,
+.platform-nav .nav-link:hover {
+    color: var(--brand) !important;
+}
+
+/* Platform sidebar */
+.platform-sidebar .nav-link.active,
+.platform-sidebar .nav-link:hover {
+    color: var(--brand) !important;
+    background-color: var(--brand-light) !important;
+}
+
+/* Platform forms */
+.platform-form .form-control:focus,
+.platform-form .form-select:focus {
+    border-color: var(--brand) !important;
+    box-shadow: 0 0 0 0.2rem var(--brand-focus) !important;
+}
+
+.workspace-limit {
+    max-width: unset !important;
+}
+
 /* link color */
 .custom-workspace-container .bg-white a,
 .custom-workspace-container .dropzone .dz-preview a,
 .custom-workspace-container .dropzone-wrapper .dz-preview a,
 .custom-workspace-container .editor-preview-side a,
 .custom-workspace-container .layout a {
-    /* color: #0052ab; */
-    /* color: #ab9600; */
-    color: #ca8a03;
+    color: var(--brand-hover);
 }
 
 .custom-workspace-container .bg-white a.text-primary:hover,
@@ -35,17 +333,15 @@
 .custom-workspace-container .dropzone-wrapper .dz-preview a.text-primary:hover,
 .custom-workspace-container .editor-preview-side a.text-primary:hover,
 .custom-workspace-container .layout a.text-primary:hover {
-    color: #ca8a03!important;
+    color: var(--brand)!important;
+}
+
+.bg-white a:hover, .dropzone .dz-preview a:hover, .dropzone-wrapper .dz-preview a:hover, .editor-preview-side a:hover, .layout a:hover {
+    color: var(--brand-hover) !important;
 }
 
 .custom-upload-field {
     align-items: center!important;
-}
-.custom-upload-field .form-label {
-    /* margin-bottom: 0.5rem; */
-}
-.custom-upload-field .dropzone-wrapper {
-    /* width: 100%; */
 }
 
 

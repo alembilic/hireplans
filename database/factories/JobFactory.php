@@ -6,6 +6,7 @@ use App\Helpers\HelperFunc;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Employer;
 use App\Models\Job;
+use App\Models\User;
 use Illuminate\Support\Str;
 
 /**
@@ -41,6 +42,7 @@ class JobFactory extends Factory
             'experience_level' => fake()->randomElement(array_keys(HelperFunc::getExperienceLevels())),
             'application_deadline' => fake()->optional()->date(),
             'is_active' => fake()->boolean(80) ? 1 : 0, // 80% chance of being active
+            'created_by' => User::factory(),
         ];
     }
 }

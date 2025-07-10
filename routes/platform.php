@@ -16,6 +16,7 @@ use App\Orchid\Screens\Examples\ExampleTextEditorsScreen;
 use App\Orchid\Screens\Job\JobEditScreen;
 use App\Orchid\Screens\Job\JobListScreen;
 use App\Orchid\Screens\Job\JobViewScreen;
+use App\Orchid\Screens\Job\JobPipelineScreen;
 use App\Orchid\Screens\JobApplication\JobApplicationEditScreen;
 use App\Orchid\Screens\JobApplication\JobApplicationListScreen;
 use App\Orchid\Screens\JobApplication\JobApplicationViewScreen;
@@ -221,6 +222,14 @@ Route::screen('jobs/{job?}/view', JobViewScreen::class)
     ->breadcrumbs(fn (Trail $trail, $job) => $trail
         ->parent('platform.jobs.list')
         ->push(__('Job details'), route('platform.jobs.view'))
+    );
+
+// Platform > jobs > Pipeline
+Route::screen('job-pipeline', JobPipelineScreen::class)
+    ->name('platform.jobs.pipeline')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.jobs.list')
+        ->push(__('Job Pipeline'), route('platform.jobs.pipeline'))
     );
 
 // Platform > job_applications > List

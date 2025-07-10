@@ -32,12 +32,22 @@ class Job extends Model
         'category',
         'experience_level',
         'application_deadline',
-        'is_active'
+        'is_active',
+        'created_by'
+    ];
+
+    protected $casts = [
+        'application_deadline' => 'date',
     ];
 
     public function employer()
     {
         return $this->belongsTo(Employer::class);
+    }
+
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 
     public function jobApplications()

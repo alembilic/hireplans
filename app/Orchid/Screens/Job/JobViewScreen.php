@@ -29,7 +29,7 @@ class JobViewScreen extends Screen
      */
     public function query(Job $job): iterable
     {
-        $job->load(['employer']); // Eager load the employer relationship
+        $job->load(['employer', 'createdBy']); // Eager load the employer and createdBy relationships
 
         return [
             'job' => $job,
@@ -68,6 +68,7 @@ class JobViewScreen extends Screen
             Sight::make('employer.name', 'Employer'),
             Sight::make('location', 'Location'),
             Sight::make('salary', 'Salary'),
+            Sight::make('createdBy.name', 'Recruiter'),
             Sight::make('job_type', 'Job Type')->render(fn(Job $job) => HelperFunc::getJobTypes()[$job->job_type] ?? $job->job_type),
             Sight::make('category', 'Category')->render(fn(Job $job) => HelperFunc::getJobCategories()[$job->category] ?? $job->category),
             Sight::make('experience_level', 'Experience Level')->render(fn(Job $job) => HelperFunc::getExperienceLevels()[$job->experience_level] ?? $job->experience_level),

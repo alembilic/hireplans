@@ -13,6 +13,7 @@ use App\Helpers\CountryHelper;
 use App\Helpers\HelperFunc;
 use Orchid\Screen\Fields\Relation;
 use App\Models\Employer;
+use App\Models\User;
 
 class JobEditLayout extends Rows
 {
@@ -42,6 +43,13 @@ class JobEditLayout extends Rows
                 ->fromModel(Employer::class, 'name')
                 ->title(__('Employer'))
                 ->required()
+                ->horizontal(),
+
+            Relation::make('job.created_by')
+                ->fromModel(User::class, 'name')
+                ->title(__('Recruiter'))
+                ->empty('Select a recruiter (current user for new jobs)')
+                ->help('Select the recruiter for this job. For new jobs, leave empty to use the current user.')
                 ->horizontal(),
 
             input::make('job.title')

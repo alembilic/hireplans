@@ -201,24 +201,13 @@ class HelperFunc
 
     public static function getApplicationStatus(JobApplication $jobApplication)
     {
-        $status = '';
-
-        switch ($jobApplication->status) {
-            case 0:
-                $status = '<span class="btn-warning px-2 py-1 text-xs font-semibold text-yellow-700 bg-yellow-100 rounded-full">Pending</span>';
-                break;
-            case 1:
-                $status = '<span class="btn-success px-2 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full">Accepted</span>';
-                break;
-            case 2:
-                $status = '<span class="btn-danger px-2 py-1 text-xs font-semibold text-red-700 bg-red-100 rounded-full">Rejected</span>';
-                break;
-            default:
-                # code...
-                break;
+        $status = \App\Enums\JobApplicationStatus::fromValue($jobApplication->status);
+        
+        if (!$status) {
+            return '<span class="px-2 py-1 text-xs font-semibold text-gray-700 bg-gray-100 rounded-full">Unknown</span>';
         }
 
-        return $status;
+        return '<span class="px-2 py-1 text-xs font-semibold rounded-full ' . $status->color() . '">' . $status->label() . '</span>';
     }
 
 

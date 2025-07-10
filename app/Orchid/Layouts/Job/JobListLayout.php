@@ -31,9 +31,11 @@ class JobListLayout extends Table
     protected function columns(): iterable
     {
         $out = [
-            TD::make('job_ref', 'Job Ref')
+            TD::make('job_ref', 'Job Ref'),
+            TD::make('createdBy.name', 'Recruiter')
                 ->sort()
                 ->cantHide()
+                ->render(fn (Job $job) => $job->createdBy->name ?? 'Unknown')
                 // ->filter(TD::FILTER_TEXT)
                 ,
 

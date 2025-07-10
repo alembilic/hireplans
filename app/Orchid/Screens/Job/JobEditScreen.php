@@ -14,7 +14,7 @@ use Orchid\Screen\Fields\Group;
 use Orchid\Screen\Actions\Button;
 use Orchid\Support\Color;
 use Orchid\Support\Facades\Toast;
-// use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth;
 
 class JobEditScreen extends Screen
 {
@@ -34,7 +34,7 @@ class JobEditScreen extends Screen
      */
     public function query(Job $job): iterable
     {
-        $job->load(['employer']); // Eager load the employer relationship
+        $job->load(['employer', 'createdBy']); // Eager load the employer and createdBy relationships
 
         return [
             'job' => $job,
@@ -117,6 +117,7 @@ class JobEditScreen extends Screen
         $request->validate([
             'job.employer_id' => 'required|exists:employers,id', // Check if the employer exists
             'job.title' => 'required|string|max:255',
+            'job.created_by' => 'nullable|exists:users,id', // Validate recruiter exists
         ]);
 
         $jobData = $request->input('job');
@@ -124,6 +125,11 @@ class JobEditScreen extends Screen
         $jobData['slug'] = HelperFunc::generateUniqueJobSlug($jobData['title']);
         // $jobData['is_active'] = (isset($jobData['is_active']) && $jobData['is_active'] === 'on') ? 1 : 0;
         $jobData['is_active'] = (isset($jobData['is_active']) && $jobData['is_active'] == 1) ? 1 : 0;
+
+        // Set recruiter field for new jobs if not provided
+        if (!$job->exists && !isset($jobData['created_by'])) {
+            $jobData['created_by'] = Auth::id();
+        }
 
         // ToDo: should not allow empty details. But there is a bug when editing the job details.
         if (!$jobData['details']) {
