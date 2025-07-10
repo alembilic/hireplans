@@ -11,6 +11,7 @@ use App\Orchid\Layouts\User\UserViewLayout;
 use App\Orchid\Layouts\Employer\EmployerViewLayout;
 use Orchid\Screen\Actions\Button;
 use Orchid\Support\Color;
+use Orchid\Screen\Actions\Link;
 
 class EmployerViewScreen extends Screen
 {
@@ -71,16 +72,13 @@ class EmployerViewScreen extends Screen
      */
     public function commandBar(): iterable
     {
-        return [
-            Button::make('Edit')
+        $actions = [];
+        if ($this->employer && $this->employer->id) {
+            $actions[] = Link::make('Edit')
                 ->route('platform.employers.edit', $this->employer)
-                ->type(Color::PRIMARY)
-                ->icon('bs.pencil'),
-            Button::make('Back to List')
-                ->route('platform.employers.list')
-                ->type(Color::SECONDARY)
-                ->icon('bs.arrow-left'),
-        ];
+                ->icon('bs.pencil');
+        }
+        return $actions;
     }
 
     /**
@@ -91,8 +89,6 @@ class EmployerViewScreen extends Screen
     public function layout(): iterable
     {
         return [
-            Layout::block([EmployerNavItemsLayout::class])->vertical(),
-
             Layout::block([UserViewLayout::class])->vertical()->title('Personal Details'),
 
             Layout::block([EmployerViewLayout::class])->vertical()->title('Employer Details'),

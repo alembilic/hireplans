@@ -12,6 +12,7 @@ use Orchid\Screen\Actions\Button;
 use Orchid\Support\Color;
 use Orchid\Screen\Fields\Group;
 use App\Helpers\HelperFunc;
+use Orchid\Screen\Actions\Link;
 
 class CandidateViewScreen extends Screen
 {
@@ -74,7 +75,14 @@ class CandidateViewScreen extends Screen
      */
     public function commandBar(): iterable
     {
-        return [];
+        return [
+            Link::make('Edit')
+                ->route('platform.candidates.edit', $this->candidate)
+                ->icon('bs.pencil'),
+            Link::make('Back to List')
+                ->route('platform.candidates.list')
+                ->icon('bs.arrow-left'),
+        ];
     }
 
     /**
@@ -88,8 +96,6 @@ class CandidateViewScreen extends Screen
         // dd($this->candidate->getCvAttachmentUrls());
 
         return [
-            Layout::block([CandidateNavItemsLayout::class])->vertical(),
-
             Layout::legend(
                 'candidate',
                 [

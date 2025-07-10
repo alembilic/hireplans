@@ -12,6 +12,7 @@ use App\Orchid\Layouts\Candidate\CandidateNavItemsLayout;
 use App\Orchid\Layouts\Candidate\CandidateFiltersLayout;
 use Illuminate\Http\Request;
 use Orchid\Support\Facades\Toast;
+use Orchid\Screen\Actions\Link;
 
 class CandidateListScreen extends Screen
 {
@@ -61,7 +62,11 @@ class CandidateListScreen extends Screen
      */
     public function commandBar(): iterable
     {
-        return [];
+        return [
+            Link::make('Add New Candidate')
+                ->icon('bs.plus-circle')
+                ->route('platform.candidates.create'),
+        ];
     }
 
     /**
@@ -73,8 +78,6 @@ class CandidateListScreen extends Screen
     {
         // dd($this->query());
         return [
-            Layout::block([CandidateNavItemsLayout::class])->vertical(),
-
             CandidateFiltersLayout::class,
 
             CandidateListLayout::class,

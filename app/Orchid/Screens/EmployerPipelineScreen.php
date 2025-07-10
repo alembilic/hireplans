@@ -4,6 +4,7 @@ namespace App\Orchid\Screens;
 
 use Orchid\Screen\Screen;
 use Orchid\Support\Facades\Layout;
+use Orchid\Screen\Actions\Link;
 
 class EmployerPipelineScreen extends Screen
 {
@@ -24,7 +25,7 @@ class EmployerPipelineScreen extends Screen
      */
     public function name(): ?string
     {
-        return null;
+        return 'Employers';
     }
 
     /**
@@ -34,7 +35,11 @@ class EmployerPipelineScreen extends Screen
      */
     public function commandBar(): iterable
     {
-        return [];
+        return [
+            Link::make('Add New Employer')
+                ->icon('bs.plus-circle')
+                ->route('platform.employers.create'),
+        ];
     }
 
     /**

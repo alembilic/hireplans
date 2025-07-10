@@ -10,6 +10,10 @@ use App\Orchid\Layouts\Job\JobFiltersLayout;
 use Orchid\Support\Facades\Layout;
 use Illuminate\Http\Request;
 use Orchid\Support\Facades\Toast;
+use Orchid\Screen\Actions\Button;
+use Orchid\Support\Color;
+use Illuminate\Support\Facades\Auth;
+use Orchid\Screen\Actions\Link;
 
 class JobListScreen extends Screen
 {
@@ -48,7 +52,15 @@ class JobListScreen extends Screen
      */
     public function commandBar(): iterable
     {
-        return [];
+        $actions = [];
+
+        if (Auth::user()->hasAccess('platform.systems.users')) {
+            $actions[] = Link::make('Add New Job')
+                        ->route('platform.jobs.create')
+                        ->icon('bs.plus-circle');
+        }
+
+        return $actions;
     }
 
     /**
@@ -59,7 +71,6 @@ class JobListScreen extends Screen
     public function layout(): iterable
     {
         return [
-            Layout::block([JobNavItemslayout::class])->vertical(),
             JobFiltersLayout::class,
             JobListLayout::class
         ];

@@ -15,6 +15,7 @@ use Orchid\Screen\Actions\Button;
 use Orchid\Support\Color;
 use Orchid\Support\Facades\Toast;
 use Illuminate\Support\Facades\Auth;
+use Orchid\Screen\Actions\Link;
 
 class JobEditScreen extends Screen
 {
@@ -72,7 +73,19 @@ class JobEditScreen extends Screen
      */
     public function commandBar(): iterable
     {
-        return [];
+        $actions = [];
+        if ($this->job && $this->job->id) {
+            $actions[] = Link::make('Pipeline')
+                ->icon('bs.funnel')
+                ->route('platform.jobs.pipeline', ['selectedJobId' => $this->job->id]);
+        }
+
+            $actions[] = Link::make('Back to List')
+                        ->route('platform.jobs.list')
+                        ->icon('bs.arrow-left');
+        
+
+        return $actions;
     }
 
     /**
@@ -83,8 +96,7 @@ class JobEditScreen extends Screen
     public function layout(): iterable
     {
         $out=  [
-            Layout::block([JobNavItemslayout::class])->vertical(),
-            Layout::block([JobEditLayout::class])->vertical()->title('Job Details'),
+            Layout::block([JobEditLayout::class])->vertical(),
 
             Layout::rows([
                 Group::make([

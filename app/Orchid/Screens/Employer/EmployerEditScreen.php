@@ -21,7 +21,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Hash;
 use Orchid\Platform\Models\Role;
-
+use Orchid\Screen\Actions\Link;
 class EmployerEditScreen extends Screen
 {
     /**
@@ -85,7 +85,10 @@ class EmployerEditScreen extends Screen
      */
     public function commandBar(): iterable
     {
-        return [];
+        $actions[] = Link::make('Back to List')
+            ->route('platform.employers.pipeline')
+            ->icon('bs.arrow-left');
+        return $actions;
     }
 
     /**
@@ -96,8 +99,6 @@ class EmployerEditScreen extends Screen
     public function layout(): iterable
     {
         return [
-            Layout::block([EmployerNavItemsLayout::class])->vertical(),
-
             Layout::block([UserEditLayout::class, UserPasswordLayout::class])->vertical()->title('Personal Details'),
 
             Layout::block([EmployerEditLayout::class])->vertical()->title('Employer Details'),

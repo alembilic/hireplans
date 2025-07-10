@@ -90,10 +90,12 @@ class JobListLayout extends Table
 
         // if (Auth::user()->hasAccess('platform.systems.users')) {
             $actions = [
+                Link::make(__('Pipeline'))
+                    ->route('platform.jobs.pipeline', ['selectedJobId' => $job->id])
+                    ->icon('bs.funnel'),
                 Link::make(__('Edit'))
                     ->route('platform.jobs.edit', $job->id)
                     ->icon('bs.pencil'),
-
                 Button::make(__('Delete'))
                     ->icon('bs.trash3')
                     ->confirm(__('Once this job is deleted, all of its resources and data will be permanently deleted. Before deleting this job, please download any data or information that you wish to retain.'))

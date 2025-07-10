@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Helpers\HelperFunc;
 // use Orchid\Attachment\File;
 use App\Orchid\Layouts\Candidate\CandidateAttachmentLayout;
-
+use Orchid\Screen\Actions\Link;
 // use Illuminate\Support\Facades\Log;
 
 class CandidateEditScreen extends Screen
@@ -100,7 +100,10 @@ class CandidateEditScreen extends Screen
      */
     public function commandBar(): iterable
     {
-        return [];
+        $actions[] = Link::make('Back to List')
+            ->route('platform.candidates.list')
+            ->icon('bs.arrow-left');
+        return $actions;
     }
 
     /**
@@ -111,9 +114,6 @@ class CandidateEditScreen extends Screen
     public function layout(): iterable
     {
         return [
-
-            Layout::block([CandidateNavItemsLayout::class])->vertical(),
-
             // Layout::view('block-title',['title' => 'Personal Details']),
             // UserEditLayout::class,
 

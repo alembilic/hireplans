@@ -13,6 +13,7 @@ use App\Models\Job;
 use App\Helpers\HelperFunc;
 use \Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use Orchid\Screen\Actions\Link;
 
 class JobViewScreen extends Screen
 {
@@ -53,7 +54,25 @@ class JobViewScreen extends Screen
      */
     public function commandBar(): iterable
     {
-        return [];
+        $actions = [];
+        
+        if (Auth::user()->hasAccess('platform.systems.users') && $this->job && $this->job->id) {
+            $actions[] = Link::make('Edit')
+                ->route('platform.jobs.edit', $this->job)
+                ->icon('bs.pencil');
+        }
+        
+        if ($this->job && $this->job->id) {
+            $actions[] = Link::make('Pipeline')
+                ->icon('bs.funnel')
+                ->route('platform.jobs.pipeline', ['selectedJobId' => $this->job->id]);
+        }
+        
+        $actions[] = Link::make('Back to List')
+            ->route('platform.jobs.list')
+            ->icon('bs.arrow-left');
+            
+        return $actions;
     }
 
     /**
@@ -99,7 +118,6 @@ class JobViewScreen extends Screen
             });
 
         $out = [
-            Layout::block([JobNavItemslayout::class])->vertical(),
             Layout::legend('job', $legendItems)->title('Job Details: ' . $this->job->title),
         ];
 

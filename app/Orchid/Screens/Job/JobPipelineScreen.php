@@ -4,6 +4,8 @@ namespace App\Orchid\Screens\Job;
 
 use Orchid\Screen\Screen;
 use Orchid\Support\Facades\Layout;
+use Orchid\Screen\Actions\Link;
+use Illuminate\Support\Facades\Auth;
 
 class JobPipelineScreen extends Screen
 {

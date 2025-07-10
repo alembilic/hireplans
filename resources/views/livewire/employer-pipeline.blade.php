@@ -1,14 +1,7 @@
 <div class="mt-6">
     <div class="bg-white rounded-lg shadow-sm border border-gray-200">
         <div x-data="{ open: false }">
-            <div class="flex flex-col flex-row items-center justify-between px-6 py-4 border-b border-gray-200 gap-4">
-                <div class="flex items-center">
-                    <h2 class="text-lg font-semibold text-gray-900">Employer Pipeline</h2>
-                </div>
-                <div class="flex">
-                    <x-create-employer-button class="w-full md:w-auto" />
-                </div>
-            </div>
+            
 
             <!-- Status Tabs and Label Row -->
             <x-status-tabs :statuses="\App\Enums\EmployerStatus::cases()" :selectedStatus="$selectedStatus"
