@@ -40,6 +40,8 @@ use App\Orchid\Screens\Candidate\CandidateListScreen;
 use App\Orchid\Screens\Candidate\CandidateViewScreen;
 use App\Orchid\Screens\Employer\EmployerEditScreen;
 use App\Orchid\Screens\Employer\EmployerViewScreen;
+use App\Orchid\Screens\TasksScreen;
+use App\Http\Controllers\GoogleAuthController;
 
 use App\Http\Middleware\ReferenceAccessControl;
 
@@ -209,6 +211,23 @@ Route::screen('employer-pipeline', \App\Orchid\Screens\EmployerPipelineScreen::c
         ->parent('platform.index')
         ->push(__('Employers'), route('platform.employers.pipeline'))
     );
+
+// Platform > Tasks
+Route::screen('tasks', TasksScreen::class)
+    ->name('platform.tasks')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push(__('Tasks'), route('platform.tasks'))
+    );
+
+// Google OAuth routes
+Route::get('tasks/connect-google', [GoogleAuthController::class, 'redirect'])
+    ->name('platform.tasks.connect-google')
+    ->middleware(['auth']);
+
+Route::get('tasks/google-callback', [GoogleAuthController::class, 'callback'])
+    ->name('platform.tasks.google-callback')
+    ->middleware(['auth']);
 
 // Platform > jobs > List
 Route::screen('jobs/list', JobListScreen::class)

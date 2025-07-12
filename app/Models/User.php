@@ -93,4 +93,12 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasOne(Candidate::class);
     }
+
+    /**
+     * Get the Google connection for the user.
+     */
+    public function googleConnection()
+    {
+        return $this->hasOne(GoogleConnection::class);
+    }
 }

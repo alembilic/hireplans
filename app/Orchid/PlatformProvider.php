@@ -76,6 +76,11 @@ class PlatformProvider extends OrchidServiceProvider
                 ->route('platform.job_applications.list')
                 ->permission('platform.systems.users'),
 
+            Menu::make(__('Tasks'))
+                ->icon('bs.check2-square')
+                ->route('platform.tasks')
+                ->permission('platform.systems.users'),
+
             Menu::make(__('References'))
                 ->icon('bs.person-fill-check')
                 ->route('platform.references.list')
