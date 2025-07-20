@@ -112,6 +112,7 @@ class JobEditScreen extends Screen
     public function saveJob(Job $job, Request $request)
     {
         // $employer = $job->employer;
+        // dd($request->all());
 
         $request->validate([
             'job.employer_id' => 'required|exists:employers,id', // Check if the employer exists
@@ -121,7 +122,8 @@ class JobEditScreen extends Screen
         $jobData = $request->input('job');
         $jobData['job_ref'] = HelperFunc::generateReferenceNumber('job');
         $jobData['slug'] = HelperFunc::generateUniqueJobSlug($jobData['title']);
-        $jobData['is_active'] = (isset($jobData['is_active']) && $jobData['is_active'] === 'on') ? 1 : 0;
+        // $jobData['is_active'] = (isset($jobData['is_active']) && $jobData['is_active'] === 'on') ? 1 : 0;
+        $jobData['is_active'] = (isset($jobData['is_active']) && $jobData['is_active'] == 1) ? 1 : 0;
 
         // ToDo: should not allow empty details. But there is a bug when editing the job details.
         if (!$jobData['details']) {

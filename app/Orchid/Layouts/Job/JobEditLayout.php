@@ -56,6 +56,7 @@ class JobEditLayout extends Rows
                 ->type('text')
                 ->max(255)
                 ->title(__('Location'))
+                ->required()
                 ->placeholder(__('Location'))
                 ->horizontal(),
 
@@ -69,18 +70,21 @@ class JobEditLayout extends Rows
             Select::make('job.job_type')
                 ->options(HelperFunc::getJobTypes())
                 ->title('Job Type')
+                ->required()
                 ->empty('Select a job type')
                 ->horizontal(),
 
             Select::make('job.category')
                 ->options(HelperFunc::getJobCategories())
                 ->title('Category')
+                ->required()
                 ->empty('Select a category')
                 ->horizontal(),
 
             Select::make('job.experience_level')
                 ->options(HelperFunc::getExperienceLevels())
                 ->title('Experience Level')
+                ->required()
                 ->empty('Select an experience level')
                 ->horizontal(),
 
@@ -98,7 +102,8 @@ class JobEditLayout extends Rows
             //     ->horizontal(),
             CheckBox::make('job.is_active')
                 ->title(__('Is Active'))
-                ->placeholder(__('Is Active'))
+                ->sendTrueOrFalse()
+                // ->placeholder(__('Is Active'))
                 ->horizontal(),
 
             // SimpleMDE::make('job.details')

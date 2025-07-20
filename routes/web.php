@@ -3,6 +3,8 @@
 use App\Http\Controllers\JobController;
 use App\Orchid\Screens\Reference\PublicReferenceFeedbackEditScreen;
 use App\Livewire\AboutPage;
+use App\Livewire\TermsPage;
+use App\Livewire\PrivacyPage;
 use App\Livewire\HomePage;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Pages\Jobs\JobDetails;
@@ -11,6 +13,8 @@ use App\Models\Job;
 // Route::view('/', 'welcome');
 Route::get('/', HomePage::class)->name('home');
 Route::get('/about', AboutPage::class)->name('about');
+Route::get('/terms-of-use', TermsPage::class)->name('terms-of-use');
+Route::get('/privacy-policy', PrivacyPage::class)->name('privacy-policy');
 
 // Route::view('dashboard', 'dashboard')
 //     ->middleware(['auth', 'verified'])

@@ -54,7 +54,6 @@ class UserEditLayout extends Rows
             Input::make('user.address_line_1')
                 ->type('text')
                 ->max(255)
-                ->required()
                 ->title(__('Address'))
                 ->placeholder(__('Hourse number and street'))
                 ->horizontal(),
@@ -62,7 +61,6 @@ class UserEditLayout extends Rows
             Input::make('user.city')
                 ->type('text')
                 ->max(255)
-                ->required()
                 ->title(__('City'))
                 ->placeholder(__('City'))
                 ->horizontal(),
@@ -70,7 +68,6 @@ class UserEditLayout extends Rows
             Input::make('user.postcode')
                 ->type('text')
                 ->max(255)
-                ->required()
                 ->title(__('Postcode'))
                 ->placeholder(__('Postcode'))
                 ->horizontal(),
@@ -84,13 +81,11 @@ class UserEditLayout extends Rows
                     ->options(CountryHelper::getCountries())
                     ->title('Country')
                     ->empty('Select a country')
-                    ->required()
                     ->horizontal(),
 
             Input::make('user.nationality')
                 ->type('text')
                 ->max(255)
-                ->required()
                 ->title(__('Nationality'))
                 ->placeholder(__('Nationality'))
                 ->horizontal(),
@@ -103,7 +98,8 @@ class UserEditLayout extends Rows
                 ->horizontal(),
 
             Picture::make('user.avatar')
-                ->title('Avatar')
+                ->title('Photo')
+                ->help('The photo needs to be a clear professional photo, without filters, sunglasses or facemarks and dark backgrounds. Niqab and religious wear are ok.')
                 ->horizontal()
                 ->targetRelativeUrl(),
         ];

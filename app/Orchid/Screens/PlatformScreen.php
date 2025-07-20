@@ -39,10 +39,11 @@ class PlatformScreen extends Screen
         //         'Job Applications' => JobApplication::where('employer_id', $employer->id)->count(),
         //     ]);
         } else if (Auth::user()->hasAccess('job.apply')) {
-            $candidate = Candidate::where('user_id', Auth::id())->first();
+            $candidate = Candidate::where('user_id', Auth::id())->first() ?? new Candidate();
+            // dd($candidate);
             $metrics = [
                 'jobs'     => Job::count(),
-                'myApplications' => JobApplication::where('candidate_id', $candidate->id)->count(),
+                'myApplications' => JobApplication::where('candidate_id', $candidate->id)->count() ?? null,
                 'myReferences' => $candidate->references->count(),
             ];
         }
@@ -128,7 +129,7 @@ class PlatformScreen extends Screen
                 Layout::view('partials.dashboard-latest-applications', [
                     'role' => 'candidate',
                     'title' => 'My Latest Applications',
-                    'applications' => JobApplication::latest()->where('candidate_id', $candidate_id)->limit(5)->get(),
+                    'applications' => JobApplication::latest()->where('candidate_id', $candidate_id)->limit(5)->get() ?? null,
                 ]),
             ]);
         }

@@ -17,7 +17,7 @@
         @livewireStyles
     </head>
 
-    <body class="flex flex-col min-h-screen font-sans text-gray-900 antialiased bg-cover bg-center" style="background-image: url('/images/skyscrapers-3850732_1920.jpg');">
+    <body class="flex flex-col min-h-screen font-sans text-gray-900 antialiased bg-cover bg-center" style="background-image: url('/images/graphic_collage_art-africa-PNG.png');">
         {{-- <div class="nav-container w-full bg-gray-100 relative"> --}}
             <livewire:layout.navigation />
         {{-- </div> --}}

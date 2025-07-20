@@ -25,8 +25,12 @@
                 height: 80px;
             }
             .bg-cover {
-                background-size: cover;
+                /* background-size: cover; */
+                background-size: contain;
                 background-attachment: fixed;
+            }
+            .h-screen {
+                height: 100vh;
             }
             .content-wrapper {
                 position: relative;
@@ -62,11 +66,69 @@
 
         </div>
 
-        <footer class="bg-gray-800 text-white text-center py-3">
-            <p>&copy; {{date('Y')}} {{ config('app.name') }}. All rights reserved.</p>
-            <a href="https://barasoft.co.uk" target="_blank" rel="noopener" class="m-5">
-                Developed by BaraSoft
-            </a>
+        <!-- <footer class="bg-gray-800 text-white text-center py-3">
+            <p>&copy; {{date('Y')}} {{ config('app.name') }}. All rights reserved. <a href="https://barasoft.co.uk" target="_blank" rel="noopener" class="text-sm">Developed by BaraSoft</a></p>
+            <div class="flex justify-center space-x-4">
+                <a href="/terms-of-use" class="m-5">Terms of Use</a>
+                <a href="/privacy-policy" class="m-5">Privacy Policy</a>
+            </div>
+        </footer> -->
+
+        <!-- <footer class="bg-gray-800 text-white py-6">
+            <div class="container mx-auto px-4">
+                <div class="flex flex-wrap justify-between items-center">
+
+                    <div class="w-full sm:w-1/3 text-center sm:text-left mb-4 sm:mb-0">
+                        <a href="/terms-of-use" class="block mb-2">Terms of Use</a>
+                        <a href="/privacy-policy" class="block">Privacy Policy</a>
+                    </div>
+
+                    <div class="w-full sm:w-1/3 text-center mb-4 sm:mb-0">
+                        <p>&copy; {{ date('Y') }} {{ config('app.name') }}. All rights reserved.</p>
+                        <p><a href="https://barasoft.co.uk" target="_blank" rel="noopener" class="text-sm">Developed by BaraSoft</a></p>
+                    </div>
+
+                    <div class="w-full sm:w-1/3 text-center sm:text-right">
+                        <p>Contact us:</p>
+                        <p>Email us at <a href="mailto:email1@example.com">email1@example.com</a> or <a href="mailto:email2@example.com">email2@example.com</a></p>
+                        <p>Call us at: <a href="tel:+123456789">+123456789</a> or <a href="tel:+987654321">+987654321</a></p>
+                    </div>
+                </div>
+            </div>
+        </footer> -->
+
+        <footer class="bg-gray-800 text-white py-6">
+            <div class="container mx-auto px-4">
+                <div class="flex flex-col sm:flex-row justify-between items-center">
+                    <!-- Left Column -->
+                    <div class="w-full sm:w-1/3 text-center sm:text-left mb-4 sm:mb-0">
+                        <div class="flex justify-center sm:justify-start space-x-4">
+                            <a href="/terms-of-use" class="text-sm hover:underline mr-3">Terms of Use</a>
+                            <a href="/privacy-policy" class="text-sm hover:underline">Privacy Policy</a>
+                        </div>
+                    </div>
+                    <!-- Center Column -->
+                    <div class="w-full sm:w-1/3 text-center mb-4 sm:mb-0">
+                        <p class="text-sm">&copy; {{ date('Y') }} {{ config('app.name') }}. All rights reserved.</p>
+                        <p class="text-sm"><a href="https://barasoft.co.uk" target="_blank" rel="noopener" class="hover:underline">Developed by BaraSoft</a></p>
+                    </div>
+                    <!-- Right Column -->
+                    <div class="w-full sm:w-1/3 text-center sm:text-right">
+                        <p class="text-md">Contact us:</p>
+                        <!-- <p class="text-sm">Email us at: <a href="mailto:email1@example.com" class="hover:underline">email1@example.com</a>
+                        Or: <a href="mailto:email2@example.com" class="hover:underline">email2@example.com</a></p>
+                        <p class="text-sm mt-4">Call us at:</p>
+                        <p class="text-sm"><a href="tel:+123456789" class="hover:underline">+123456789</a></p>
+                        <p class="text-sm"><a href="tel:+987654321" class="hover:underline">+987654321</a></p> -->
+                        <p class="text-sm">Email us at <a href="mailto:admin@hireplans.com">admin@hireplans.com</a> or <a href="mailto:enquiries@hireplans.com">enquiries@hireplans.com</a></p>
+                        <p class="text-sm">Call us at: <a href="tel:+443333031417">+443333031417</a> or <a href="tel:+442032398039">+442032398039</a></p>
+                    </div>
+                </div>
+            </div>
         </footer>
+
+
+
+
     </body>
 </html>

@@ -37,6 +37,7 @@ class UserPasswordLayout extends Rows
                 ->placeholder($placeholder)
                 ->title(__('Password'))
                 ->horizontal()
+                ->required()
                 ->autocomplete('new-password')
                 // ->addAttributes([
                 //     'onfocus' => "this.removeAttribute('readonly');",

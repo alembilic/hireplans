@@ -54,7 +54,8 @@ use App\Http\Middleware\ReferenceAccessControl;
 // Main
 Route::screen('/main', PlatformScreen::class)
     ->middleware(['auth'])
-    ->name('platform.main');
+    // ->name('platform.main')
+    ->name('dashboard');
 
 // Platform > Profile
 Route::screen('profile', UserProfileScreen::class)

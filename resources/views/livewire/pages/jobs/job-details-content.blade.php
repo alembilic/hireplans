@@ -19,7 +19,7 @@
     <div class="flex mr-4 mb-3 lg:mb-3">
         <span><i class="bi bi-calendar-event text-yellow-500 mr-2"></i><span class="text-gray-600 font-bold ml-1">Posted on:</span> {{ $job->created_at->format('d M Y') }}</span>
     </div>
-    <div class="flex mr-4 mb-3 lg:mb-3">
-        <p class="text-gray-800">{{ $job->details }}</p>
+    <div class="mr-4 mb-3 lg:mb-3">
+        <p class="text-gray-800">{!! $job->details !!}</p>
     </div>
 </div>

@@ -216,7 +216,7 @@ class UserProfileScreen extends Screen
 
         Toast::info(__('Profile saved'));
 
-        return redirect()->route('platform.main');
+        return redirect()->route('dashboard');
     }
 
 }

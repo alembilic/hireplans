@@ -37,7 +37,8 @@ class CandidateAttachmentLayout extends Rows
                             $html .= "
                                 <div class='file-link cv-link flex items-center justify-between p-2 border rounded'>
                                     <span class='text-blue-600'>{$link}</span>
-                                    <button class='btn-remove bg-red-500 text-white px-2 py-1 rounded hover:bg-red-700 transition' data-file-id='{$id}'>
+                                    <button class='btn-remove bg-red-500 text-white px-2 py-1 rounded hover:bg-red-700 transition' data-file-id='{$id}'
+                                        onclick=\"deleteCvFile('{$id}', this)\">
                                         Delete
                                     </button>
                                 </div>";
