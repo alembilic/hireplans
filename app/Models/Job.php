@@ -56,6 +56,14 @@ class Job extends Model
     }
 
     /**
+     * Get the meetings for the job.
+     */
+    public function meetings()
+    {
+        return $this->hasMany(Meeting::class);
+    }
+
+    /**
      * Check if the user can apply for a job.
      */
     public function canApply() {

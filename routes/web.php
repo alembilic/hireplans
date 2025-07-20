@@ -8,6 +8,7 @@ use App\Livewire\PrivacyPage;
 use App\Livewire\HomePage;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Pages\Jobs\JobDetails;
+// Schedule is now handled by Orchid platform
 use App\Models\Job;
 
 // Route::view('/', 'welcome');

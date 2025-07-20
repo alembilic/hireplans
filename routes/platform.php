@@ -41,6 +41,7 @@ use App\Orchid\Screens\Candidate\CandidateViewScreen;
 use App\Orchid\Screens\Employer\EmployerEditScreen;
 use App\Orchid\Screens\Employer\EmployerViewScreen;
 use App\Orchid\Screens\TasksScreen;
+use App\Orchid\Screens\ScheduleScreen;
 use App\Http\Controllers\GoogleAuthController;
 
 use App\Http\Middleware\ReferenceAccessControl;
@@ -219,6 +220,24 @@ Route::screen('tasks', TasksScreen::class)
         ->parent('platform.index')
         ->push(__('Tasks'), route('platform.tasks'))
     );
+
+// Platform > Schedule
+Route::screen('schedule', ScheduleScreen::class)
+    ->name('platform.schedule')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push(__('Schedule'), route('platform.schedule'))
+    );
+
+// Schedule AJAX routes
+Route::post('schedule/update-status', [ScheduleScreen::class, 'updateStatus'])
+    ->name('platform.schedule.update-status');
+
+Route::post('schedule/delete-meeting', [ScheduleScreen::class, 'deleteMeeting'])
+    ->name('platform.schedule.delete-meeting');
+
+Route::get('schedule/meeting/{id}', [ScheduleScreen::class, 'getMeeting'])
+    ->name('platform.schedule.get-meeting');
 
 // Google OAuth routes
 Route::get('tasks/connect-google', [GoogleAuthController::class, 'redirect'])

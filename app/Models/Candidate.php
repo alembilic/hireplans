@@ -154,4 +154,12 @@ class Candidate extends Model
     {
         return $this->hasMany(Reference::class);
     }
+
+    /**
+     * Get the meetings for the candidate.
+     */
+    public function meetings()
+    {
+        return $this->hasMany(Meeting::class);
+    }
 }

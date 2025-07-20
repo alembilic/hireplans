@@ -32,6 +32,8 @@ class GoogleTasksService
         $this->client->setRedirectUri(config('services.google.redirect_uri'));
         $this->client->setScopes([
             'https://www.googleapis.com/auth/tasks',
+            'https://www.googleapis.com/auth/calendar',
+            'https://www.googleapis.com/auth/calendar.events',
             'https://www.googleapis.com/auth/userinfo.email',
             'https://www.googleapis.com/auth/userinfo.profile'
         ]);

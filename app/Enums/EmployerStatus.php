@@ -4,13 +4,12 @@ namespace App\Enums;
 
 enum EmployerStatus: int
 {
+    case UNCONTACTED = 6;
     case IN_PROGRESS = 1;
     case ACTIVE_OPPORTUNITY = 2;
     case CURRENT_CLIENT = 3;
     case DEAD_OPPORTUNITY = 4;
     case DO_NOT_PROSPECT = 5;
-    case UNCONTACTED = 6;
-
     public function label(): string
     {
         return match($this) {
