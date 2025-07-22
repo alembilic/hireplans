@@ -6,6 +6,7 @@ use App\Models\Meeting;
 use App\Models\Job;
 use App\Models\Candidate;
 use App\Services\GoogleCalendarService;
+use App\Services\ActivityService;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
@@ -128,6 +129,23 @@ class MeetingModal extends Component
             $meetingData['created_by'] = Auth::id();
             $meeting = Meeting::create($meetingData);
             
+            // Load relationships for activity logging
+            $meeting->load(['candidate', 'job']);
+            
+            // Log meeting scheduled activity
+            try {
+                ActivityService::meetingScheduled($meeting->candidate, $meeting, Auth::id());
+            } catch (\Exception $e) {
+                \Log::error('Failed to log meeting activity: ' . $e->getMessage(), [
+                    'meeting_id' => $meeting->id,
+                    'candidate_id' => $meeting->candidate_id,
+                    'user_id' => Auth::id(),
+                    'error_trace' => $e->getTraceAsString()
+                ]);
+                // Don't fail the meeting creation, just log the error
+                session()->flash('warning', 'Meeting created but activity logging failed. Check logs for details.');
+            }
+            
             // Create Google Calendar event if enabled and user has Google connection
             if ($this->createGoogleEvent && Auth::user()->googleConnection) {
                 $this->createGoogleCalendarEvent($meeting);
@@ -136,6 +154,12 @@ class MeetingModal extends Component
             $this->dispatch('meeting-created', message: 'Meeting created successfully!');
         } else {
             $this->meeting->update($meetingData);
+            
+            // Load relationships for activity logging
+            $this->meeting->load(['candidate', 'job']);
+            
+            // Log meeting updated activity
+            ActivityService::meetingUpdated($this->meeting->candidate, $this->meeting, Auth::id());
             
             // Update Google Calendar event if it exists
             if ($this->meeting->google_event_id && Auth::user()->googleConnection) {

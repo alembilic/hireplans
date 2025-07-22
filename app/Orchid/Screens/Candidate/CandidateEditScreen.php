@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Helpers\HelperFunc;
 // use Orchid\Attachment\File;
 use App\Orchid\Layouts\Candidate\CandidateAttachmentLayout;
+use App\Services\ActivityService;
 use Orchid\Screen\Actions\Link;
 // use Illuminate\Support\Facades\Log;
 
@@ -100,9 +101,17 @@ class CandidateEditScreen extends Screen
      */
     public function commandBar(): iterable
     {
-        $actions[] = Link::make('Back to List')
-            ->route('platform.candidates.list')
-            ->icon('bs.arrow-left');
+        if ($this->candidate->exists) {
+            $actions[] = Link::make('View Profile')
+                ->route('platform.candidates.view', $this->candidate->id)
+                ->icon('bs.eye');
+        }
+        
+        $actions[] = 
+            Link::make('Back to List')
+                ->route('platform.candidates.list')
+                ->icon('bs.arrow-left');
+
         return $actions;
     }
 
@@ -178,9 +187,22 @@ class CandidateEditScreen extends Screen
 
         $candidateData = $request->collect('candidate')->except([])->toArray();
         $candidateData['user_id'] = $user->id;
-        $candidateData['candidate_ref'] = HelperFunc::generateReferenceNumber('candidate');
+        
+        // Check if this is a new candidate
+        $isNewCandidate = !$candidate->exists;
+        
+        if ($isNewCandidate) {
+            $candidateData['candidate_ref'] = HelperFunc::generateReferenceNumber('candidate');
+        }
 
         $candidate->fill($candidateData)->save();
+
+        // Log activity
+        if ($isNewCandidate) {
+            ActivityService::profileCreated($candidate);
+        } else {
+            ActivityService::profileUpdated($candidate, auth()->id());
+        }
 
         // Sync attachments for "candidate.cv"
         if ($request->has('candidate.cv')) {
@@ -189,7 +211,17 @@ class CandidateEditScreen extends Screen
             $currentCvAttachments = $candidate->attachment()->wherePivot('field_name', 'cv')->pluck('attachments.id')->toArray();
 
             $newCvAttachments = array_diff($cvAttachments, $currentCvAttachments);
-            $candidate->attachment()->attach($newCvAttachments, ['field_name' => 'cv']);
+            if (!empty($newCvAttachments)) {
+                $candidate->attachment()->attach($newCvAttachments, ['field_name' => 'cv']);
+                
+                // Log document upload activity for each new CV
+                foreach ($newCvAttachments as $attachmentId) {
+                    $attachment = \Orchid\Attachment\Models\Attachment::find($attachmentId);
+                    if ($attachment) {
+                        ActivityService::documentUploaded($candidate, 'CV', $attachment->original_name, auth()->id());
+                    }
+                }
+            }
         }
 
         // Sync attachments for "candidate.other-documents"
@@ -201,7 +233,17 @@ class CandidateEditScreen extends Screen
                 ->toArray();
 
             $newOtherDocumentsAttachments = array_diff($otherDocumentsAttachments, $currentOtherDocumentsAttachments);
-            $candidate->attachment()->attach($newOtherDocumentsAttachments, ['field_name' => 'other-documents']);
+            if (!empty($newOtherDocumentsAttachments)) {
+                $candidate->attachment()->attach($newOtherDocumentsAttachments, ['field_name' => 'other-documents']);
+                
+                // Log document upload activity for each new document
+                foreach ($newOtherDocumentsAttachments as $attachmentId) {
+                    $attachment = \Orchid\Attachment\Models\Attachment::find($attachmentId);
+                    if ($attachment) {
+                        ActivityService::documentUploaded($candidate, 'Other Document', $attachment->original_name, auth()->id());
+                    }
+                }
+            }
         }
         // $candidate->attachment()->syncWithoutDetaching(
         //     $request->input('candidate.other-documents', [])

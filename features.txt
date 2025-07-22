@@ -1,0 +1,106 @@
+## Hireplans Application Features
+
+### Current Features:
+1. User authentication and registration system
+2. Job listings and job details pages
+3. Candidate profile management (basic layout)
+4. Employer management system
+5. Job application system
+6. Google Calendar integration
+7. Email verification system
+8. Reference system with feedback
+9. Meeting scheduling functionality
+10. Task management system
+11. Admin dashboard with Orchid platform
+
+### Feature Updates Log:
+- Initial system setup with basic candidate, employer, and job management functionality
+- Updated candidate profile page with modern 2-column layout (Jan 2024):
+  * Left sidebar (1/3 width): Unified card containing profile, contact info, and basic details
+  * Right content area (2/3 width): Experience, skills, languages, documents, notes sections
+  * Modern card-based design with Bootstrap components and icons
+  * Responsive design for mobile and desktop using Bootstrap grid system
+  * Professional styling similar to LinkedIn profile layout
+  * Clickable email (mailto) and phone (tel) links for better usability
+  * Removed redundant Actions section (actions available in top command bar)
+  * Moved profile header into sidebar for more integrated layout
+  * Combined sidebar sections into one unified card for cleaner design
+  * Converted from Tailwind CSS to Bootstrap classes with proper responsive layout
+  * Replaced SVG icons with Bootstrap Icons for consistency
+  * Converted entire page to Livewire component for better maintainability
+  * Interactive skills and languages management using Livewire:
+    - Add new skills/languages with compact, well-sized input field and button layout
+    - Delete existing skills/languages with black X button on each badge (better visibility)
+    - Real-time updates without page reload using Livewire
+    - Duplicate prevention and validation
+    - Enter key support for quick adding
+    - Enhanced UI with proper button spacing (ms-1 gap), consistent sizing, and centered icons
+    - Compact input groups with max-width constraint (350px) for better visual balance
+    - Auto-focus on input fields for better UX
+    - No JavaScript required - all handled by Livewire
+  * Unified document display logic with edit page:
+    - CV and other document links now use same data structure and rendering as edit screen
+    - Consistent document handling across view and edit pages using HelperFunc::renderAttachmentsLinks
+    - Proper clickable links with target="_blank" for document downloads
+    - Unified attachment display with icons and proper formatting
+  * Comprehensive Activity Logging System (Jan 2024):
+    - Created activities database table with proper schema for timeline tracking
+    - Built Activity model with type constants, relationships, and helper methods
+    - Developed ActivityService for easy logging across the application
+    - Added "Show Activity" button below left sidebar (full-width button with activity icon)
+    - Toggle between normal profile view and activity timeline view
+    - Dynamic button styling (outline when inactive, filled when active)
+    - Real activity timeline display with:
+      * Chronological order (most recent first)
+      * Color-coded activity icons and badges
+      * Rich activity descriptions with metadata
+      * Clickable links to related jobs, applications, meetings
+      * Activity types: profile created/updated, job applied, status changed, meetings, notes, documents
+      * User attribution showing who performed each action
+      * Timestamps for all activities
+    - Add custom notes functionality:
+      * "Add Note" button in activity view
+      * Textarea input with validation and keyboard shortcuts (Ctrl+Enter)
+      * Notes appear in timeline with chat icon and user attribution
+    - Integrated activity logging into existing events:
+      * Profile creation and updates
+      * Document uploads (CV and other documents)
+      * Job applications - logged when candidates apply for positions
+      * Job application status changes - logged from job pipeline when recruiters update status
+      * Meeting scheduling - logged when meetings are created from schedule page
+      * Meeting updates - logged when meeting details are modified
+      * Meeting status changes - logged when meetings are marked as completed or status changed
+      * Automatic activity generation for all candidate interactions
+    - Job Pipeline Integration:
+      * Status changes in job pipeline automatically create activity logs
+      * Activities include old status, new status, job details, and who made the change
+      * Timeline shows complete application journey from application to final decision
+    - Meeting Management Integration:
+      * Meeting creation from schedule page automatically logs activity (both Livewire and Orchid ScheduleScreen)
+      * Meeting updates and status changes create timeline entries (Orchid admin interface)
+      * Activities include meeting details, job context, and scheduling information
+      * Special handling for meeting completion with detailed metadata
+      * Enhanced error handling and logging for troubleshooting activity creation
+      * Improved candidate profile links in schedule page (no new window opening)
+      * Clickable candidate names in schedule view link directly to candidate profiles
+      * Activity logging integrated into Orchid ScheduleScreen for create/update/status change operations
+      * Fixed meeting edit modal JavaScript compatibility issue in Orchid admin interface
+      * Resolved "Illegal invocation" and "loadMeetingData is not defined" JavaScript errors  
+      * Implemented proper Orchid modal pattern using async data loading and ModalToggle
+      * Replaced custom JavaScript with Orchid's built-in async modal functionality  
+      * Added asyncGetMeeting method for proper async modal data loading with ->async() method
+      * Used ->asyncParameters() to pass meeting ID to async modal handler
+      * Fixed "Cannot access offset of type string on string" error by returning proper array structure from asyncGetMeeting
+      * Ensured meeting data is returned as individual field values matching form field expectations
+      * Removed custom JavaScript in favor of Orchid's native modal system
+      * Enhanced activity timeline with custom-styled action links using modern CSS
+      * Replaced Bootstrap button classes with elegant custom `.activity-link` styles
+      * Added hover effects, subtle animations, and color-coded job/application links
+      * Improved visual hierarchy and user experience in candidate activity timeline
+      * Replaced all native heading tags (h1-h6) with Bootstrap typography classes to prevent CSS conflicts
+      * Used fw-bold fs-5 for section titles, fw-medium fs-6 for subsections, preventing global style overrides
+      * Enhanced typography consistency across the entire candidate profile page
+      * Added professional profile image section with circular avatar display
+      * Integrated UI Avatars service for automatic fallback profile images
+      * Added email verification badge overlay on profile image for visual verification status
+      * Displays candidate name, job title, and company prominently under profile image 

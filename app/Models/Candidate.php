@@ -162,4 +162,12 @@ class Candidate extends Model
     {
         return $this->hasMany(Meeting::class);
     }
+
+    /**
+     * Get the activities for the candidate.
+     */
+    public function activities()
+    {
+        return $this->hasMany(Activity::class)->orderBy('created_at', 'desc');
+    }
 }

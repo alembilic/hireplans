@@ -173,6 +173,8 @@ Route::screen('candidates/{candidate?}/view', CandidateViewScreen::class)
         ->push(__('Candidate details'), route('platform.candidates.view'))
     );
 
+
+
 // Platform > employers > List (redirects to pipeline)
 Route::screen('employers/list', EmployerListScreen::class)
     ->name('platform.employers.list')
@@ -236,8 +238,7 @@ Route::post('schedule/update-status', [ScheduleScreen::class, 'updateStatus'])
 Route::post('schedule/delete-meeting', [ScheduleScreen::class, 'deleteMeeting'])
     ->name('platform.schedule.delete-meeting');
 
-Route::get('schedule/meeting/{id}', [ScheduleScreen::class, 'getMeeting'])
-    ->name('platform.schedule.get-meeting');
+
 
 // Google OAuth routes
 Route::get('tasks/connect-google', [GoogleAuthController::class, 'redirect'])

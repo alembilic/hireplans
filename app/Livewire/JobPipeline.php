@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Enums\JobApplicationStatus;
 use App\Models\Job;
 use App\Models\JobApplication;
+use App\Services\ActivityService;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -92,8 +93,23 @@ class JobPipeline extends Component
     public function updateApplicationStatus($applicationId, $newStatus)
     {
         // Ensure status is int (in case from dropdown it's a string)
-        $application = JobApplication::findOrFail($applicationId);
-        $application->update(['status' => (int)$newStatus]);
+        $application = JobApplication::with(['candidate', 'job.employer'])->findOrFail($applicationId);
+        $oldStatus = $application->status;
+        $newStatusInt = (int)$newStatus;
+        
+        // Only log if status actually changed
+        if ($oldStatus !== $newStatusInt) {
+            $application->update(['status' => $newStatusInt]);
+            
+            // Log activity for the candidate
+            ActivityService::applicationStatusChanged(
+                $application->candidate,
+                $application,
+                $oldStatus,
+                $newStatusInt,
+                auth()->id()
+            );
+        }
         
         $this->loadApplications();
         

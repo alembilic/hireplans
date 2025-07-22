@@ -1,0 +1,7 @@
+---
+alwaysApply: true
+---
+Gererate file features.txt if it soesn't exist. 
+After each feature added, make a note about that feature and use it for future reference so old features are not overwritten.
+Let me know if I ask for something and it is conflicting with some feature.
+Add to that file project specific notes that would help make decisions like how to approach adding new features ex. using tailwind, each page should have title, using livewire instead of JS, or something that comes on during the interaction. This rule is to make the project more consistent over multiple interactions. I have noticed that sometimes FE or BE style can be different.

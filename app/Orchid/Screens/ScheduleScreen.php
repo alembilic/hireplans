@@ -98,7 +98,7 @@ class ScheduleScreen extends Screen
                     ->filter(Input::make())
                     ->render(function (Meeting $meeting) {
                         if ($meeting->candidate) {
-                            return '<a href="' . route('platform.candidates.edit', $meeting->candidate->id) . '" class="text-primary" target="_blank">'
+                            return '<a href="' . route('platform.candidates.view', $meeting->candidate->id) . '" class="text-primary">'
                                 . e($meeting->candidate->user->name) . '</a>';
                         }
                         return '-';
@@ -286,7 +286,8 @@ class ScheduleScreen extends Screen
             ->title('Edit Meeting')
             ->method('updateMeeting')
             ->applyButton('Update Meeting')
-            ->closeButton('Cancel'),
+            ->closeButton('Cancel')
+            ->async('asyncGetMeeting'),
         ];
     }
 
@@ -312,6 +313,22 @@ class ScheduleScreen extends Screen
         $meetingData['job_id'] = $meetingData['job_id'] ?: null;
 
         $meeting = Meeting::create($meetingData);
+
+        // Load relationships for activity logging
+        $meeting->load(['candidate', 'job']);
+        
+        // Log meeting scheduled activity
+        try {
+            \App\Services\ActivityService::meetingScheduled($meeting->candidate, $meeting, Auth::id());
+        } catch (\Exception $e) {
+            \Log::error('Failed to log meeting activity: ' . $e->getMessage(), [
+                'meeting_id' => $meeting->id,
+                'candidate_id' => $meeting->candidate_id,
+                'user_id' => Auth::id(),
+                'error_trace' => $e->getTraceAsString()
+            ]);
+            // Don't fail the meeting creation, just log the error
+        }
 
         // Create Google Calendar event if enabled and user has Google connection
         if ($request->get('create_google_event')) {
@@ -348,11 +365,27 @@ class ScheduleScreen extends Screen
             'meeting.phone_number' => 'nullable|string|max:20',
         ]);
 
-        $meetingData = $request->get('meeting');
+        $meetingData = $request->all()['meeting'];
         $meeting = Meeting::findOrFail($meetingData['id']);
         
         $meetingData['job_id'] = $meetingData['job_id'] ?: null;
         $meeting->update($meetingData);
+
+        // Load relationships for activity logging
+        $meeting->load(['candidate', 'job']);
+        
+        // Log meeting updated activity
+        try {
+            \App\Services\ActivityService::meetingUpdated($meeting->candidate, $meeting, Auth::id());
+        } catch (\Exception $e) {
+            \Log::error('Failed to log meeting update activity: ' . $e->getMessage(), [
+                'meeting_id' => $meeting->id,
+                'candidate_id' => $meeting->candidate_id,
+                'user_id' => Auth::id(),
+                'error_trace' => $e->getTraceAsString()
+            ]);
+            // Don't fail the meeting update, just log the error
+        }
 
         // Update Google Calendar event if it exists
         if ($meeting->google_event_id && Auth::user()->googleConnection) {
@@ -390,7 +423,28 @@ class ScheduleScreen extends Screen
         ]);
 
         $meeting = Meeting::findOrFail($request->get('id'));
-        $meeting->update(['status' => $request->get('status')]);
+        $oldStatus = $meeting->status;
+        $newStatus = $request->get('status');
+        
+        $meeting->update(['status' => $newStatus]);
+        
+        // Load relationships for activity logging
+        $meeting->load(['candidate', 'job']);
+        
+        // Log meeting status changed activity
+        try {
+            \App\Services\ActivityService::meetingStatusChanged($meeting->candidate, $meeting, $oldStatus, $newStatus, Auth::id());
+        } catch (\Exception $e) {
+            \Log::error('Failed to log meeting status change activity: ' . $e->getMessage(), [
+                'meeting_id' => $meeting->id,
+                'candidate_id' => $meeting->candidate_id,
+                'old_status' => $oldStatus,
+                'new_status' => $newStatus,
+                'user_id' => Auth::id(),
+                'error_trace' => $e->getTraceAsString()
+            ]);
+            // Don't fail the status update, just log the error
+        }
         
         Toast::info('Meeting status updated successfully!');
         
@@ -398,12 +452,26 @@ class ScheduleScreen extends Screen
     }
 
     /**
-     * Get meeting data for editing.
+     * Async method to load meeting data for the edit modal.
      */
-    public function getMeeting(Request $request, $id)
+    public function asyncGetMeeting(Meeting $meeting): array
     {
-        $meeting = Meeting::findOrFail($id);
-        return response()->json($meeting);
+        $meeting->load(['candidate.user', 'job']);
+        
+        return [
+            'meeting' => [
+                'id' => $meeting->id,
+                'title' => $meeting->title,
+                'type' => $meeting->type,
+                'scheduled_at' => $meeting->scheduled_at,
+                'duration_minutes' => $meeting->duration_minutes,
+                'candidate_id' => $meeting->candidate_id,
+                'job_id' => $meeting->job_id,
+                'meeting_link' => $meeting->meeting_link,
+                'phone_number' => $meeting->phone_number,
+                'description' => $meeting->description,
+            ],
+        ];
     }
 
     /**

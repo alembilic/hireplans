@@ -3,6 +3,7 @@
 namespace App\Orchid\Screens\JobApplication;
 
 use App\Helpers\HelperFunc;
+use App\Services\ActivityService;
 use Illuminate\Http\Request;
 use App\Models\Job;
 use App\Models\JobApplication;
@@ -137,7 +138,11 @@ class JobApplicationEditScreen extends Screen
         $applicationData['cover_letter'] = Arr::get($request->input('job_application.cover_letter'), 0, null);
         $application->fill($applicationData)->save();
 
-        // dd($applicationData);
+        // Load relationships for activity logging
+        $application->load(['job.employer', 'candidate']);
+        
+        // Log job application activity
+        ActivityService::jobApplied($application->candidate, $application);
 
         Toast::info(__('Your application was submitted successfully.'));
 

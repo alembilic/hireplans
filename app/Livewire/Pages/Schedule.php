@@ -5,6 +5,7 @@ namespace App\Livewire\Pages;
 use App\Models\Meeting;
 use App\Models\Job;
 use App\Models\Candidate;
+use App\Services\ActivityService;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -100,8 +101,36 @@ class Schedule extends Component
 
     public function updateStatus($meetingId, $status)
     {
-        $meeting = Meeting::findOrFail($meetingId);
+        $meeting = Meeting::with(['candidate', 'job'])->findOrFail($meetingId);
+        $oldStatus = $meeting->status;
         $meeting->update(['status' => $status]);
+        
+        // Log meeting status change activity if status actually changed
+        if ($oldStatus !== $status) {
+            if ($status === 'completed') {
+                // Use the specific completed activity type
+                ActivityService::log(
+                    $meeting->candidate,
+                    'meeting_completed',
+                    'Meeting Completed',
+                    "Meeting '{$meeting->title}' was marked as completed",
+                    [
+                        'meeting_id' => $meeting->id,
+                        'meeting_title' => $meeting->title,
+                        'meeting_type' => $meeting->type,
+                        'scheduled_at' => $meeting->scheduled_at->toISOString(),
+                        'job_id' => $meeting->job_id,
+                        'job_title' => $meeting->job->title ?? null,
+                        'old_status' => $oldStatus,
+                        'new_status' => $status,
+                    ],
+                    Auth::id()
+                );
+            } else {
+                // Use the general meeting updated activity type for other status changes
+                ActivityService::meetingUpdated($meeting->candidate, $meeting, Auth::id());
+            }
+        }
         
         $this->dispatch('meeting-status-updated', message: 'Meeting status updated successfully!');
     }
