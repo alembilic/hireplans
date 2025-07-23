@@ -407,6 +407,53 @@
                 </div>
             </div>
 
+            <!-- Languages Section -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <div class="fw-bold fs-5 d-flex align-items-center mb-3">
+                        <i class="bi bi-translate text-primary me-2"></i>
+                        Languages
+                    </div>
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+                        @foreach($this->languagesArray as $language)
+                            <span class="badge bg-success-subtle text-success-emphasis px-3 py-2 d-flex align-items-center">
+                                {{ $language }}
+                                <button type="button" class="btn-close ms-2 text-black" style="font-size: 0.6rem;" 
+                                        wire:click="removeLanguage('{{ $language }}')" 
+                                        aria-label="Remove language"></button>
+                            </span>
+                        @endforeach
+                    </div>
+                    
+                    @if($showLanguageInput)
+                        <div class="input-group input-group-sm mb-3" style="max-width: 350px;">
+                            <input type="text" class="form-control" 
+                                   placeholder="Enter new language" 
+                                   wire:model="newLanguage"
+                                   wire:keydown.enter="addLanguage"
+                                   autofocus>
+                            <button class="btn btn-success d-flex align-items-center justify-content-center" 
+                                    type="button" 
+                                    wire:click="addLanguage"
+                                    style="min-width: 45px;">
+                                <i class="bi bi-check"></i>
+                            </button>
+                            <button class="btn btn-outline-secondary d-flex align-items-center justify-content-center ms-1" 
+                                    type="button" 
+                                    wire:click="toggleLanguageInput"
+                                    style="min-width: 45px;">
+                                <i class="bi bi-x"></i>
+                            </button>
+                        </div>
+                        @error('newLanguage') <div class="text-danger small">{{ $message }}</div> @enderror
+                    @else
+                        <button type="button" class="btn btn-outline-success btn-sm px-3" wire:click="toggleLanguageInput">
+                            <i class="bi bi-plus me-1"></i>Add Language
+                        </button>
+                    @endif
+                </div>
+            </div>
+
             <!-- Job Applications Section -->
             <div class="card shadow-sm mb-4">
                 <div class="card-body">
@@ -536,53 +583,6 @@
                                 This candidate hasn't applied to any jobs yet.
                             </p>
                         </div>
-                    @endif
-                </div>
-            </div>
-
-            <!-- Languages Section -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-body">
-                    <div class="fw-bold fs-5 d-flex align-items-center mb-3">
-                        <i class="bi bi-translate text-primary me-2"></i>
-                        Languages
-                    </div>
-                    <div class="d-flex flex-wrap gap-2 mb-3">
-                        @foreach($this->languagesArray as $language)
-                            <span class="badge bg-success-subtle text-success-emphasis px-3 py-2 d-flex align-items-center">
-                                {{ $language }}
-                                <button type="button" class="btn-close ms-2 text-black" style="font-size: 0.6rem;" 
-                                        wire:click="removeLanguage('{{ $language }}')" 
-                                        aria-label="Remove language"></button>
-                            </span>
-                        @endforeach
-                    </div>
-                    
-                    @if($showLanguageInput)
-                        <div class="input-group input-group-sm mb-3" style="max-width: 350px;">
-                            <input type="text" class="form-control" 
-                                   placeholder="Enter new language" 
-                                   wire:model="newLanguage"
-                                   wire:keydown.enter="addLanguage"
-                                   autofocus>
-                            <button class="btn btn-success d-flex align-items-center justify-content-center" 
-                                    type="button" 
-                                    wire:click="addLanguage"
-                                    style="min-width: 45px;">
-                                <i class="bi bi-check"></i>
-                            </button>
-                            <button class="btn btn-outline-secondary d-flex align-items-center justify-content-center ms-1" 
-                                    type="button" 
-                                    wire:click="toggleLanguageInput"
-                                    style="min-width: 45px;">
-                                <i class="bi bi-x"></i>
-                            </button>
-                        </div>
-                        @error('newLanguage') <div class="text-danger small">{{ $message }}</div> @enderror
-                    @else
-                        <button type="button" class="btn btn-outline-success btn-sm px-3" wire:click="toggleLanguageInput">
-                            <i class="bi bi-plus me-1"></i>Add Language
-                        </button>
                     @endif
                 </div>
             </div>
