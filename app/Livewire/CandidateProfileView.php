@@ -23,7 +23,7 @@ class CandidateProfileView extends Component
 
     public function mount(Candidate $candidate, $cvLinks = [], $otherDocumentsLinks = [])
     {
-        $candidate->load(['user', 'attachment']);
+        $candidate->load(['user', 'attachment', 'jobApplications.job.employer']);
         $this->candidate = $candidate;
         $this->cvLinks = $cvLinks;
         $this->otherDocumentsLinks = $otherDocumentsLinks;

@@ -201,7 +201,13 @@ class HelperFunc
 
     public static function getApplicationStatus(JobApplication $jobApplication)
     {
-        $status = \App\Enums\JobApplicationStatus::fromValue($jobApplication->status);
+        // Check if status is already an enum instance
+        if ($jobApplication->status instanceof \App\Enums\JobApplicationStatus) {
+            $status = $jobApplication->status;
+        } else {
+            // If it's still an integer, convert it to enum
+            $status = \App\Enums\JobApplicationStatus::fromValue($jobApplication->status);
+        }
         
         if (!$status) {
             return '<span class="px-2 py-1 text-xs font-semibold text-gray-700 bg-gray-100 rounded-full">Unknown</span>';

@@ -34,6 +34,16 @@ class JobApplication extends Model
     ];
 
     /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'status' => \App\Enums\JobApplicationStatus::class,
+        'viewed_at' => 'datetime',
+    ];
+
+    /**
      * The attributes for which you can use filters in url.
      *
      * @var array

@@ -103,4 +103,17 @@
       * Added professional profile image section with circular avatar display
       * Integrated UI Avatars service for automatic fallback profile images
       * Added email verification badge overlay on profile image for visual verification status
-      * Displays candidate name, job title, and company prominently under profile image 
+      * Displays candidate name, job title, and company prominently under profile image
+      * Added comprehensive Job Applications section displaying application history
+      * Shows job title, company, application status with color-coded badges and icons
+      * Displays application date, job location, and cover letter preview
+      * Status-specific icons (send, eye, people, check-circle, x-circle) for visual clarity
+      * Includes direct links to view full application details
+      * Handles empty state with helpful messaging when no applications exist
+      * Fixed status display by properly mapping JobApplicationStatus enum values to labels
+      * Added enum casting to JobApplication model for proper status handling
+      * Status badges now correctly show: Applied, Longlist, Shortlist, Screening, Interviewing, Hired, Rejected
+      * Enhanced status logic with proper enum instance checking and fallback handling
+      * Fixed cover letter display to show downloadable file link instead of raw text content
+      * Cover letter now appears as clickable download button with file icon and original filename
+      * Added proper error handling for missing cover letter files 

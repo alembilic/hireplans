@@ -407,6 +407,139 @@
                 </div>
             </div>
 
+            <!-- Job Applications Section -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <div class="fw-bold fs-5 d-flex align-items-center mb-3">
+                        <i class="bi bi-file-earmark-person text-primary me-2"></i>
+                        Job Applications
+                    </div>
+                    
+                    @if($candidate->jobApplications && $candidate->jobApplications->count() > 0)
+                        <div class="row g-3">
+                            @foreach($candidate->jobApplications->sortByDesc('created_at') as $application)
+                            <div class="col-md-6">
+                                <div class="border rounded-3 p-3 bg-light">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <div class="flex-grow-1">
+                                            <div class="fw-medium text-dark mb-4">
+                                                {{ $application->job->title ?? 'Job Title Not Available' }}
+                                                <span class="text-muted small ms-3">
+                                                    <i class="bi bi-building me-1"></i>
+                                                    {{ $application->job->employer->name ?? 'Company Not Available' }}
+                                                </span>
+                                            </div>
+                                        
+                                            <div class="d-flex flex-wrap gap-2 align-items-center">
+                                                <span class="badge 
+                                                    @if($application->status instanceof \App\Enums\JobApplicationStatus)
+                                                        @switch($application->status)
+                                                            @case(\App\Enums\JobApplicationStatus::APPLIED)
+                                                                bg-info-subtle text-info-emphasis
+                                                                @break
+                                                            @case(\App\Enums\JobApplicationStatus::LONGLIST)
+                                                            @case(\App\Enums\JobApplicationStatus::SHORTLIST)
+                                                            @case(\App\Enums\JobApplicationStatus::SCREENING)
+                                                                bg-warning-subtle text-warning-emphasis
+                                                                @break
+                                                            @case(\App\Enums\JobApplicationStatus::INTERVIEWING)
+                                                                bg-primary-subtle text-primary-emphasis
+                                                                @break
+                                                            @case(\App\Enums\JobApplicationStatus::HIRED)
+                                                                bg-success-subtle text-success-emphasis
+                                                                @break
+                                                            @case(\App\Enums\JobApplicationStatus::REJECTED)
+                                                                bg-danger-subtle text-danger-emphasis
+                                                                @break
+                                                            @default
+                                                                bg-secondary-subtle text-secondary-emphasis
+                                                        @endswitch
+                                                    @else
+                                                        bg-secondary-subtle text-secondary-emphasis
+                                                    @endif
+                                                ">
+                                                    <i class="bi 
+                                                        @if($application->status instanceof \App\Enums\JobApplicationStatus)
+                                                            @switch($application->status)
+                                                                @case(\App\Enums\JobApplicationStatus::APPLIED)
+                                                                    bi-send
+                                                                    @break
+                                                                @case(\App\Enums\JobApplicationStatus::LONGLIST)
+                                                                @case(\App\Enums\JobApplicationStatus::SHORTLIST)
+                                                                @case(\App\Enums\JobApplicationStatus::SCREENING)
+                                                                    bi-eye
+                                                                    @break
+                                                                @case(\App\Enums\JobApplicationStatus::INTERVIEWING)
+                                                                    bi-people
+                                                                    @break
+                                                                @case(\App\Enums\JobApplicationStatus::HIRED)
+                                                                    bi-check-circle
+                                                                    @break
+                                                                @case(\App\Enums\JobApplicationStatus::REJECTED)
+                                                                    bi-x-circle
+                                                                    @break
+                                                                @default
+                                                                    bi-clock
+                                                            @endswitch
+                                                        @else
+                                                            bi-clock
+                                                        @endif
+                                                    me-1"></i>
+                                                    @if($application->status instanceof \App\Enums\JobApplicationStatus)
+                                                        {{ $application->status->label() }}
+                                                    @else
+                                                        {{ ucfirst($application->status) }}
+                                                    @endif
+                                                </span>
+                                                <small class="text-muted ms-2">
+                                                    <i class="bi bi-calendar-event me-1"></i>
+                                                    Applied {{ $application->created_at->format('M d, Y') }}
+                                                </small>
+                                                @if($application->job->location)
+                                                <small class="text-muted ms-2">
+                                                    <i class="bi bi-geo-alt me-1"></i>
+                                                    {{ $application->job->location }}
+                                                </small>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    @if($application->cover_letter)
+                                    <div class="mt- pt-2 border-top">
+                                        <small class="text-muted fw-medium ">Cover Letter:</small>
+                                            @php
+                                                $coverLetter = $application->getCoverLetter();
+                                            @endphp
+                                            @if($coverLetter)
+                                                <a href="{{ $coverLetter->url }}" 
+                                                   target="_blank" 
+                                                   class="btn btn-sm inline">
+                                                    <i class="bi bi-file-earmark-text me-1"></i>
+                                                    {{ $coverLetter->original_name ?? 'Cover Letter' }}
+                                                    <i class="bi bi-download ms-1"></i>
+                                                </a>
+                                            @else
+                                                <small class="text-muted">Cover letter file not found</small>
+                                            @endif
+                                    </div>
+                                    @endif
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="text-center py-4">
+                            <i class="bi bi-file-earmark-x text-muted mb-3" style="font-size: 3rem;"></i>
+                            <div class="fw-bold fs-6 text-muted mb-1">No Job Applications</div>
+                            <p class="text-muted small mb-0">
+                                This candidate hasn't applied to any jobs yet.
+                            </p>
+                        </div>
+                    @endif
+                </div>
+            </div>
+
             <!-- Languages Section -->
             <div class="card shadow-sm mb-4">
                 <div class="card-body">

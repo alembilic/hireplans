@@ -170,4 +170,12 @@ class Candidate extends Model
     {
         return $this->hasMany(Activity::class)->orderBy('created_at', 'desc');
     }
+
+    /**
+     * Get the job applications for the candidate.
+     */
+    public function jobApplications()
+    {
+        return $this->hasMany(JobApplication::class)->orderBy('created_at', 'desc');
+    }
 }
