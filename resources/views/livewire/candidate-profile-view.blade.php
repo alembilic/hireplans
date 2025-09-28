@@ -470,7 +470,11 @@
                                     <div class="d-flex justify-content-between align-items-start mb-2">
                                         <div class="flex-grow-1">
                                             <div class="fw-medium text-dark mb-4">
-                                                {{ $application->job->title ?? 'Job Title Not Available' }}
+                                                <a href="{{ route('platform.jobs.view', $application->job->id) }}" 
+                                                   class="text-decoration-none text-dark fw-medium">
+                                                    {{ $application->job->title ?? 'Job Title Not Available' }}
+                                                    <i class="bi bi-arrow-up-right-square ms-1 text-muted" style="font-size: 0.8rem;"></i>
+                                                </a>
                                                 <span class="text-muted small ms-3">
                                                     <i class="bi bi-building me-1"></i>
                                                     {{ $application->job->employer->name ?? 'Company Not Available' }}
