@@ -229,6 +229,32 @@
       * Changed form field from single-line input to multi-line textarea (4 rows)
       * Updated help text to include language teaching skills examples
       * Better accommodation of comprehensive skill lists from LLM parsing
+  * **LinkedIn Search Integration (Jan 2025) - [HIDDEN/DISABLED]:**
+    - Created comprehensive LinkedIn candidate search system for sourcing talent
+    - Built LinkedInSearchService with real API integration support:
+      * LinkedIn Official API integration (requires partner approval)
+      * RapidAPI fallback services for easier access
+      * Supports search by keywords, location, and job titles
+      * Returns candidate profiles with detailed information (name, title, company, skills, experience)
+      * Relevance scoring system for match quality assessment
+      * Comprehensive profile data including education, summary, connections
+    - Developed professional Orchid admin interface:
+      * LinkedIn Search screen with intuitive search form and filters
+      * Real-time search results display in responsive table layout
+      * Profile photos, relevance badges, and skill visualization
+      * Professional candidate cards with LinkedIn-style presentation
+      * Search statistics and result count with performance metrics
+    - Advanced candidate profile management:
+      * Detailed profile viewing with experience timeline and education
+      * Direct LinkedIn profile links for external verification
+      * One-click candidate addition to recruitment pipeline
+      * Integrated messaging system for candidate outreach
+      * Skills-based filtering and location-based search refinement
+    - **Currently hidden from navigation and routes** until API integration is configured
+    - Ready for production LinkedIn API integration with multiple provider options
+    - Follows project standards: Bootstrap styling, Orchid layouts, proper breadcrumbs
+    - Comprehensive error handling and configuration guidance systems
+    - **To re-enable:** Uncomment menu item in PlatformProvider and route in platform.php, then configure API credentials
 
 ### Project Development Guidelines:
 - **Frontend Framework**: Use Livewire for interactive components instead of custom JavaScript

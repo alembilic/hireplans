@@ -38,7 +38,19 @@ return [
     'google' => [
         'client_id' => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
-        'redirect_uri' => env('GOOGLE_REDIRECT_URI'),
+        'redirect' => env('GOOGLE_REDIRECT_URL'),
+    ],
+
+    'linkedin' => [
+        'api_key' => env('LINKEDIN_API_KEY'),
+        'api_secret' => env('LINKEDIN_API_SECRET'),
+        'base_url' => env('LINKEDIN_BASE_URL', 'https://api.linkedin.com/v2'),
+        'redirect_uri' => env('LINKEDIN_REDIRECT_URI'),
+    ],
+
+    'rapidapi' => [
+        'key' => env('RAPIDAPI_KEY'),
+        'linkedin_host' => env('RAPIDAPI_LINKEDIN_HOST', 'linkedin-profile-scraper.p.rapidapi.com'),
     ],
 
 ];

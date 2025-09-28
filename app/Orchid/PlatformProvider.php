@@ -56,6 +56,12 @@ class PlatformProvider extends OrchidServiceProvider
                 ->route('platform.candidates.list')
                 ->permission('platform.systems.users'),
 
+            // LinkedIn Search - temporarily hidden until API integration is configured
+            // Menu::make(__('LinkedIn Search'))
+            //     ->icon('bi.linkedin')
+            //     ->route('platform.linkedin.search')
+            //     ->permission('platform.systems.users'),
+
             Menu::make(__('Employers'))
                 ->icon('bs.buildings')
                 ->route('platform.employers.pipeline')

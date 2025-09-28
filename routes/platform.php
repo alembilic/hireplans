@@ -266,6 +266,14 @@ Route::screen('outreach/{campaign}/view', OutreachViewScreen::class)
         ->push(__('View Campaign'), route('platform.outreach.view', $campaign))
     );
 
+// Platform > LinkedIn Search - temporarily disabled until API integration is configured
+// Route::screen('linkedin-search', \App\Orchid\Screens\LinkedInSearchScreen::class)
+//     ->name('platform.linkedin.search')
+//     ->breadcrumbs(fn (Trail $trail) => $trail
+//         ->parent('platform.index')
+//         ->push(__('LinkedIn Search'), route('platform.linkedin.search'))
+//     );
+
 // Schedule AJAX routes
 Route::post('schedule/update-status', [ScheduleScreen::class, 'updateStatus'])
     ->name('platform.schedule.update-status');
