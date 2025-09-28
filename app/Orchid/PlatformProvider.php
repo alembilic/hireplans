@@ -86,6 +86,11 @@ class PlatformProvider extends OrchidServiceProvider
                 ->route('platform.schedule')
                 ->permission('platform.systems.users'),
 
+            Menu::make(__('Outreach'))
+                ->icon('bs.envelope')
+                ->route('platform.outreach')
+                ->permission('platform.systems.users'),
+
             Menu::make(__('References'))
                 ->icon('bs.person-fill-check')
                 ->route('platform.references.list')

@@ -404,3 +404,7 @@ input {
         min-width: 16em;
     }
 }
+
+.btn .me-2 {
+    margin-right: 8px !important;
+}

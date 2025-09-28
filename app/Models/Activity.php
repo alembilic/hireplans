@@ -51,6 +51,9 @@ class Activity extends Model
     const TYPE_REFERENCE_REQUESTED = 'reference_requested';
     const TYPE_REFERENCE_COMPLETED = 'reference_completed';
     const TYPE_DOCUMENT_UPLOADED = 'document_uploaded';
+    const TYPE_CAMPAIGN_SENT = 'campaign_sent';
+    const TYPE_CAMPAIGN_DELIVERED = 'campaign_delivered';
+    const TYPE_CAMPAIGN_FAILED = 'campaign_failed';
 
     /**
      * Get the candidate that owns the activity.
@@ -86,6 +89,9 @@ class Activity extends Model
             self::TYPE_REFERENCE_REQUESTED => 'bi-envelope',
             self::TYPE_REFERENCE_COMPLETED => 'bi-envelope-check',
             self::TYPE_DOCUMENT_UPLOADED => 'bi-file-earmark-plus',
+            self::TYPE_CAMPAIGN_SENT => 'bi-send',
+            self::TYPE_CAMPAIGN_DELIVERED => 'bi-send-check',
+            self::TYPE_CAMPAIGN_FAILED => 'bi-send-x',
             default => 'bi-activity',
         };
     }
@@ -108,6 +114,9 @@ class Activity extends Model
             self::TYPE_REFERENCE_REQUESTED => 'primary',
             self::TYPE_REFERENCE_COMPLETED => 'success',
             self::TYPE_DOCUMENT_UPLOADED => 'info',
+            self::TYPE_CAMPAIGN_SENT => 'primary',
+            self::TYPE_CAMPAIGN_DELIVERED => 'success',
+            self::TYPE_CAMPAIGN_FAILED => 'danger',
             default => 'primary',
         };
     }

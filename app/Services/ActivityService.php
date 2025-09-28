@@ -245,4 +245,64 @@ class ActivityService
             ]
         );
     }
+
+    /**
+     * Log campaign sent activity.
+     */
+    public static function campaignSent(Candidate $candidate, $campaign, ?int $createdBy = null): Activity
+    {
+        return self::log(
+            $candidate,
+            Activity::TYPE_CAMPAIGN_SENT,
+            'Email Campaign Queued',
+            "Added to email campaign: {$campaign->name}",
+            [
+                'campaign_id' => $campaign->id,
+                'campaign_name' => $campaign->name,
+                'campaign_title' => $campaign->title,
+            ],
+            $createdBy
+        );
+    }
+
+    /**
+     * Log campaign delivered activity.
+     */
+    public static function campaignDelivered(Candidate $candidate, $campaign, ?int $createdBy = null): Activity
+    {
+        return self::log(
+            $candidate,
+            Activity::TYPE_CAMPAIGN_DELIVERED,
+            'Email Campaign Delivered',
+            "Email campaign '{$campaign->name}' successfully delivered",
+            [
+                'campaign_id' => $campaign->id,
+                'campaign_name' => $campaign->name,
+                'campaign_title' => $campaign->title,
+                'delivered_at' => now()->toISOString(),
+            ],
+            $createdBy
+        );
+    }
+
+    /**
+     * Log campaign failed activity.
+     */
+    public static function campaignFailed(Candidate $candidate, $campaign, string $error, ?int $createdBy = null): Activity
+    {
+        return self::log(
+            $candidate,
+            Activity::TYPE_CAMPAIGN_FAILED,
+            'Email Campaign Failed',
+            "Email campaign '{$campaign->name}' failed to deliver: {$error}",
+            [
+                'campaign_id' => $campaign->id,
+                'campaign_name' => $campaign->name,
+                'campaign_title' => $campaign->title,
+                'error_message' => $error,
+                'failed_at' => now()->toISOString(),
+            ],
+            $createdBy
+        );
+    }
 } 

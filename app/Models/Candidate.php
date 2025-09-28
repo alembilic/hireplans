@@ -178,4 +178,14 @@ class Candidate extends Model
     {
         return $this->hasMany(JobApplication::class)->orderBy('created_at', 'desc');
     }
+
+    /**
+     * Get the email campaigns for the candidate.
+     */
+    public function emailCampaigns()
+    {
+        return $this->belongsToMany(EmailCampaign::class, 'campaign_candidates')
+                    ->withPivot('status', 'sent_at', 'error_message')
+                    ->withTimestamps();
+    }
 }

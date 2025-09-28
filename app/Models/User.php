@@ -101,4 +101,22 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasOne(GoogleConnection::class);
     }
+
+    /**
+     * Get the email campaigns created by the user.
+     */
+    public function emailCampaigns()
+    {
+        return $this->hasMany(EmailCampaign::class, 'created_by');
+    }
+
+    /**
+     * Get the email campaigns this user is part of.
+     */
+    public function emailCampaignsReceived()
+    {
+        return $this->belongsToMany(EmailCampaign::class, 'campaign_users')
+                    ->withPivot('status', 'sent_at', 'error_message')
+                    ->withTimestamps();
+    }
 }

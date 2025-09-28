@@ -42,6 +42,9 @@ use App\Orchid\Screens\Employer\EmployerEditScreen;
 use App\Orchid\Screens\Employer\EmployerViewScreen;
 use App\Orchid\Screens\TasksScreen;
 use App\Orchid\Screens\ScheduleScreen;
+use App\Orchid\Screens\OutreachScreen;
+use App\Orchid\Screens\OutreachEditScreen;
+use App\Orchid\Screens\OutreachViewScreen;
 use App\Http\Controllers\GoogleAuthController;
 
 use App\Http\Middleware\ReferenceAccessControl;
@@ -229,6 +232,38 @@ Route::screen('schedule', ScheduleScreen::class)
     ->breadcrumbs(fn (Trail $trail) => $trail
         ->parent('platform.index')
         ->push(__('Schedule'), route('platform.schedule'))
+    );
+
+// Platform > Outreach
+Route::screen('outreach', OutreachScreen::class)
+    ->name('platform.outreach')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push(__('Outreach'), route('platform.outreach'))
+    );
+
+// Platform > Outreach > Create
+Route::screen('outreach/create', OutreachEditScreen::class)
+    ->name('platform.outreach.create')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.outreach')
+        ->push(__('Create Campaign'), route('platform.outreach.create'))
+    );
+
+// Platform > Outreach > Edit
+Route::screen('outreach/{campaign}/edit', OutreachEditScreen::class)
+    ->name('platform.outreach.edit')
+    ->breadcrumbs(fn (Trail $trail, $campaign) => $trail
+        ->parent('platform.outreach')
+        ->push(__('Edit Campaign'), route('platform.outreach.edit', $campaign))
+    );
+
+// Platform > Outreach > View
+Route::screen('outreach/{campaign}/view', OutreachViewScreen::class)
+    ->name('platform.outreach.view')
+    ->breadcrumbs(fn (Trail $trail, $campaign) => $trail
+        ->parent('platform.outreach')
+        ->push(__('View Campaign'), route('platform.outreach.view', $campaign))
     );
 
 // Schedule AJAX routes
