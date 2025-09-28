@@ -24,8 +24,11 @@ use Illuminate\Support\Facades\Hash;
 use App\Helpers\HelperFunc;
 // use Orchid\Attachment\File;
 use App\Orchid\Layouts\Candidate\CandidateAttachmentLayout;
+use App\Orchid\Layouts\Candidate\CandidateDocumentImportLayout;
 use App\Services\ActivityService;
+use App\Services\DocumentParsingService;
 use Orchid\Screen\Actions\Link;
+use Orchid\Attachment\Models\Attachment;
 // use Illuminate\Support\Facades\Log;
 
 class CandidateEditScreen extends Screen
@@ -61,6 +64,33 @@ class CandidateEditScreen extends Screen
 
         // Load the related user if the candidate exists
         $user = $candidate->exists ? $candidate->user : new User();
+
+        // Check if we have document parsed data to populate form fields
+        $documentParsedData = session('document_parsed_data', []);
+        
+        // If we have document data, populate the candidate and user with it
+        if (!empty($documentParsedData) && !$candidate->exists) {
+            // Populate user fields
+            if (isset($documentParsedData['user'])) {
+                foreach ($documentParsedData['user'] as $field => $value) {
+                    if (!empty($value)) {
+                        $user->$field = $value;
+                    }
+                }
+            }
+            
+            // Populate candidate fields
+            if (isset($documentParsedData['candidate'])) {
+                foreach ($documentParsedData['candidate'] as $field => $value) {
+                    if (!empty($value)) {
+                        $candidate->$field = $value;
+                    }
+                }
+            }
+            
+            // Clear the session data after using it
+            session()->forget('document_parsed_data');
+        }
 
         return [
             'candidate'  => $candidate,
@@ -101,16 +131,24 @@ class CandidateEditScreen extends Screen
      */
     public function commandBar(): iterable
     {
+        $actions = [];
+        
         if ($this->candidate->exists) {
             $actions[] = Link::make('View Profile')
                 ->route('platform.candidates.view', $this->candidate->id)
                 ->icon('bs.eye');
+        } else {
+            // Add Parse Document button for new candidates
+            $actions[] = Button::make('Parse Document')
+                ->method('parseDocumentFile')
+                ->type(Color::INFO)
+                ->icon('bs.file-earmark-text')
+                ->novalidate();
         }
         
-        $actions[] = 
-            Link::make('Back to List')
-                ->route('platform.candidates.list')
-                ->icon('bs.arrow-left');
+        $actions[] = Link::make('Back to List')
+            ->route('platform.candidates.list')
+            ->icon('bs.arrow-left');
 
         return $actions;
     }
@@ -123,8 +161,10 @@ class CandidateEditScreen extends Screen
     public function layout(): iterable
     {
         return [
-            // Layout::view('block-title',['title' => 'Personal Details']),
-            // UserEditLayout::class,
+            // Document Import section - only show for new candidates
+            ...(!$this->candidate->exists ? [
+                Layout::block([CandidateDocumentImportLayout::class])->vertical()->title('Quick Import from Document'),
+            ] : []),
 
             Layout::block([UserEditLayout::class, UserPasswordLayout::class])->vertical()->title('Personal Details'),
 
@@ -153,9 +193,110 @@ class CandidateEditScreen extends Screen
     }
 
     /**
+     * Parse document file and populate form fields
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function parseDocumentFile(Request $request)
+    {
+        try {
+            $documentImportData = $request->input('document_import');
+            $documentAttachmentId = null;
+            
+            if (is_array($documentImportData) && !empty($documentImportData)) {
+                $documentAttachmentId = $documentImportData[0];
+            }
+            
+            if (!$documentAttachmentId) {
+                Toast::error('Please upload a document file first');
+                return back();
+            }
+
+            $attachment = Attachment::find($documentAttachmentId);
+            if (!$attachment) {
+                Toast::error('Document file not found. Attachment ID: ' . $documentAttachmentId);
+                return back();
+            }
+
+            // Get file extension and construct proper file name
+            $fileExtension = pathinfo($attachment->original_name, PATHINFO_EXTENSION);
+            $fileName = $attachment->name . '.' . $fileExtension;
+            $filePath = \Storage::disk($attachment->disk)->path($attachment->path . $fileName);
+            
+            // Check if file exists with extension
+            if (!\Storage::disk($attachment->disk)->exists($attachment->path . $fileName)) {
+                Toast::error('Document file not found on disk');
+                return back();
+            }
+            
+            if (!in_array(strtolower($fileExtension), ['pdf', 'docx', 'doc'])) {
+                // Try getting extension from original_name if available
+                $originalExtension = $attachment->original_name ? pathinfo($attachment->original_name, PATHINFO_EXTENSION) : '';
+                if (!empty($originalExtension) && in_array(strtolower($originalExtension), ['pdf', 'docx', 'doc'])) {
+                    $fileExtension = $originalExtension;
+                } else {
+                    Toast::error("Unsupported file format '{$fileExtension}' detected. Please upload PDF or DOCX files. (Original: {$attachment->original_name})");
+                    return back();
+                }
+            }
+
+            // Parse document data
+            $parseResult = DocumentParsingService::parseCandidateData($filePath, $fileExtension);
+            
+            if (isset($parseResult['error'])) {
+                Toast::error('Document parsing error: ' . $parseResult['error']);
+                return back();
+            }
+
+            if (empty($parseResult['candidates'])) {
+                Toast::warning('No valid candidate data found in document');
+                return back();
+            }
+
+            // Get the first candidate from the document (for single candidate import)
+            $candidateData = $parseResult['candidates'][0];
+            $totalCount = $parseResult['count'];
+
+            // Pre-populate form fields with parsed data
+            $formData = [
+                'user' => [
+                    'name' => $candidateData['name'] ?? '',
+                    'email' => $candidateData['email'] ?? '',
+                    'phone' => $candidateData['phone'] ?? '',
+                    'city' => $candidateData['city'] ?? '',
+                    'country' => $candidateData['country'] ?? '',
+                ],
+                'candidate' => [
+                    'gender' => $candidateData['gender'] ?? '',
+                    'current_company' => $candidateData['current_company'] ?? '',
+                    'current_job_title' => $candidateData['current_job_title'] ?? '',
+                    'languages' => $candidateData['languages'] ?? '',
+                    'skills' => $candidateData['skills'] ?? '',
+                ]
+            ];
+
+            // Store the parsed data in session to populate form
+            session()->flash('document_parsed_data', $formData);
+            session()->flash('document_total_count', $totalCount);
+            
+            Toast::success('Document parsed successfully! Form fields have been populated with extracted candidate data.');
+
+            // Clean up the uploaded document file
+            $attachment->delete();
+
+            return back();
+
+        } catch (\Exception $e) {
+            Toast::error('Error parsing document: ' . $e->getMessage());
+            return back();
+        }
+    }
+
+    /**
      * @param \Illuminate\Http\Request $request
      *
-     * @return void
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function saveCandidate(Candidate $candidate, Request $request)
     {
@@ -258,7 +399,7 @@ class CandidateEditScreen extends Screen
     /**
      * Cancel the edit operation and return to the list screen.
      *
-     * @return void
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function cancel()
     {

@@ -7,11 +7,14 @@
     "require": {
         "php": "^8.2",
         "google/apiclient": "^2.18",
+        "guzzlehttp/guzzle": "^7.8",
         "laravel/framework": "^11.0",
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.5",
         "livewire/volt": "^1.0",
-        "orchid/platform": "^14.23"
+        "orchid/platform": "^14.23",
+        "phpoffice/phpword": "^1.4",
+        "smalot/pdfparser": "^2.12"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.13",

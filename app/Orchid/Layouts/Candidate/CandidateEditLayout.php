@@ -55,12 +55,11 @@ class CandidateEditLayout extends Rows
                 ->help('Separate languages with a comma. Eg. English, Spanish, French')
                 ->horizontal(),
 
-            Input::make('candidate.skills')
-                ->type('text')
-                ->max(255)
+            TextArea::make('candidate.skills')
                 ->title(__('Skills'))
                 ->placeholder(__('Skills'))
-                ->help('Separate skills with a comma. Eg. PHP, Java, Python')
+                ->rows(4)
+                ->help('Separate skills with a comma. Eg. Teaching, Tutoring, TEFL, TESOL, ESL Teaching, Curriculum Development, Language Assessment, Online Teaching, Classroom Management, Grammar Instruction, etc.')
                 ->horizontal(),
         ];
 

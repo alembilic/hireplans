@@ -117,6 +117,9 @@
       * Fixed cover letter display to show downloadable file link instead of raw text content
       * Cover letter now appears as clickable download button with file icon and original filename
       * Added proper error handling for missing cover letter files
+      * Enhanced job application entries with clickable links to application details
+      * Job titles now link to platform.job_application.view route for detailed application viewing
+      * Added visual indicator icon (arrow-up-right-square) for linked job titles
       * **Email Marketing Outreach System (Jan 2025):**
         - Created comprehensive email marketing campaign management system
         - Built EmailCampaign model with status tracking (draft, sent, scheduled)
@@ -174,19 +177,58 @@
                - HTML output automatically generated from rich text formatting
                - Enhanced user experience for creating visually appealing marketing campaigns
                - Consistent with Orchid platform's rich text editing capabilities
-             - **Variable Replacement System (Jan 2025):**
-               - Added dynamic variable replacement in email campaigns for personalized messaging
-               - Support for {{variable}} syntax in both email subject and content
-               - Available variables include:
-                 * Basic user data: {{name}}, {{first_name}}, {{email}}, {{phone}}, {{city}}, {{country}}, {{nationality}}
-                 * Candidate-specific data (if profile exists): {{current_company}}, {{job_title}}, {{candidate_ref}}
-               - Automatic replacement during email sending with user-specific data
-               - Frontend helper showing all available variables with descriptions
-               - Graceful handling of missing data with empty string fallbacks
-               - Support for extracting first name from full name for more natural personalization
+            - **Variable Replacement System (Jan 2025):**
+              - Added dynamic variable replacement in email campaigns for personalized messaging
+              - Support for {{variable}} syntax in both email subject and content
+              - Available variables include:
+                * Basic user data: {{name}}, {{first_name}}, {{email}}, {{phone}}, {{city}}, {{country}}, {{nationality}}
+                * Candidate-specific data (if profile exists): {{current_company}}, {{job_title}}, {{candidate_ref}}
+              - Automatic replacement during email sending with user-specific data
+              - Frontend helper showing all available variables with descriptions
+              - Graceful handling of missing data with empty string fallbacks
+              - Support for extracting first name from full name for more natural personalization
         - Used consistent styling patterns: Bootstrap classes with Tailwind utilities, proper form validation
         - Implemented responsive design with modal forms and table layouts
         - Added proper error handling and success messages for user feedback
+  * **Document Parsing and Auto-Population System (Jan 2025):**
+    - Created comprehensive document parsing service for candidate data extraction from CV/Resume files
+    - Built DocumentParsingService with intelligent text extraction and pattern matching:
+      * PDF parsing using Spatie/PDF-to-Text library for text extraction
+      * DOCX/DOC parsing using PhpOffice/PhpWord library for structured document reading
+      * Smart pattern recognition for common CV sections (Experience, Skills, Contact Info)
+      * Regex-based field extraction for names, emails, phones, companies, job titles
+      * Automatic gender normalization and data cleaning with validation
+      * Context-aware parsing for different CV formats and layouts
+    - Integrated document import functionality into Orchid candidate creation form:
+      * Document upload field accepts PDF, DOCX, DOC files for new candidate creation
+      * "Parse Document" button in command bar triggers automatic text extraction and form population
+      * Session-based data transfer to populate all form fields after parsing
+      * Real-time document processing with comprehensive error handling
+      * User feedback with success/error messages and extracted data preview
+    - Enhanced candidate creation workflow:
+      * Upload CV/Resume (PDF/DOCX) → Parse Document → Review populated fields → Save candidate
+      * Automatic cleanup of temporary uploaded document files after parsing
+      * Form validation integration with extracted data
+      * Preserves existing form functionality while adding document parsing convenience
+    - Supported document field extraction:
+      * Personal info: name (multiple patterns), email, phone (various formats), city, country
+      * Professional info: current company, job title, work experience
+      * Skills and languages: section-based extraction with multiple separator support
+      * Gender information when available in documents
+      * Flexible pattern matching for different CV formats and structures
+    - **LLM-Enhanced Data Extraction (Jan 2025):**
+      * Integrated AI-powered document parsing for superior accuracy
+      * Primary: Groq API with Llama 3.1 70B for intelligent data extraction
+      * Fallback: Regex-based parsing when LLM is unavailable
+      * Smart context understanding for CV sections and data relationships
+      * Structured JSON response format for consistent data formatting
+      * Configurable via GROQ_API_KEY environment variable
+      * Dramatically improved accuracy over pure regex pattern matching
+    - **Enhanced Skills Field (Jan 2025):**
+      * Upgraded skills database column from VARCHAR(255) to TEXT for unlimited length
+      * Changed form field from single-line input to multi-line textarea (4 rows)
+      * Updated help text to include language teaching skills examples
+      * Better accommodation of comprehensive skill lists from LLM parsing
 
 ### Project Development Guidelines:
 - **Frontend Framework**: Use Livewire for interactive components instead of custom JavaScript
