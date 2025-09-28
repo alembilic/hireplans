@@ -256,6 +256,20 @@
     - Comprehensive error handling and configuration guidance systems
     - **To re-enable:** Uncomment menu item in PlatformProvider and route in platform.php, then configure API credentials
 
+### Issues Resolved:
+- **Orchid Sidebar Color Issue After Deployment (Jan 2025) - SOLVED:**
+  - Problem: After deployment, Orchid sidebar changed from dark theme to light theme and link colors reverted
+  - Root Cause: CSS specificity and selector mismatch between custom styles and Orchid's default CSS
+  - Investigation revealed:
+    * Browser inspector showed `.bg-dark .nav>li>a { color: #e2e1e5; }` overriding custom styles
+    * Custom CSS was targeting `.aside .nav-link.active` but Orchid uses `.bg-dark .nav>li>a` structure
+    * Same CSS specificity but Orchid CSS loaded after custom CSS, causing override
+  - Solution: Added higher-specificity selectors to target Orchid's actual HTML structure:
+    * `.aside.bg-dark .nav > li > a` and `.bg-dark .nav > li > a.active` 
+    * Ensured custom brand colors (#a16207) properly override Orchid defaults
+    * Custom styles now have higher specificity and load after Orchid CSS
+  - Result: Sidebar properly displays custom brand colors and maintains dark theme with golden accents
+
 ### Project Development Guidelines:
 - **Frontend Framework**: Use Livewire for interactive components instead of custom JavaScript
 - **Styling**: Mix Bootstrap classes with Tailwind utilities for consistent design

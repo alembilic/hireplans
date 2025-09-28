@@ -115,6 +115,19 @@
     background-color: var(--brand) !important;
 }
 
+/* Orchid Sidebar Navigation - Higher Specificity */
+.aside.bg-dark .nav > li > a,
+.aside.bg-dark .nav > li > a:hover,
+.bg-dark .nav > li > a.active {
+    color: var(--brand) !important;
+    background-color: var(--brand-light) !important;
+}
+
+.bg-dark .nav > li > a.active::before,
+.bg-dark .nav > li > a:hover::before {
+    background-color: var(--brand) !important;
+}
+
 /* Form Controls */
 .form-control:focus,
 .form-select:focus {
@@ -306,6 +319,50 @@ html body .bg-secondary * {
 .platform-sidebar .nav-link:hover {
     color: var(--brand) !important;
     background-color: var(--brand-light) !important;
+}
+
+/* High Specificity Overrides for Orchid Default Styles */
+/* Normal Navigation Links - Keep default white/light color */
+.aside.bg-dark .nav > li > a,
+.bg-dark.aside .nav > li > a {
+    color: #e2e1e5 !important; /* Keep Orchid's default light color for normal links */
+    background-color: transparent !important;
+}
+
+/* Hover Navigation Links - Apply brand color on hover */
+.aside.bg-dark .nav > li > a:hover,
+.aside.bg-dark .nav > li > a:focus,
+.bg-dark.aside .nav > li > a:hover,
+.bg-dark.aside .nav > li > a:focus {
+    color: var(--brand) !important;
+    background-color: var(--brand-light) !important;
+}
+
+/* Active Navigation Links - Apply brand color for active state */
+.aside.bg-dark .nav > li.active > a,
+.aside.bg-dark .nav > li > a.active,
+.bg-dark.aside .nav > li.active > a,
+.bg-dark.aside .nav > li > a.active {
+    color: var(--brand) !important;
+    background-color: var(--brand-light) !important;
+}
+
+/* Pagination Overrides - Higher specificity than Orchid's complex selectors */
+.bg-dark .pagination .page-item.active .page-link,
+.bg-dark .pagination .page-item.active span,
+.bg-dark .pagination > li.active .page-link,
+.bg-dark .pagination > li.active span,
+.bg-dark .pagination > li.active span:focus,
+.bg-dark .pagination > li.active span:hover {
+    color: #ffffff !important;
+    background-color: var(--brand) !important;
+    border-color: var(--brand) !important;
+}
+
+/* Text Muted Override */
+.bg-dark .text-muted,
+.aside.bg-dark .text-muted {
+    color: #8c8a98 !important; /* Keep Orchid's muted color for readability */
 }
 
 /* Platform forms */
