@@ -51,8 +51,8 @@ class CandidateAttachmentLayout extends Rows
             Upload::make('candidate.cv')
                 ->title('Upload CV')
                 ->horizontal()
-                ->maxFiles(1),
-                // ->value($this->query['cv']),
+                ->maxFiles(1)
+                ->value($this->query['cv']),
 
             // CustomUpload::make('candidate.cv')
             //     ->title('Upload CV')
@@ -83,8 +83,8 @@ class CandidateAttachmentLayout extends Rows
 
             Upload::make('candidate.other-documents')
                 ->title('Upload Other Documents')
-                ->horizontal(),
-                // ->value($this->query['other_documents']),
+                ->horizontal()
+                ->value($this->query['other_documents']),
         ];
     }
 }

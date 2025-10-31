@@ -177,11 +177,14 @@ REQUIRED FIELDS:
 - phone: Phone number (with country code if available)
 - city: Current city
 - country: Current country
+- nationality: Nationality or citizenship (e.g., \"British\", \"American\")
+- date_of_birth: Date of birth in YYYY-MM-DD format (if available)
 - gender: Gender (Male/Female/Other/null)
 - current_company: Current or most recent company/employer
 - current_job_title: Current or most recent job title/position
 - languages: Comma-separated list of languages (e.g., \"English, Spanish, French\")
 - skills: Comma-separated list of technical skills and competencies
+- work_experiences: Brief summary of work experience (2-3 sentences max)
 
 RULES:
 1. Extract information accurately from the text
@@ -190,6 +193,8 @@ RULES:
 4. Normalize names to proper case (e.g., \"John Smith\")
 5. Clean phone numbers (remove extra spaces/characters)
 6. For current company/title, pick the most recent from experience section
+7. For work_experiences, provide a concise summary of professional background
+8. For date_of_birth, convert any date format to YYYY-MM-DD
 
 TEXT TO ANALYZE:
 " . substr($text, 0, 4000) . "
@@ -208,11 +213,14 @@ Return only the JSON object:";
             'phone' => self::extractPhone($text),
             'city' => self::extractCity($text),
             'country' => self::extractCountry($text),
+            'nationality' => self::extractNationality($text),
+            'date_of_birth' => self::extractDateOfBirth($text),
             'gender' => self::extractGender($text),
             'current_company' => self::extractCurrentCompany($text),
             'current_job_title' => self::extractCurrentJobTitle($text),
             'languages' => self::extractLanguages($text),
             'skills' => self::extractSkills($text),
+            'work_experiences' => self::extractWorkExperiences($text),
         ];
     }
 
@@ -327,6 +335,57 @@ Return only the JSON object:";
     {
         if (preg_match('/(?:Skills?|Technical\s+Skills?)[:\s]+([A-Za-z0-9\s,;\/\-\(\).#+]+)/i', $text, $matches)) {
             return trim($matches[1]);
+        }
+        return null;
+    }
+
+    private static function extractNationality(string $text): ?string
+    {
+        // Look for nationality patterns
+        if (preg_match('/(?:Nationality|Citizenship)[:\s]+([A-Za-z\s]+)/i', $text, $matches)) {
+            return trim($matches[1]);
+        }
+        return null;
+    }
+
+    private static function extractDateOfBirth(string $text): ?string
+    {
+        // Look for date of birth patterns
+        $patterns = [
+            '/(?:Date\s+of\s+Birth|DOB|Born)[:\s]+(\d{1,2}[\/-]\d{1,2}[\/-]\d{4})/i',
+            '/(?:Date\s+of\s+Birth|DOB|Born)[:\s]+(\d{4}[\/-]\d{1,2}[\/-]\d{1,2})/i',
+            '/(?:Date\s+of\s+Birth|DOB|Born)[:\s]+(\d{1,2}[\s]\w+[\s]\d{4})/i'
+        ];
+        
+        foreach ($patterns as $pattern) {
+            if (preg_match($pattern, $text, $matches)) {
+                $dateString = trim($matches[1]);
+                // Try to convert to YYYY-MM-DD format
+                $date = \DateTime::createFromFormat('d/m/Y', $dateString) ?: 
+                        \DateTime::createFromFormat('m/d/Y', $dateString) ?: 
+                        \DateTime::createFromFormat('Y-m-d', $dateString) ?: 
+                        \DateTime::createFromFormat('d M Y', $dateString);
+                        
+                if ($date) {
+                    return $date->format('Y-m-d');
+                }
+                return $dateString; // Return original if can't parse
+            }
+        }
+        return null;
+    }
+
+    private static function extractWorkExperiences(string $text): ?string
+    {
+        // Look for experience section and extract a summary
+        if (preg_match('/(?:Experience|Work\s+Experience|Employment)[:\s]+(.{0,500})/i', $text, $matches)) {
+            $experience = trim($matches[1]);
+            // Take first few sentences up to 200 characters
+            $experience = substr($experience, 0, 200);
+            if (strlen($experience) == 200) {
+                $experience = substr($experience, 0, strrpos($experience, ' ')) . '...';
+            }
+            return $experience;
         }
         return null;
     }

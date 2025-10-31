@@ -207,12 +207,12 @@
       * User feedback with success/error messages and extracted data preview
     - Enhanced candidate creation workflow:
       * Upload CV/Resume (PDF/DOCX) → Parse Document → Review populated fields → Save candidate
-      * Automatic cleanup of temporary uploaded document files after parsing
+      * Parsed CV is automatically saved as attachment when candidate is created (no cleanup/deletion)
       * Form validation integration with extracted data
       * Preserves existing form functionality while adding document parsing convenience
     - Supported document field extraction:
-      * Personal info: name (multiple patterns), email, phone (various formats), city, country
-      * Professional info: current company, job title, work experience
+      * Personal info: name (multiple patterns), email, phone (various formats), city, country, nationality, date of birth
+      * Professional info: current company, job title, work experience summary
       * Skills and languages: section-based extraction with multiple separator support
       * Gender information when available in documents
       * Flexible pattern matching for different CV formats and structures
@@ -229,6 +229,33 @@
       * Changed form field from single-line input to multi-line textarea (4 rows)
       * Updated help text to include language teaching skills examples
       * Better accommodation of comprehensive skill lists from LLM parsing
+    - **Enhanced Candidate Form Fields (Oct 2025):**
+      * Removed address and postcode fields from user profile form for cleaner interface
+      * Added work_experiences field to capture brief summary of professional background
+      * Updated PDF parsing to extract nationality, date of birth, and work experiences
+      * Enhanced LLM prompts to include new field extraction (nationality, DOB, work summary)
+      * Added regex fallback patterns for new fields with proper date format conversion
+      * Database migration added work_experiences TEXT column to candidates table
+      * All parsing methods now extract comprehensive candidate profile data
+      * **CV Retention After Parsing:** Parsed CV documents are now automatically saved as CV attachments instead of being deleted, preserving the original document for future reference
+      * **Visual CV Display:** Parsed documents now appear in the "Existing CVs" section of the form, allowing users to see the uploaded CV immediately after parsing
+      * **Database Constraint Fix:** Fixed SQLSTATE[23000] integrity constraint violation by ensuring all candidate fields use empty strings instead of null values, preventing database insertion errors
+      * **CV Profile Display Fix:** Fixed issue where parsed CVs weren't appearing on candidate profile pages by enabling Upload field value population in CandidateAttachmentLayout
+      * **Secure Password Setup System (Oct 2025):**
+        - Replaced manual password entry with secure email-based password setup for new users
+        - Added checkbox option "Send password setup email to user" for new candidate creation
+        - Users receive professional email with secure link to set their own password (60-minute expiration)
+        - Leverages Laravel's built-in password reset token system for security
+        - Existing user editing still supports manual password changes
+        - Created PasswordSetupController, PasswordSetupMail, and associated routes/views
+        - Enhanced user experience with branded email template and secure setup flow
+        - Automatic email verification upon password setup completion
+      * **Alpine.js Navigation Fix (Oct 2025):**
+        - Fixed "Alpine.navigate is not a function" errors on logout and navigation
+        - Resolved multiple Alpine.js instances conflict between Livewire and custom scripts
+        - Removed navigate: true parameters from Livewire components to prevent JavaScript conflicts
+        - Cleaned up Alpine.js initialization to work properly with Livewire's built-in Alpine instance
+        - Ensured stable logout functionality and navigation throughout the application
   * **LinkedIn Search Integration (Jan 2025) - [HIDDEN/DISABLED]:**
     - Created comprehensive LinkedIn candidate search system for sourcing talent
     - Built LinkedInSearchService with real API integration support:

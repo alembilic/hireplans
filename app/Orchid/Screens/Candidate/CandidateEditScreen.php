@@ -29,6 +29,10 @@ use App\Services\ActivityService;
 use App\Services\DocumentParsingService;
 use Orchid\Screen\Actions\Link;
 use Orchid\Attachment\Models\Attachment;
+use App\Mail\PasswordSetupMail;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 // use Illuminate\Support\Facades\Log;
 
 class CandidateEditScreen extends Screen
@@ -58,6 +62,25 @@ class CandidateEditScreen extends Screen
 
         $otherDocumentsAttachments = $candidate->getOtherDocAttachments();
         $otherDocumentsAttachmentsInfo = $otherDocumentsAttachments ? $candidate->getOtherDocAttachmentsInfo() : null;
+
+        // Include parsed document as CV for new candidates
+        $cvAttachmentIds = $cvAttachments->pluck('id')->toArray();
+        $cvLinksArray = $cvAttachmentsInfo ? HelperFunc::renderAttachmentsLinks($cvAttachmentsInfo) : [];
+        
+        if (!$candidate->exists && session()->has('parsed_document_attachment_id')) {
+            $parsedAttachmentId = session('parsed_document_attachment_id');
+            if (!in_array($parsedAttachmentId, $cvAttachmentIds)) {
+                $cvAttachmentIds[] = $parsedAttachmentId;
+                
+                // Also add to cv_links for display in "Existing CVs" section
+                $parsedAttachment = \Orchid\Attachment\Models\Attachment::find($parsedAttachmentId);
+                if ($parsedAttachment) {
+                    $parsedAttachmentInfo = HelperFunc::getAttachmentInfo($parsedAttachment);
+                    $parsedCvLinks = HelperFunc::renderAttachmentsLinks([$parsedAttachmentInfo]);
+                    $cvLinksArray = array_merge($cvLinksArray, $parsedCvLinks);
+                }
+            }
+        }
 
         // dd($candidate);
         // dd($candidate->renderAttachmentsLinks());
@@ -91,13 +114,18 @@ class CandidateEditScreen extends Screen
             // Clear the session data after using it
             session()->forget('document_parsed_data');
         }
+        
+        // Clear parsed document attachment ID after using it for CV
+        if (!$candidate->exists && session()->has('parsed_document_attachment_id')) {
+            session()->forget('parsed_document_attachment_id');
+        }
 
         return [
             'candidate'  => $candidate,
             'user'       => $user,
-            'cv' => $cvAttachments->pluck('id')->toArray(),
+            'cv' => $cvAttachmentIds,
             'other_documents' => $otherDocumentsAttachments->pluck('id')->toArray(),
-            'cv_links' => $cvAttachmentsInfo ? HelperFunc::renderAttachmentsLinks($cvAttachmentsInfo) : [],
+            'cv_links' => $cvLinksArray,
             'other_documents_links' => $otherDocumentsAttachmentsInfo ? HelperFunc::renderAttachmentsLinks($otherDocumentsAttachmentsInfo) : [],
         ];
     }
@@ -266,6 +294,8 @@ class CandidateEditScreen extends Screen
                     'phone' => $candidateData['phone'] ?? '',
                     'city' => $candidateData['city'] ?? '',
                     'country' => $candidateData['country'] ?? '',
+                    'nationality' => $candidateData['nationality'] ?? '',
+                    'dob' => $candidateData['date_of_birth'] ?? '',
                 ],
                 'candidate' => [
                     'gender' => $candidateData['gender'] ?? '',
@@ -273,17 +303,16 @@ class CandidateEditScreen extends Screen
                     'current_job_title' => $candidateData['current_job_title'] ?? '',
                     'languages' => $candidateData['languages'] ?? '',
                     'skills' => $candidateData['skills'] ?? '',
+                    'work_experiences' => $candidateData['work_experiences'] ?? '',
                 ]
             ];
 
             // Store the parsed data in session to populate form
             session()->flash('document_parsed_data', $formData);
             session()->flash('document_total_count', $totalCount);
+            session()->flash('parsed_document_attachment_id', $documentAttachmentId);
             
-            Toast::success('Document parsed successfully! Form fields have been populated with extracted candidate data.');
-
-            // Clean up the uploaded document file
-            $attachment->delete();
+            Toast::success('Document parsed successfully! Form fields have been populated with extracted candidate data. The CV will be saved when you create the candidate.');
 
             return back();
 
@@ -312,14 +341,25 @@ class CandidateEditScreen extends Screen
             // 'user.avatar' => 'mimes:jpeg,jpg,png,bmp,gif,svg,webp|max:1024',
         ]);
 
-        $user->when($request->filled('user.password'), function (Builder $builder) use ($request) {
-            $builder->getModel()->password = Hash::make($request->input('user.password'));
-        });
+        // Handle password setup based on request
+        $isNewUser = !$user->exists;
+        $sendPasswordEmail = $request->boolean('send_password_setup_email', false);
+        
+        if ($isNewUser && $sendPasswordEmail) {
+            // For new users with email setup - don't set password yet
+            $user->fill($request->collect('user')->except(['password', 'permissions', 'roles'])->toArray());
+            $user->password = Hash::make(Str::random(32)); // Set temporary random password
+            $user->save();
+        } else {
+            // For existing users or manual password setup
+            $user->when($request->filled('user.password'), function (Builder $builder) use ($request) {
+                $builder->getModel()->password = Hash::make($request->input('user.password'));
+            });
 
-        $user
-            ->fill($request->collect('user')->except(['password', 'permissions', 'roles'])->toArray())
-            // ->forceFill(['permissions' => $permissions])
-            ->save();
+            $user
+                ->fill($request->collect('user')->except(['password', 'permissions', 'roles'])->toArray())
+                ->save();
+        }
 
         // Find the roles
         $role1 = Role::where('slug', 'authenticated_user')->first();
@@ -328,6 +368,15 @@ class CandidateEditScreen extends Screen
 
         $candidateData = $request->collect('candidate')->except([])->toArray();
         $candidateData['user_id'] = $user->id;
+        
+        // Ensure null values are converted to empty strings for database constraints
+        $candidateData['skills'] = $candidateData['skills'] ?? '';
+        $candidateData['languages'] = $candidateData['languages'] ?? '';
+        $candidateData['work_experiences'] = $candidateData['work_experiences'] ?? '';
+        $candidateData['gender'] = $candidateData['gender'] ?? '';
+        $candidateData['current_company'] = $candidateData['current_company'] ?? '';
+        $candidateData['current_job_title'] = $candidateData['current_job_title'] ?? '';
+        $candidateData['notes'] = $candidateData['notes'] ?? '';
         
         // Check if this is a new candidate
         $isNewCandidate = !$candidate->exists;
@@ -390,7 +439,32 @@ class CandidateEditScreen extends Screen
         //     $request->input('candidate.other-documents', [])
         // );
 
-        Toast::info(__('Candidate saved'));
+        // Send password setup email if requested
+        if ($isNewUser && $sendPasswordEmail) {
+            try {
+                // Generate password reset token
+                $token = Str::random(64);
+                
+                // Store the token in password_reset_tokens table
+                DB::table('password_reset_tokens')->updateOrInsert(
+                    ['email' => $user->email],
+                    [
+                        'email' => $user->email,
+                        'token' => hash('sha256', $token),
+                        'created_at' => now()
+                    ]
+                );
+                
+                // Send password setup email
+                Mail::to($user)->send(new PasswordSetupMail($user, $token));
+                
+                Toast::success(__('Candidate saved successfully! Password setup email has been sent to ') . $user->email);
+            } catch (\Exception $e) {
+                Toast::warning(__('Candidate saved, but failed to send password setup email: ') . $e->getMessage());
+            }
+        } else {
+            Toast::info(__('Candidate saved'));
+        }
 
         // return redirect()->route('platform.candidates.list');
         return redirect()->route('platform.candidates.view', $candidate->id);

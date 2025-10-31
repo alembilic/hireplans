@@ -36,7 +36,7 @@ class CandidateEditLayout extends Rows
             Input::make('candidate.current_company')
                 ->type('text')
                 ->max(255)
-                ->title(__('Current Company'))
+                ->title(__('Current Company/School'))
                 ->placeholder(__('Current Company'))
                 ->horizontal(),
 
@@ -60,6 +60,13 @@ class CandidateEditLayout extends Rows
                 ->placeholder(__('Skills'))
                 ->rows(4)
                 ->help('Separate skills with a comma. Eg. Teaching, Tutoring, TEFL, TESOL, ESL Teaching, Curriculum Development, Language Assessment, Online Teaching, Classroom Management, Grammar Instruction, etc.')
+                ->horizontal(),
+
+            TextArea::make('candidate.work_experiences')
+                ->title(__('Other Work Experiences'))
+                ->placeholder(__('Brief summary of other work experiences'))
+                ->rows(4)
+                ->help('Brief description of other relevant work experience (in short)')
                 ->horizontal(),
         ];
 

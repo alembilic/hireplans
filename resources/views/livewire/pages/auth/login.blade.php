@@ -23,7 +23,7 @@ new #[Layout('layouts.guest')] class extends Component
         // $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
         // Redirect user to Orchid dashboard
         // $this->redirectIntended(route('platform.index'), true);
-        $this->redirectIntended(default: route('platform.index', absolute: false), navigate: true);
+        $this->redirectIntended(default: route('platform.index', absolute: false));
     }
 }; ?>
 

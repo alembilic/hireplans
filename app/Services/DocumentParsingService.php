@@ -172,8 +172,18 @@ class DocumentParsingService
             $candidate['email'] = strtolower(trim($candidate['email']));
         }
         
-        return array_filter($candidate, function($value) {
-            return $value !== null && $value !== '';
-        });
+        // Ensure all expected fields exist with empty string defaults
+        $expectedFields = [
+            'name', 'email', 'phone', 'city', 'country', 'nationality', 'date_of_birth',
+            'gender', 'current_company', 'current_job_title', 'languages', 'skills', 'work_experiences'
+        ];
+        
+        foreach ($expectedFields as $field) {
+            if (!isset($candidate[$field]) || $candidate[$field] === null || $candidate[$field] === '') {
+                $candidate[$field] = '';
+            }
+        }
+        
+        return $candidate;
     }
 }

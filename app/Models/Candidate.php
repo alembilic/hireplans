@@ -30,6 +30,7 @@ class Candidate extends Model
         'current_job_title',
         'languages',
         'skills',
+        'work_experiences',
         'notes',
     ];
 

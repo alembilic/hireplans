@@ -51,25 +51,11 @@ class UserEditLayout extends Rows
                 ->placeholder(__('Phone'))
                 ->horizontal(),
 
-            Input::make('user.address_line_1')
-                ->type('text')
-                ->max(255)
-                ->title(__('Address'))
-                ->placeholder(__('Hourse number and street'))
-                ->horizontal(),
-
             Input::make('user.city')
                 ->type('text')
                 ->max(255)
                 ->title(__('City'))
                 ->placeholder(__('City'))
-                ->horizontal(),
-
-            Input::make('user.postcode')
-                ->type('text')
-                ->max(255)
-                ->title(__('Postcode'))
-                ->placeholder(__('Postcode'))
                 ->horizontal(),
 
             // Select::make('user.country_code')

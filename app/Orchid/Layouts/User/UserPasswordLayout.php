@@ -7,6 +7,7 @@ namespace App\Orchid\Layouts\User;
 use Orchid\Platform\Models\User;
 use Orchid\Screen\Field;
 use Orchid\Screen\Fields\Password;
+use Orchid\Screen\Fields\CheckBox;
 use Orchid\Screen\Layouts\Rows;
 
 class UserPasswordLayout extends Rows
@@ -21,28 +22,28 @@ class UserPasswordLayout extends Rows
         /** @var User $user */
         $user = $this->query->get('user');
 
-        $placeholder = $user->exists
-            ? __('Leave empty to keep current password')
-            : __('Enter the password to be set');
-
+        // For existing users, show password field
+        if ($user->exists) {
+            $placeholder = __('Leave empty to keep current password');
+            
+            return [
+                Password::make('user.password')
+                    ->placeholder($placeholder)
+                    ->title(__('Password'))
+                    ->horizontal()
+                    ->autocomplete('new-password')
+            ];
+        }
+        
+        // For new users, show email setup option
         return [
-            // Trying to prevent pre-fill by browser!
-            // Password::make('dummy_password')
-            //     ->type('password')
-            //     ->horizontal()
-            //     ->hidden()
-            //     ->autocomplete('off'),
-
-            Password::make('user.password')
-                ->placeholder($placeholder)
-                ->title(__('Password'))
+            CheckBox::make('send_password_setup_email')
+                ->title(__('Password Setup'))
+                ->placeholder(__('Send password setup email to user'))
+                ->help(__('When checked, the user will receive an email with a secure link to set up their own password. Recommended for security.'))
                 ->horizontal()
-                ->required()
-                ->autocomplete('new-password')
-                // ->addAttributes([
-                //     'onfocus' => "this.removeAttribute('readonly');",
-                //     'readonly' => 'readonly',
-                // ]),
+                ->value(true) // Default to checked
+                ->sendTrueOrFalse(),
         ];
     }
 }

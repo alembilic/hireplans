@@ -34,6 +34,12 @@ Route::screen('feedback/{reference?}/edit', PublicReferenceFeedbackEditScreen::c
 
 require __DIR__.'/auth.php';
 
+// Password Setup Routes
+Route::get('/password/setup/{token}', [\App\Http\Controllers\Auth\PasswordSetupController::class, 'show'])
+    ->name('password.setup');
+Route::post('/password/setup', [\App\Http\Controllers\Auth\PasswordSetupController::class, 'store'])
+    ->name('password.setup.store');
+
 Route::get('/jobs/listings', function () {
     $page = request()->get('page', 1);
     session(['page' => $page]);
