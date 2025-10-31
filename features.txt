@@ -256,6 +256,27 @@
         - Removed navigate: true parameters from Livewire components to prevent JavaScript conflicts
         - Cleaned up Alpine.js initialization to work properly with Livewire's built-in Alpine instance
         - Ensured stable logout functionality and navigation throughout the application
+      * **Job Application Email Notifications (Oct 2025):**
+        - Added automatic email notifications to cv@hireplans.com when users apply for jobs
+        - Created JobApplicationNotificationMail with comprehensive application details
+        - Professional email template includes candidate info, job details, skills, and CV status
+        - Queued email processing for reliable delivery without blocking application submission
+        - Includes direct links to view full application and candidate profile in admin panel
+        - Robust error handling ensures application submission succeeds even if email fails
+        - Complete application summary with formatted candidate and employer information
+      * **Unified Email Template System (Oct 2025):**
+        - Created consistent, professional email template system based on password-setup design
+        - Built reusable base email layout (emails/layouts/base.blade.php) with brand styling
+        - Standardized all emails with consistent header, footer, typography, and brand colors
+        - Responsive design with mobile-friendly layouts and proper grid systems
+        - Comprehensive styling classes: info-box, warning-box, success-box, action-buttons, etc.
+        - Updated all existing emails to use the unified template:
+          * Password setup emails (secure account creation)
+          * Job application notifications (cv@hireplans.com alerts)
+          * Reference request emails (professional feedback requests)
+          * Email marketing campaigns (branded messaging)
+        - Improved professional appearance and brand consistency across all communications
+        - Easier maintenance with centralized styling and reusable components
   * **LinkedIn Search Integration (Jan 2025) - [HIDDEN/DISABLED]:**
     - Created comprehensive LinkedIn candidate search system for sourcing talent
     - Built LinkedInSearchService with real API integration support:

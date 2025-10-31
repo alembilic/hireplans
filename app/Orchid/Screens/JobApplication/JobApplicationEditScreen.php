@@ -7,6 +7,8 @@ use App\Services\ActivityService;
 use Illuminate\Http\Request;
 use App\Models\Job;
 use App\Models\JobApplication;
+use App\Mail\JobApplicationNotificationMail;
+use Illuminate\Support\Facades\Mail;
 use Orchid\Screen\Screen;
 use Orchid\Support\Facades\Layout;
 use App\Orchid\Layouts\JobApplication\JobApplicationEditLayout;
@@ -138,11 +140,23 @@ class JobApplicationEditScreen extends Screen
         $applicationData['cover_letter'] = Arr::get($request->input('job_application.cover_letter'), 0, null);
         $application->fill($applicationData)->save();
 
-        // Load relationships for activity logging
-        $application->load(['job.employer', 'candidate']);
+        // Load relationships for activity logging and email notification
+        $application->load(['job.employer', 'candidate.user']);
         
         // Log job application activity
         ActivityService::jobApplied($application->candidate, $application);
+
+        // Send notification email to cv@hireplans.com
+        try {
+            Mail::send(new JobApplicationNotificationMail($application));
+        } catch (\Exception $e) {
+            // Log the error but don't prevent the application from being submitted
+            \Log::error('Failed to send job application notification email: ' . $e->getMessage(), [
+                'application_id' => $application->id,
+                'job_id' => $job->id,
+                'candidate_id' => $application->candidate_id
+            ]);
+        }
 
         Toast::info(__('Your application was submitted successfully.'));
 

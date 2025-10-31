@@ -1,10 +1,17 @@
-@component('mail::message')
+@extends('emails.layouts.base')
 
-{!! $email_content !!}
+@section('title', 'Email Campaign')
+@section('email-title', $email_title ?? 'Message from ' . config('app.name'))
 
-Thanks,<br>
-{{ $creator_name }}<br>
-{{ config('app.name') }}
+@section('content')
+    <div class="content-text">
+        {!! $email_content !!}
+    </div>
+@endsection
 
-@endcomponent
+@section('footer-content')
+    <p>Thanks,<br>
+    <strong>{{ $creator_name }}</strong><br>
+    {{ config('app.name') }}</p>
+@endsection
 
