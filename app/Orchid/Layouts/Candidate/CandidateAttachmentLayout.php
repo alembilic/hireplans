@@ -8,6 +8,7 @@ use Orchid\Screen\Fields\Upload;
 use App\Orchid\Fields\CustomUpload;
 use Orchid\Screen\Fields\Input;
 use App\Orchid\Fields\HtmlField;
+use Orchid\Screen\Fields\Label;
 
 class CandidateAttachmentLayout extends Rows
 {
@@ -27,6 +28,11 @@ class CandidateAttachmentLayout extends Rows
     {
         // dd($this->query['cv_links']);
         return [
+            Label::make('cv_parser_info')
+                ->title('CV Parser Information')
+                ->value('💡 Tip: After uploading your CV, click the "Parse CV" button in the command bar above to automatically extract and populate your profile information from the document. Supports PDF, DOCX, and DOC formats with AI-powered data extraction.')
+                ->help('The parser will intelligently extract personal details, work experience, skills, and contact information from your CV without overwriting existing data.'),
+
             HtmlField::make('custom_html.cv-links')
                 ->label('Existing CVs')
                 ->horizontal()

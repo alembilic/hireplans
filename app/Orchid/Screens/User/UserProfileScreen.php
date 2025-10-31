@@ -23,6 +23,9 @@ use Orchid\Screen\Fields\Group;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Candidate;
 use App\Helpers\HelperFunc;
+use App\Services\DocumentParsingService;
+use Orchid\Attachment\Models\Attachment;
+use Illuminate\Support\Facades\Storage;
 
 class UserProfileScreen extends Screen
 {
@@ -56,10 +59,33 @@ class UserProfileScreen extends Screen
             $otherDocuments = $otherDocumentsAttachments->pluck('id')->toArray();
         }
 
+        // Check for parsed CV data in session and merge with existing candidate data
+        $candidate = $user->candidate ?? new Candidate();
+        $parsedData = session()->get('parsed_cv_data');
+        
+        if ($parsedData) {
+            // Merge parsed data with existing candidate data (parsed data takes priority for empty fields)
+            $candidateArray = $candidate->toArray();
+            
+            // Only populate empty fields with parsed data
+            foreach ($parsedData as $key => $value) {
+                if (empty($candidateArray[$key]) && !empty($value)) {
+                    $candidate->$key = $value;
+                }
+            }
+            
+            // Also merge user data if name is empty
+            if (empty($user->name) && !empty($parsedData['name'])) {
+                $user->name = $parsedData['name'];
+            }
+            
+            // Clear the session data after use
+            session()->forget('parsed_cv_data');
+        }
 
         return [
-            'user' => $request->user(),
-            'candidate' => $user->candidate ?? new Candidate(),
+            'user' => $user,
+            'candidate' => $candidate,
             'cv' => $cv,
             'other_documents' => $otherDocuments,
             'cv_links' => $cvAttachmentsInfo ? HelperFunc::renderAttachmentsLinks($cvAttachmentsInfo) : [],
@@ -80,7 +106,7 @@ class UserProfileScreen extends Screen
      */
     public function description(): ?string
     {
-        return 'Update your account details such as name, email address and password';
+        return 'Update your account details such as name, email address and password. Upload your CV and use the "Parse CV" button to automatically populate your profile fields with extracted data.';
     }
 
     /**
@@ -91,6 +117,12 @@ class UserProfileScreen extends Screen
     public function commandBar(): iterable
     {
         return [
+            Button::make('Parse CV')
+                ->icon('bs.file-earmark-text')
+                ->method('parseCV')
+                ->type(Color::SUCCESS)
+                ->canSee($this->hasUploadedCV()),
+
             Button::make('Back to my account')
                 ->novalidate()
                 ->canSee(Impersonation::isSwitch())
@@ -156,7 +188,7 @@ class UserProfileScreen extends Screen
     /**
      * @param \Illuminate\Http\Request $request
      *
-     * @return void
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function saveProfile(Request $request)
     {
@@ -216,7 +248,90 @@ class UserProfileScreen extends Screen
 
         Toast::info(__('Profile saved'));
 
-        return redirect()->route('dashboard');
+        return redirect()->back();
+    }
+
+    /**
+     * Check if user has uploaded CV attachments
+     *
+     * @return bool
+     */
+    private function hasUploadedCV(): bool
+    {
+        $user = Auth::user()->load('candidate');
+        
+        if (!$user->candidate) {
+            return false;
+        }
+
+        $cvAttachments = $user->candidate->getCvAttachments();
+        
+        return $cvAttachments && $cvAttachments->count() > 0;
+    }
+
+    /**
+     * Parse CV and populate form fields with extracted data
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function parseCV(Request $request)
+    {
+        try {
+            $user = Auth::user()->load('candidate');
+            
+            if (!$user->candidate) {
+                Toast::error('No candidate profile found. Please save your profile first.');
+                return redirect()->back();
+            }
+
+            // Get the most recent CV attachment
+            $cvAttachments = $user->candidate->getCvAttachments();
+            
+            if (!$cvAttachments || $cvAttachments->count() === 0) {
+                Toast::error('No CV found to parse. Please upload a CV first.');
+                return redirect()->back();
+            }
+
+            $latestCV = $cvAttachments->sortByDesc('created_at')->first();
+            
+            // Get file extension and construct proper file name
+            $fileExtension = pathinfo($latestCV->original_name, PATHINFO_EXTENSION);
+            $fileName = $latestCV->name . '.' . $fileExtension;
+            $filePath = \Storage::disk($latestCV->disk)->path($latestCV->path . $fileName);
+            
+            // Check if file exists
+            if (!\Storage::disk($latestCV->disk)->exists($latestCV->path . $fileName)) {
+                Toast::error('CV file not found on disk. Please re-upload your CV.');
+                return redirect()->back();
+            }
+            
+            // Parse the document
+            $parseResult = DocumentParsingService::parseCandidateData($filePath, $fileExtension);
+            
+            if (isset($parseResult['error'])) {
+                Toast::error('Error parsing CV: ' . $parseResult['error']);
+                return redirect()->back();
+            }
+            
+            if (!isset($parseResult['candidates']) || empty($parseResult['candidates'])) {
+                Toast::error('No data could be extracted from the CV.');
+                return redirect()->back();
+            }
+
+            // Get the parsed candidate data
+            $parsedData = $parseResult['candidates'][0];
+            
+            // Store parsed data in session for form population
+            session()->put('parsed_cv_data', $parsedData);
+            
+            Toast::success('CV parsed successfully! Form fields have been populated with extracted data.');
+            
+        } catch (\Exception $e) {
+            Toast::error('An error occurred while parsing the CV: ' . $e->getMessage());
+        }
+        
+        return redirect()->back();
     }
 
 }

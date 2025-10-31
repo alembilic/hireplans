@@ -27,9 +27,28 @@ class GoogleTasksService
     private function initializeClient(): void
     {
         $this->client = new Google_Client();
-        $this->client->setClientId(config('services.google.client_id'));
-        $this->client->setClientSecret(config('services.google.client_secret'));
-        $this->client->setRedirectUri(config('services.google.redirect_uri'));
+        
+        // Get configuration values
+        $clientId = config('services.google.client_id');
+        $clientSecret = config('services.google.client_secret');
+        $redirectUri = config('services.google.redirect');
+        
+        // Validate required configuration
+        if (empty($clientId)) {
+            throw new \Exception('Google Client ID is not configured. Please set GOOGLE_CLIENT_ID in your environment.');
+        }
+        
+        if (empty($clientSecret)) {
+            throw new \Exception('Google Client Secret is not configured. Please set GOOGLE_CLIENT_SECRET in your environment.');
+        }
+        
+        if (empty($redirectUri)) {
+            throw new \Exception('Google Redirect URI is not configured. Please set GOOGLE_REDIRECT_URL in your environment.');
+        }
+        
+        $this->client->setClientId($clientId);
+        $this->client->setClientSecret($clientSecret);
+        $this->client->setRedirectUri($redirectUri);
         $this->client->setScopes([
             'https://www.googleapis.com/auth/tasks',
             'https://www.googleapis.com/auth/calendar',

@@ -277,6 +277,28 @@
           * Email marketing campaigns (branded messaging)
         - Improved professional appearance and brand consistency across all communications
         - Easier maintenance with centralized styling and reusable components
+      * **Google Tasks Integration Fix (Oct 2025):**
+        - Fixed "missing required redirect URI" error in GoogleTasksService
+        - Corrected configuration key mismatch: changed from redirect_uri to redirect to match services.php config
+        - Added comprehensive validation for Google configuration (client_id, client_secret, redirect_uri)
+        - Enhanced error messages to guide users to set missing environment variables
+        - Required environment variables: GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REDIRECT_URL
+        - Fixed CORS error by preventing Orchid.js from intercepting OAuth redirects as AJAX requests
+        - Added data-turbo="false" and target="_self" to Google OAuth link in tasks-component.blade.php
+        - Redirect URL should match dashboard prefix: http://localhost:8000/portal/tasks/google-callback (for portal prefix)
+        - Ensures proper Google OAuth authentication flow for Google Tasks and Calendar integration
+      * **User Profile CV Parser Integration (Oct 2025):**
+        - Extended existing CV parsing functionality to user profile edit page (UserProfileScreen)
+        - Added "Parse CV" button in command bar that appears when user has uploaded CV attachments
+        - Integrated DocumentParsingService and LlmParsingService for AI-enhanced data extraction
+        - Automatic form population with parsed CV data (only fills empty fields, preserves existing data)
+        - Session-based data transfer between parsing and form rendering for seamless UX
+        - Comprehensive error handling with user feedback via Toast messages
+        - Supports PDF, DOCX, and DOC file formats with intelligent text extraction
+        - Parses personal info, professional details, skills, and work experience from CVs
+        - Smart field mapping between parsed data and candidate profile form fields
+        - Uses most recent CV attachment when multiple CVs are uploaded
+        - Leverages existing CV attachment functionality without breaking current workflows
   * **LinkedIn Search Integration (Jan 2025) - [HIDDEN/DISABLED]:**
     - Created comprehensive LinkedIn candidate search system for sourcing talent
     - Built LinkedInSearchService with real API integration support:
