@@ -697,3 +697,114 @@ Enhanced the homepage featured jobs section to display real job data from the da
   * Added 'accepted' validation rule in register method
   * Enhanced auth layout CSS with checkbox-container and checkbox-label styles
   * Golden link colors (#D4A017) with hover effects matching site branding
+
+## Job Posting Inquiry Modal (Nov 18, 2025)
+
+**Interactive modal form for employers to submit job posting inquiries directly from the homepage**
+
+### Overview:
+Created a professional modal-based inquiry system allowing employers to easily request to post job openings without leaving the homepage. Submissions are sent directly to the company email for follow-up.
+
+### Technical Implementation:
+- **Livewire Component**: `App\Livewire\JobInquiryModal`
+- **Mailable**: `App\Mail\JobInquiryMail`
+- **Email Template**: `resources/views/emails/job-inquiry.blade.php`
+- **Modal View**: `resources/views/livewire/job-inquiry-modal.blade.php`
+
+### Features:
+1. **Modal Trigger**:
+   - "Post a job" button in CTA band opens modal
+   - Conditional rendering based on `showModal` prop
+   - Livewire event dispatch system for smooth interaction
+   - Non-intrusive overlay design with backdrop
+
+2. **Form Fields**:
+   - **Email**: Contact email for follow-up (required, validated)
+   - **Company**: Company name (required)
+   - **Position**: Job role/position title (required)
+   - **Location**: Job location (required)
+   - **Details**: Detailed position description (required, max 2000 chars)
+
+3. **Validation & Error Handling**:
+   - Full Laravel validation with custom error messages
+   - Real-time error display under each field
+   - Required field indicators with red asterisks
+   - Comprehensive backend validation rules
+
+4. **Email Notification**:
+   - Sent to `COMPANY_EMAIL` environment variable
+   - Professional email template using unified layout system
+   - Includes all inquiry details in organized format
+   - Direct "Reply to Company" button with mailto link
+   - Action required notice for timely follow-up
+
+5. **User Experience**:
+   - **Professional Design**: Matches site branding with golden theme
+   - **Smooth Animation**: Fade-in overlay with centered modal
+   - **Mobile Responsive**: Works perfectly on all screen sizes
+   - **Click Outside to Close**: Overlay click closes modal
+   - **Close Button**: Clear X button in header
+   - **Success/Error Messages**: Toast-style notifications
+   - **Form Reset**: Clears all fields after successful submission
+
+### Visual Design:
+- **Modal Styling**: 
+  * White background with rounded corners (12px)
+  * Professional shadow for depth
+  * Max width 600px for optimal form layout
+  * Scrollable content if needed (max-height 90vh)
+
+- **Form Styling**:
+  * Golden focus states (#F4C542) matching brand
+  * Clean input fields with proper spacing
+  * Textarea for detailed descriptions
+  * Professional button design with hover effects
+
+- **Header Section**:
+  * Clear "Post a Job" title
+  * Helpful subtitle explaining purpose
+  * Close button with hover effects
+
+- **Action Buttons**:
+  * Cancel: White with gray border
+  * Submit: Golden primary button
+  * Proper spacing and alignment
+
+### Email Template:
+- Uses unified email layout (`emails.layouts.base`)
+- Organized information display with tables
+- Company information section with all details
+- Position details in highlighted box
+- Call-to-action button to reply
+- Action required warning box
+
+### Integration:
+- **Homepage**: Modal component added to `resources/views/livewire/home-page.blade.php`
+- **CTA Band**: Modified to trigger modal instead of anchor link
+- **Conditional Display**: `showModal` prop controls behavior
+- **Event System**: Livewire dispatch/listen pattern for communication
+
+### User Flow:
+1. User clicks "Post a job" button in CTA band
+2. Modal opens with inquiry form
+3. User fills in company details and position information
+4. Form validates on submission
+5. Email sent to company (admin@hireplans.com or COMPANY_EMAIL)
+6. Success message displayed
+7. Modal closes and form resets
+8. Admin receives email and can reply directly
+
+### Error Handling:
+- Try-catch block for email sending
+- Logs errors for debugging
+- User-friendly error messages
+- Validation prevents incomplete submissions
+- Session flash messages for feedback
+
+### Benefits:
+- **Lead Generation**: Captures employer inquiries directly
+- **Professional Appearance**: Shows commitment to customer service
+- **Easy to Use**: Simple form with clear instructions
+- **No Page Reload**: Smooth single-page experience
+- **Mobile Friendly**: Works on all devices
+- **Immediate Response**: Email notification ensures quick follow-up

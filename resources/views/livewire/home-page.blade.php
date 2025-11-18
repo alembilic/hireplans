@@ -1,4 +1,7 @@
 <div>
+    <!-- Job Inquiry Modal -->
+    <livewire:job-inquiry-modal />
+
     <!-- Hero Section with Enhanced Search -->
     <x-hero-section 
         title="Find the role that fits your plan." 
@@ -34,6 +37,7 @@
         text="Connect with qualified professionals ready to make an impact."
         :primaryButton="['text' => 'Post a job', 'link' => '#contact']"
         :secondaryButton="['text' => 'Talk to us', 'link' => '#contact']"
+        :showModal="true"
     />
 </div>
 
