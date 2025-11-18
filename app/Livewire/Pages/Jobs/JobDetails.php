@@ -31,6 +31,6 @@ class JobDetails extends Component
     public function render()
     {
         return view('livewire.pages.jobs.job-details', ['job' => $this->job])
-            ->layout('layouts.app');
+            ->layout('layouts.home-layout');
     }
 }

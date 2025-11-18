@@ -20,9 +20,9 @@ class JobList extends Component
     public function mount()
     {
         $this->search = request()->query('search', $this->search);
-        // $this->jobs = Job::with('employer')->where('is_active', 1)->paginate(10);
+        $this->location = request()->query('location', $this->location);
+        $this->job_type = request()->query('workType', $this->job_type);
         $this->jobTypes = $this->getJobTypes();
-        // $this->currentPage = request()->query('page', 1);
         $this->page = session('page', 1); // Retrieve the page number from the session, default to 1
     }
 
@@ -51,6 +51,11 @@ class JobList extends Component
     public function updatingPage($page)
     {
         session(['page' => $page]); // Store the current page number in the session
+    }
+
+    public function goToPage($page)
+    {
+        $this->setPage($page);
     }
 
     public function getJobTypes()
@@ -107,8 +112,7 @@ class JobList extends Component
             ->where('is_active', 1)
             ->paginate(10);
 
-        return view('livewire.pages.jobs.job-list', ['jobs' => $this->jobs])
-            ->layout('layouts.app');
+        return view('livewire.pages.jobs.job-list', ['jobs' => $this->jobs]);
     }
 }
 

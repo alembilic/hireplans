@@ -299,6 +299,93 @@
         - Smart field mapping between parsed data and candidate profile form fields
         - Uses most recent CV attachment when multiple CVs are uploaded
         - Leverages existing CV attachment functionality without breaking current workflows
+  * **Website Redesign with Component-Based Architecture (Jan 2025):**
+    - Implemented complete redesign of the homepage using modern HTML template from hireplans-sites folder
+    - Created comprehensive set of reusable Blade components for consistent design system:
+      * hero-section: Enhanced search form with job role, location, and work type filters
+      * trust-stats: Company statistics display (20+ years experience, Gulf region focus, etc.)
+      * mission-section: Professional company description and values
+      * featured-jobs: Job listings display with sample data and customizable job arrays
+      * categories-section: Job category browsing with hover effects and job counts
+      * how-it-works: Step-by-step process for both job seekers and employers
+      * testimonials-section: Customer testimonials with professional card layout
+      * cta-band: Call-to-action section with customizable buttons and messaging
+      * site-header: Professional navigation header with authentication integration
+      * site-footer: Comprehensive footer with links, social media, and contact info
+    - Enhanced Livewire HomePage component with multi-field search functionality:
+      * Added searchQuery, location, and workType properties for comprehensive job search
+      * Implemented searchJobs() method to handle form submission and redirect with query parameters
+      * Maintains backward compatibility with existing /jobs/listings route structure
+    - Created dedicated home-layout.blade.php for optimized home page experience:
+      * Professional typography using Inter font family matching design template
+      * Brand color system with golden theme (--brand-gold: #F4C542, --brand-gold-600: #D4A017)
+      * Bootstrap integration with custom styling for consistent component appearance
+      * SEO-optimized meta tags including Open Graph and Twitter Card support
+      * Accessibility features including skip links and proper ARIA labels
+    - Preserved existing functionality while upgrading visual design:
+      * Maintained job search redirection to /jobs/listings with query parameters
+      * Kept authentication integration and user state management
+      * Preserved responsive design for mobile and desktop compatibility
+    - Component-based architecture for maximum reusability:
+      * All sections are now modular Blade components with customizable props
+      * Easy to maintain and update individual sections without affecting others
+      * Consistent styling patterns using Bootstrap classes with Tailwind utilities
+      * Professional hover effects and animations for enhanced user experience
+    - **Header and Footer CSS Fix (Jan 2025):**
+      * Fixed missing header and footer styles that were causing display issues
+      * Added proper logo sizing (40px mobile, 50px desktop) to prevent oversized images
+      * Implemented mobile hamburger navigation with smooth animations
+      * Added professional footer styling with organized column layout and social icons
+      * Fixed responsive design breakpoints for mobile, tablet, and desktop views
+      * Scoped all styles to .home-layout class to prevent conflicts with Orchid admin
+      * Added proper hover effects, transitions, and professional styling throughout
+      * Added cursor pointer to featured job cards for better UX indicating clickable elements
+    - **Mobile Menu Z-Index Fix (Jan 2025):**
+      * Fixed z-index conflicts where logo was overlapping the mobile hamburger menu sidebar
+      * Corrected gray appearance issue in mobile menu background
+      * Proper layering: hamburger button (z-index: 1002), mobile menu (z-index: 1001), backdrop (z-index: 1000), logo (z-index: 100)
+      * Enhanced mobile menu styling with professional white background and proper hover effects
+      * Added smooth transitions and proper shadow effects for better user experience
+      * Mobile navigation now displays correctly on all devices without visual conflicts
+      * Added smooth coordinated animations with 0.3s fade-in backdrop that complements sidebar slide-in
+      * Backdrop covers only main content area (left side) while keeping sidebar area clear and professional
+      * Perfect spacing using `right: 280px` positioning to prevent any overlap with sidebar menu
+      * Clean X close button without background styling for modern, minimal appearance
+      * Removed hover background effects when menu is in X state for cleaner interaction
+      * Fixed X symmetry by using 4px translate values with transform-origin: center for perfectly balanced diagonal lines
+    - **Anchor Link Scroll Offset Fix (Jan 2025):**
+      * Fixed sticky header covering content when clicking anchor navigation links
+      * Added scroll-padding-top: 90px to .home-layout for modern browser support
+      * Added scroll-margin-top: 90px to :target elements for older browser compatibility
+      * Calculated offset accounts for header height (73px) plus comfortable padding (17px)
+      * Now when users click navigation links (#about, #contact, #jobs, etc.), content appears properly below the sticky header
+      * Tested and verified working across all anchor links on the homepage
+    - **Unified Authentication Page Styling (Nov 2025):**
+      * Created consistent authentication layout (layouts/auth.blade.php) with clean, headerless design
+      * Updated all authentication pages to use unified styling: login, register, forgot-password, reset-password
+      * Implemented professional auth card design with brand colors and consistent form styling
+      * Added proper error handling, success messages, and form validation styling
+      * Maintains responsive design with mobile-friendly layouts
+      * Simplified layout with logo-only navigation - logo links back to homepage (/)
+      * Professional form styling with brand golden theme (#F4C542, #D4A017) matching home page design
+      * Enhanced user experience with improved typography, spacing, and visual hierarchy
+      * Clean, focused authentication experience without header navigation distractions
+      * Custom checkbox styling with proper background, borders, and branded checked state for better visibility
+      * Warm off-white background color (#FFFBF0) for consistent, professional appearance
+    - **Job Listings Page Redesign (Nov 2025):**
+      * Complete redesign of job listings page using home-layout for brand consistency
+      * Professional search and filters section with Bootstrap grid layout and brand styling
+      * Modern job cards with hover effects, company logos, and colorful job detail badges
+      * Enhanced job information display: location, salary, job type, experience level with distinct colors
+      * Responsive design with proper mobile layout and Bootstrap column system
+      * Improved search functionality supporting job title, company, keywords, location, and job type filtering
+      * Professional typography matching home page design with proper spacing and visual hierarchy
+      * Results counter showing pagination info and empty state design for no results
+      * Clickable job cards with smooth hover animations and proper call-to-action buttons
+      * Consistent brand colors (#F4C542, #D4A017, #FAFAFA) throughout the page
+      * Integration with home page search - accepts search parameters from homepage hero section
+      * Improved spacing: increased gaps between job cards, better tag spacing with flex layout, enhanced visual hierarchy
+      * Custom pagination design matching brand style: card-based layout, golden hover effects, proper page numbering with ellipsis, branded current page indicator
   * **LinkedIn Search Integration (Jan 2025) - [HIDDEN/DISABLED]:**
     - Created comprehensive LinkedIn candidate search system for sourcing talent
     - Built LinkedInSearchService with real API integration support:
@@ -352,4 +439,177 @@
 - **Authentication**: Protect routes with auth middleware for user-specific features
 - **Database**: Create proper migrations and models with relationships
 - **Validation**: Implement form validation with user-friendly error messages
-- **Responsive Design**: Ensure mobile-friendly layouts with proper spacing and sizing 
+- **Responsive Design**: Ensure mobile-friendly layouts with proper spacing and sizing
+- **Authentication Pages**: Use layouts/auth.blade.php layout for clean, headerless design with logo-only navigation across all auth pages (login, register, forgot-password, reset-password)
+
+## Job Details Page Redesign (Nov 2025)
+
+**Complete modern redesign of job details page at /jobs/details/{id}**
+
+### Layout and Structure:
+- **Layout Change**: Switched from layouts.app to layouts.home-layout for consistent site branding
+- **Container Layout**: Uses Bootstrap container with proper padding and responsive design
+- **Background**: Matches job listings page with #FAFAFA background color
+- **Card Design**: Single clean white card with rounded corners and subtle shadow
+
+### Visual Design:
+- **Header Section**: 
+  * Large company logo (80x80px) or branded initial fallback
+  * Prominent job title (2.25rem, weight 700)
+  * Company name as subtitle (1.25rem, weight 600)
+  * Professional spacing and alignment
+
+- **Job Details Grid**:
+  * 6-column responsive grid layout (col-md-6)
+  * Icon-based information display with golden themed icons
+  * Consistent icon containers (40x40px) with golden background tint
+  * Upper-case labels with proper typography hierarchy
+  * Information includes: Location, Salary, Job Type, Experience Level, Category, Posted Date
+
+- **Job Description**:
+  * Clear section separation with border-top divider
+  * Professional typography with 1.7 line-height for readability
+  * Proper heading hierarchy and spacing
+
+### Navigation and Actions:
+- **Back Navigation**: 
+  * Top-level back link with golden hover states
+  * Breadcrumb-style navigation to job listings
+  * Preserves pagination state from listings page
+
+- **Action Buttons**:
+  * Primary golden gradient "Apply Now" button with hover animations
+  * Secondary outlined "Back to Listings" button
+  * Conditional display based on authentication and profile status
+  * Proper button sizing and spacing with icons
+
+### Color Scheme and Branding:
+- **Primary Colors**: Golden theme (#F4C542, #D4A017) matching site branding
+- **Text Colors**: Professional hierarchy (#0A0A0A for headings, #4B4B4B for body, #6B7280 for labels)
+- **Interactive Elements**: Hover states and transitions on all clickable elements
+- **Icon Design**: Bootstrap Icons with consistent golden theming
+
+### Technical Implementation:
+- **Component**: App\Livewire\Pages\Jobs\JobDetails
+- **View**: resources/views/livewire/pages/jobs/job-details.blade.php
+- **Layout**: Uses layouts.home-layout for consistent site header and footer
+- **Responsive**: Bootstrap grid system with proper mobile optimization
+- **Accessibility**: Proper heading structure, alt text, and semantic markup
+
+### User Experience Improvements:
+- **Visual Hierarchy**: Clear information prioritization and scanning patterns
+- **Professional Presentation**: Corporate-level design suitable for recruitment platform
+- **Consistent Navigation**: Seamless integration with job listings flow
+- **Mobile Optimization**: Responsive design that works across all device sizes
+- **Loading Performance**: Optimized markup and minimal custom CSS 
+
+### Latest Updates (Nov 15, 2025):
+- **Job Card Layout Enhancement**:
+  * Repositioned company logo to appear on the left side of job title and employer name (desktop)
+  * Logo appears on top of job title and employer name on mobile devices
+  * Used responsive flexbox layout with Bootstrap classes:
+    - `flex-column` on mobile (vertical stack)
+    - `flex-md-row` on desktop (horizontal layout)
+  * Updated text alignment for consistency:
+    - `text-start` for consistent left alignment across all screen sizes
+    - Removed center alignment on mobile for better consistency
+   * Job tags/badges are left-aligned for consistent layout
+   * Company logo height now dynamically matches content height:
+     - Uses `align-self-stretch` and `min-height: 60px` with `height: auto`
+     - Logo container stretches to match title + employer + tags content height
+     - Maintains 60px width with flexible height for better visual balance
+   * Improved visual hierarchy and readability across all device sizes
+   * Maintained hover effects and professional styling
+
+- **Search Section Flex Layout Refactor**:
+  * Converted from Bootstrap grid (`row`/`col-md-*`) to pure flexbox layout
+  * Replaced `col-md-4`, `col-md-3`, `col-md-2` classes with responsive flex utilities:
+    - Search input: `flex-fill` with min-width 280px, max-width 320px (largest field)
+    - Location and Job Type: `flex-grow-1` with min-width 200px, max-width 240px
+    - Action buttons: `flex-shrink-0` with min-width 140px (fixed width)
+  * Enhanced responsive behavior:
+    - `d-flex flex-wrap` container with `gap-3` for consistent spacing
+    - `align-items-end` to align all form elements at bottom baseline
+    - Min-width constraints prevent fields from becoming too narrow
+    - Max-width constraints maintain optimal proportions on larger screens
+  * Improved button styling with `width: 100%` for consistent full-width appearance
+  * Better responsive wrapping behavior when screen space is limited
+  * Maintained all existing styling, hover effects, and functionality
+  * **Enhanced Button Layout and Mobile Optimization**:
+    - Separated form fields and action buttons into distinct rows for better hierarchy
+    - Buttons now positioned at bottom of search section instead of baseline alignment
+    - Form fields row: `d-flex flex-wrap gap-3 align-items-end mb-3`
+    - Buttons row: `d-flex gap-2 justify-content-center justify-content-md-start`
+    - Mobile-first design with `w-100` classes ensuring 100% width on small screens
+    - Inline button layout: Search and Reset buttons positioned side by side on same row
+    - Centered button alignment on mobile, left-aligned on desktop  
+    - Compact button sizing with original padding for optimal space usage
+
+- **Job Details Tiles Layout**:
+  * Converted job properties from inline grid to individual tile cards
+  * Each property (Location, Salary, Job Type, Experience, Category, Posted Date) has its own tile
+  * Tile design features:
+    - 60x60px golden gradient icon containers with larger 1.5rem icons
+    - Subtle gradient background (white to light gray)
+    - Rounded corners (12px border-radius) for modern appearance
+    - Center-aligned content with proper spacing
+    - Hover animations: translateY(-4px) with golden glow shadow
+    - Golden border highlight on hover for interactive feedback
+  * Responsive grid layout:
+    - col-md-4 (3 tiles per row on desktop)
+    - col-sm-6 (2 tiles per row on tablet)
+    - Full width on mobile for optimal readability
+  * Enhanced visual impact with better separation and focus on each property
+  * Consistent golden branding throughout all interactive elements
+
+- **Job Detail Tile Component Creation**:
+  * Extracted tile functionality into reusable `<x-job-detail-tile>` component
+  * Component props: `icon`, `label`, `value`, and optional `class`
+  * Added cursor pointer styling for better UX indication
+  * Improved salary formatting with `number_format()` for better readability
+  * Component features:
+    - Fully encapsulated styling and hover animations
+    - Reusable across different contexts
+    - Clean separation of concerns
+    - Consistent golden branding and interactions
+  * Maintained all previous styling and animations within the component
+  * Simplified main template with clean component usage
+
+## Featured Jobs Database Integration (Nov 15, 2025)
+
+### Overview
+Enhanced the homepage featured jobs section to display real job data from the database instead of static sample content, providing users with current and relevant job opportunities.
+
+### Technical Implementation
+- **HomePage Livewire Component Enhancement**:
+  * Added `getFeaturedJobs()` method to fetch latest 6 active jobs from database
+  * Implemented eager loading of employer relationship for optimal performance
+  * Added proper data transformation to match component expectations
+  * Integrated HelperFunc utility methods for consistent data formatting
+
+- **Data Processing & Formatting**:
+  * Job types formatted using `HelperFunc::getJobTypes()` for consistent display
+  * Experience levels formatted using `HelperFunc::getExperienceLevels()` 
+  * Salary formatting with `number_format()` and currency symbol
+  * Proper fallback handling for missing data fields
+  * Dynamic tag generation based on actual job properties
+
+- **Featured Jobs Component Updates**:
+  * Enhanced component to handle real database data
+  * Improved null value handling for optional fields (salary, location)
+  * Added validation for empty tags with appropriate fallbacks
+  * Maintained backward compatibility with existing component structure
+
+### Database Query Optimization
+- **Query Strategy**:
+  * Filtered for active jobs only (`is_active = true`)
+  * Ordered by creation date (`latest()`) to show newest opportunities
+  * Limited to 6 results for optimal page performance
+  * Eager loaded employer relationship to prevent N+1 queries
+
+### User Experience Improvements
+- **Dynamic Content**: Homepage now displays current job opportunities instead of static samples
+- **Consistent Branding**: Job types and experience levels use standardized terminology
+- **Professional Presentation**: Proper salary formatting and clean data display
+- **Real Links**: Each job card links to actual job detail pages
+- **Fallback Handling**: Graceful handling of missing employer or job data

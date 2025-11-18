@@ -465,3 +465,7 @@ input {
 .btn .me-2 {
     margin-right: 8px !important;
 }
+
+.d-flex {
+    display: flex !important;
+}
