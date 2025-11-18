@@ -8,6 +8,6 @@ class TermsPage extends Component
 {
     public function render()
     {
-        return view('livewire.terms-page')->layout('layouts.app');
+        return view('livewire.terms-page')->layout('layouts.home-layout');
     }
 }

@@ -4,8 +4,8 @@
             <div class="footer__column">
                 <h3 class="footer__heading">Product</h3>
                 <ul class="footer__links">
-                    <li><a href="#jobs">Jobs</a></li>
-                    <li><a href="#categories">Categories</a></li>
+                    <li><a href="{{ route('jobs.listings') }}">Jobs</a></li>
+                    <li><a href="{{ route('home') }}#categories">Categories</a></li>
                     <li><a href="#companies">Companies</a></li>
                 </ul>
             </div>
@@ -13,7 +13,7 @@
             <div class="footer__column">
                 <h3 class="footer__heading">Company</h3>
                 <ul class="footer__links">
-                    <li><a href="#about">About</a></li>
+                    <li><a href="{{ route('home') }}#about">About</a></li>
                     <li><a href="#careers">Careers</a></li>
                     <li><a href="#press">Press</a></li>
                 </ul>
@@ -22,10 +22,10 @@
             <div class="footer__column">
                 <h3 class="footer__heading">Support</h3>
                 <ul class="footer__links">
-                    <li><a href="#contact" id="contact">Contact</a></li>
+                    <li><a href="{{ route('home') }}#contact" id="contact">Contact</a></li>
                     <li><a href="#faq">FAQ</a></li>
-                    <li><a href="#privacy">Privacy</a></li>
-                    <li><a href="#terms">Terms</a></li>
+                    <li><a href="{{ route('privacy-policy') }}">Privacy</a></li>
+                    <li><a href="{{ route('terms-of-use') }}">Terms</a></li>
                 </ul>
             </div>
             

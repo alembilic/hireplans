@@ -613,3 +613,87 @@ Enhanced the homepage featured jobs section to display real job data from the da
 - **Professional Presentation**: Proper salary formatting and clean data display
 - **Real Links**: Each job card links to actual job detail pages
 - **Fallback Handling**: Graceful handling of missing employer or job data
+
+## Privacy and Terms Pages Redesign (Nov 18, 2025)
+
+**Complete modern redesign of Privacy Policy and Terms of Use pages**
+
+### Layout and Structure:
+- **Layout Change**: Switched from layouts.app to layouts.home-layout for consistent site branding
+- **Hero Section**: Added professional hero section with centered titles and descriptive subtitles
+- **Container Layout**: Uses card-based content container with proper padding and responsive design
+- **Background**: Matches job listings and details pages with #FAFAFA background color
+- **Card Design**: Single clean white card with rounded corners (12px) and subtle shadow
+
+### Visual Design:
+- **Hero Section**:
+  * Centered page title with large, bold typography (3rem)
+  * Descriptive subtitle explaining page purpose
+  * Professional spacing and color hierarchy (#6B7280 for subtitle)
+  * Clean, minimal design matching site branding
+
+- **Content Section**:
+  * Maximum width container (900px) for optimal readability
+  * White card background with border-radius and shadow
+  * Professional typography with proper line-height (1.7) for easy reading
+  * Color hierarchy: #0A0A0A for headings, #4B4B4B for body text
+
+- **Typography System**:
+  * Main section headers (H2): 1.75rem, bold, golden color (#D4A017) with bottom border (#F4C542)
+  * Section headers (H3): 1.5rem, bold, golden color (#D4A017)
+  * Subsection headers (H4): 1.25rem, semi-bold, dark color (#0A0A0A)
+  * Body text: Comfortable line-height (1.7) for readability
+  * Links: Golden color (#D4A017) with underline for visibility
+
+### Content Structure:
+- **Privacy Policy Page**:
+  * Comprehensive sections on data collection, usage, and rights
+  * Organized with clear headings and subsections
+  * Proper list formatting with margin and spacing
+  * Contact information with clickable email links
+  * GDPR compliance information and user rights
+
+- **Terms of Use Page**:
+  * Clear sections on website usage, security, and copyright
+  * User obligations and limitation of liability
+  * Website availability and disclaimer information
+  * Link to Privacy Policy for related information
+  * Law and jurisdiction details
+
+### Color Scheme and Branding:
+- **Primary Colors**: Golden theme (#F4C542, #D4A017) matching site branding
+- **Text Colors**: Professional hierarchy (#0A0A0A for headings, #4B4B4B for body, #6B7280 for subtitles)
+- **Interactive Elements**: Golden underlined links for clear call-to-action
+- **Section Dividers**: Golden accent border for main headings
+
+### Technical Implementation:
+- **Components**: 
+  * App\Livewire\PrivacyPage (resources/views/livewire/privacy-page.blade.php)
+  * App\Livewire\TermsPage (resources/views/livewire/terms-page.blade.php)
+- **Layout**: Uses layouts.home-layout for consistent site header and footer
+- **Routes**: Already configured in routes/web.php (/privacy-policy, /terms-of-use)
+- **Footer Integration**: Links already exist in main site footer (layouts/app.blade.php)
+- **Responsive**: Bootstrap-compatible design with proper mobile optimization
+- **Accessibility**: Proper heading hierarchy, semantic HTML, and readable typography
+
+### User Experience Improvements:
+- **Consistent Navigation**: Seamless integration with main site navigation and footer
+- **Professional Presentation**: Corporate-level design suitable for legal documentation
+- **Visual Hierarchy**: Clear information prioritization and scanning patterns
+- **Mobile Optimization**: Responsive design that works across all device sizes
+- **Improved Readability**: Proper typography, spacing, and color contrast for long-form content
+- **Brand Consistency**: Matches homepage, job listings, and job details page design
+
+### Registration Terms Agreement (Nov 18, 2025):
+- **Required Checkbox**: Added mandatory agreement checkbox to registration form
+- **Legal Compliance**: Users must agree to Terms of Use and Privacy Policy before creating account
+- **Linked Documents**: Direct links to both policies that open in new tabs
+- **Validation**: Backend validation with 'accepted' rule ensures checkbox is checked
+- **Professional Styling**: Checkbox styled with golden brand colors matching auth layout
+- **User Experience**: Clear, readable text with hover effects on links
+- **Error Handling**: Proper error messages if user attempts to register without agreeing
+- **Implementation**: 
+  * Added `agreed_to_terms` boolean property to register Livewire component
+  * Added 'accepted' validation rule in register method
+  * Enhanced auth layout CSS with checkbox-container and checkbox-label styles
+  * Golden link colors (#D4A017) with hover effects matching site branding

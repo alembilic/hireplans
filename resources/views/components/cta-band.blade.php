@@ -14,7 +14,7 @@
                 <a href="{{ $primaryButton['link'] }}" class="btn btn--primary btn--large">
                     {{ $primaryButton['text'] }}
                 </a>
-                <a href="{{ $secondaryButton['link'] }}" class="btn btn--ghost btn--large">
+                <a href="mailto:{{ env('COMPANY_EMAIL') ?? '' }}" class="btn btn--ghost btn--large d-flex items-center">
                     {{ $secondaryButton['text'] }}
                 </a>
             </div>

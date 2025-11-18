@@ -8,6 +8,6 @@ class PrivacyPage extends Component
 {
     public function render()
     {
-        return view('livewire.privacy-page')->layout('layouts.app');
+        return view('livewire.privacy-page')->layout('layouts.home-layout');
     }
 }

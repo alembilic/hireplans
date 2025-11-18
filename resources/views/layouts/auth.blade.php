@@ -99,6 +99,13 @@
             gap: 0.5rem;
         }
         
+        .auth-form .checkbox-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            cursor: pointer;
+        }
+        
         .auth-form input[type="checkbox"] {
             width: 18px;
             height: 18px;
@@ -143,6 +150,18 @@
             font-size: 0.875rem;
             color: #4B4B4B;
             margin: 0;
+            line-height: 1.5;
+            font-weight: 400;
+        }
+        
+        .auth-form .checkbox-label a {
+            color: #D4A017;
+            text-decoration: underline;
+            font-weight: 500;
+        }
+        
+        .auth-form .checkbox-label a:hover {
+            color: #0A0A0A;
         }
         
         .auth-button {

@@ -120,7 +120,7 @@
                         <p class="text-sm mt-4">Call us at:</p>
                         <p class="text-sm"><a href="tel:+123456789" class="hover:underline">+123456789</a></p>
                         <p class="text-sm"><a href="tel:+987654321" class="hover:underline">+987654321</a></p> -->
-                        <p class="text-sm">Email us at <a href="mailto:admin@hireplans.com">admin@hireplans.com</a> or <a href="mailto:enquiries@hireplans.com">enquiries@hireplans.com</a></p>
+                        <p class="text-sm">Email us at <a href="mailto:{{ env('COMPANY_EMAIL') ?? '' }}">{{ env('COMPANY_EMAIL') ?? '' }}</a></p>
                         <p class="text-sm">Call us at: <a href="tel:+443333031417">+443333031417</a> or <a href="tel:+442032398039">+442032398039</a></p>
                     </div>
                 </div>

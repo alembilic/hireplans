@@ -15,6 +15,7 @@ new #[Layout('layouts.auth')] class extends Component
     public string $email = '';
     public string $password = '';
     public string $password_confirmation = '';
+    public bool $agreed_to_terms = false;
 
     /**
      * Handle an incoming registration request.
@@ -25,6 +26,7 @@ new #[Layout('layouts.auth')] class extends Component
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
+            'agreed_to_terms' => ['accepted'],
         ]);
 
         $validated['password'] = Hash::make($validated['password']);
@@ -79,6 +81,19 @@ new #[Layout('layouts.auth')] class extends Component
             <label for="password_confirmation">{{ __('Confirm Password') }}</label>
             <input wire:model="password_confirmation" id="password_confirmation" type="password" name="password_confirmation" required autocomplete="new-password" />
             @error('password_confirmation')
+                <div class="error-text">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <!-- Terms and Privacy Agreement -->
+        <div class="form-group">
+            <label class="checkbox-container">
+                <input wire:model="agreed_to_terms" id="agreed_to_terms" type="checkbox" name="agreed_to_terms" required />
+                <span class="checkbox-label">
+                    I agree to the <a href="{{ route('terms-of-use') }}" target="_blank">Terms of Use</a> and <a href="{{ route('privacy-policy') }}" target="_blank">Privacy Policy</a>
+                </span>
+            </label>
+            @error('agreed_to_terms')
                 <div class="error-text">{{ $message }}</div>
             @enderror
         </div>
