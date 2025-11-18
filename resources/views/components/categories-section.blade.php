@@ -1,52 +1,33 @@
-@props(['categories' => [], 'title' => 'Browse by category'])
+@props(['jobTypes' => [], 'locations' => [], 'title' => 'Find Jobs by Type & Location'])
 
 <section class="categories">
     <div class="container">
         <h2 class="section-title">{{ $title }}</h2>
         
-        <div class="category-grid">
-            @if(count($categories) > 0)
-                @foreach($categories as $category)
-                <a href="{{ $category['link'] ?? '#' }}" class="pill-card">
-                    <span class="pill-card__name">{{ $category['name'] ?? 'Category' }}</span>
-                    <span class="pill-card__count">{{ $category['count'] ?? '0 jobs' }}</span>
-                </a>
-                @endforeach
-            @else
-                <!-- Default categories if none provided -->
-                <a href="#" class="pill-card">
-                    <span class="pill-card__name">Engineering</span>
-                    <span class="pill-card__count">1,247 jobs</span>
-                </a>
-                <a href="#" class="pill-card">
-                    <span class="pill-card__name">Design</span>
-                    <span class="pill-card__count">342 jobs</span>
-                </a>
-                <a href="#" class="pill-card">
-                    <span class="pill-card__name">Marketing</span>
-                    <span class="pill-card__count">589 jobs</span>
-                </a>
-                <a href="#" class="pill-card">
-                    <span class="pill-card__name">Product</span>
-                    <span class="pill-card__count">421 jobs</span>
-                </a>
-                <a href="#" class="pill-card">
-                    <span class="pill-card__name">Data</span>
-                    <span class="pill-card__count">673 jobs</span>
-                </a>
-                <a href="#" class="pill-card">
-                    <span class="pill-card__name">Sales</span>
-                    <span class="pill-card__count">812 jobs</span>
-                </a>
-                <a href="#" class="pill-card">
-                    <span class="pill-card__name">Operations</span>
-                    <span class="pill-card__count">294 jobs</span>
-                </a>
-                <a href="#" class="pill-card">
-                    <span class="pill-card__name">Finance</span>
-                    <span class="pill-card__count">456 jobs</span>
-                </a>
-            @endif
+        <!-- Job Types Row -->
+        <div style="margin-bottom: 2rem;">
+            <h3 style="font-size: 1.25rem; font-weight: 600; color: #0A0A0A; margin-bottom: 1.25rem;">Job Types</h3>
+            <div class="category-grid">
+                    @foreach($jobTypes as $type)
+                    <a href="{{ $type['link'] ?? '#' }}" class="pill-card">
+                        <span class="pill-card__name">{{ $type['name'] ?? 'Type' }}</span>
+                        <span class="pill-card__count">{{ $type['count'] ?? '0 jobs' }}</span>
+                    </a>
+                    @endforeach
+            </div>
+        </div>
+
+        <!-- Locations Row -->
+        <div>
+            <h3 style="font-size: 1.25rem; font-weight: 600; color: #0A0A0A; margin-bottom: 1.25rem;">Top Locations</h3>
+            <div class="category-grid">
+                    @foreach($locations as $location)
+                    <a href="{{ $location['link'] ?? '#' }}" class="pill-card">
+                        <span class="pill-card__name">{{ $location['name'] ?? 'Location' }}</span>
+                        <span class="pill-card__count">{{ $location['count'] ?? '0 jobs' }}</span>
+                    </a>
+                    @endforeach
+            </div>
         </div>
     </div>
 </section>

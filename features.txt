@@ -808,3 +808,91 @@ Created a professional modal-based inquiry system allowing employers to easily r
 - **No Page Reload**: Smooth single-page experience
 - **Mobile Friendly**: Works on all devices
 - **Immediate Response**: Email notification ensures quick follow-up
+
+## Dynamic Job Type & Location Filters (Nov 18, 2025)
+
+**Replaced static categories with dynamic job type and location filters on homepage**
+
+### Overview:
+Transformed the homepage categories section into an interactive filter system with two rows: Job Types and Top Locations. Each filter shows real-time job counts and links directly to filtered job listings.
+
+### Technical Implementation:
+- **Component**: `app/Livewire/HomePage.php` - Added data retrieval methods
+- **View Component**: `resources/views/components/categories-section.blade.php` - Two-row layout
+- **Database Queries**: Real-time counting of active jobs by type and location
+
+### Features:
+
+1. **Job Types Row**:
+   - Displays all available job types from `HelperFunc::getJobTypes()`
+   - Shows real-time count of active jobs for each type
+   - Types include: Full Time, Part Time, Contract, Temporary, Internship, Volunteer, Other
+   - Each card links to filtered job listings: `/jobs/listings?type={job_type}`
+   - Dynamic counting: only shows types with active jobs
+
+2. **Top Locations Row**:
+   - Shows top 8 locations by job count
+   - Extracted from actual job data (location field)
+   - Displays "City, Country" format
+   - Real-time job counts per location
+   - Links to location-filtered listings: `/jobs/listings?location={location}`
+   - Sorted by job count (highest first)
+
+3. **Data Methods**:
+   - **`getJobTypesWithCounts()`**: Queries database for job counts by type
+   - **`getTopLocations()`**: Aggregates locations with job counts using SQL GROUP BY
+   - Real-time queries ensure accuracy
+   - Efficient with proper indexing on is_active and location fields
+
+### Visual Design:
+- **Two-Row Layout**: Clear separation between types and locations
+- **Section Headers**: "Job Types" and "Top Locations" with proper typography
+- **Pill Cards**: Existing pill-card styling maintained for consistency
+- **Responsive Grid**: Category-grid class ensures mobile-friendly layout
+- **Hover Effects**: Interactive feedback on hover
+- **Job Counts**: Dynamic count display (e.g., "5 jobs", "1 job")
+
+### User Experience:
+- **Quick Filtering**: One-click access to filtered job listings
+- **Real Data**: Always shows current job availability
+- **Clear Labels**: Descriptive names and accurate counts
+- **Mobile Responsive**: Grid adapts to screen size
+- **Fast Loading**: Efficient queries with minimal overhead
+- **Fallback Content**: Default items shown if no data available
+
+### Integration:
+- **HomePage Component**: 
+  * Added `jobTypes` and `locations` to render data
+  * Methods called on each page load for fresh data
+- **Categories Section**: 
+  * Accepts `jobTypes` and `locations` props
+  * Renders two separate grids
+  * Maintains existing styling and structure
+- **Job Listings Page**: 
+  * Existing filtering system handles `type` and `location` parameters
+  * Seamless integration with search functionality
+
+### Database Queries:
+```php
+// Job Types with Counts
+Job::where('is_active', true)
+    ->where('job_type', $key)
+    ->count();
+
+// Top Locations with Counts
+Job::where('is_active', true)
+    ->selectRaw('location, COUNT(*) as job_count')
+    ->groupBy('location')
+    ->orderBy('job_count', 'desc')
+    ->limit(8)
+    ->get();
+```
+
+### Benefits:
+- **Better User Experience**: Users can quickly find jobs by type or location
+- **Dynamic Content**: Always reflects current job availability
+- **Improved Navigation**: Direct filtering from homepage
+- **SEO Friendly**: Clean URLs with query parameters
+- **Data-Driven**: No hardcoded values, all from database
+- **Performance**: Efficient queries with proper counting
+- **Scalability**: Automatically adapts as jobs are added/removed

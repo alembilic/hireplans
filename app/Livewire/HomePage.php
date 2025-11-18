@@ -72,10 +72,51 @@ class HomePage extends Component
             });
     }
 
+    public function getJobTypesWithCounts()
+    {
+        $jobTypes = HelperFunc::getJobTypes();
+        $typesWithCounts = [];
+        
+        foreach ($jobTypes as $key => $label) {
+            $count = Job::where('is_active', true)
+                ->where('job_type', $key)
+                ->count();
+            
+            $typesWithCounts[] = [
+                'name' => $label,
+                'count' => $count . ' ' . ($count == 1 ? 'job' : 'jobs'),
+                'link' => route('jobs.listings', ['type' => $key])
+            ];
+        }
+        
+        return $typesWithCounts;
+    }
+
+    public function getTopLocations()
+    {
+        // Get top 8 locations with job counts
+        $locations = Job::where('is_active', true)
+            ->selectRaw('location, COUNT(*) as job_count')
+            ->groupBy('location')
+            ->orderBy('job_count', 'desc')
+            ->limit(8)
+            ->get();
+        
+        return $locations->map(function ($location) {
+            return [
+                'name' => $location->location,
+                'count' => $location->job_count . ' ' . ($location->job_count == 1 ? 'job' : 'jobs'),
+                'link' => route('jobs.listings', ['location' => $location->location])
+            ];
+        });
+    }
+
     public function render()
     {
         return view('livewire.home-page', [
-            'featuredJobs' => $this->getFeaturedJobs()
+            'featuredJobs' => $this->getFeaturedJobs(),
+            'jobTypes' => $this->getJobTypesWithCounts(),
+            'locations' => $this->getTopLocations()
         ])->layout('layouts.home-layout');
     }
 }

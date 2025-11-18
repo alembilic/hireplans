@@ -23,7 +23,11 @@
     <x-featured-jobs title="Featured opportunities" :jobs="$featuredJobs" />
 
     <!-- Browse by Category -->
-    <x-categories-section title="Browse by category" />
+    <x-categories-section 
+        title="Find Jobs by Type & Location"
+        :jobTypes="$jobTypes"
+        :locations="$locations"
+    />
 
     <!-- How It Works -->
     <x-how-it-works title="How it works" />
