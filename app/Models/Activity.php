@@ -54,6 +54,7 @@ class Activity extends Model
     const TYPE_CAMPAIGN_SENT = 'campaign_sent';
     const TYPE_CAMPAIGN_DELIVERED = 'campaign_delivered';
     const TYPE_CAMPAIGN_FAILED = 'campaign_failed';
+    const TYPE_QUIL_MEETING_COMPLETED = 'quil_meeting_completed';
 
     /**
      * Get the candidate that owns the activity.
@@ -92,6 +93,7 @@ class Activity extends Model
             self::TYPE_CAMPAIGN_SENT => 'bi-send',
             self::TYPE_CAMPAIGN_DELIVERED => 'bi-send-check',
             self::TYPE_CAMPAIGN_FAILED => 'bi-send-x',
+            self::TYPE_QUIL_MEETING_COMPLETED => 'bi-mic',
             default => 'bi-activity',
         };
     }
@@ -117,6 +119,7 @@ class Activity extends Model
             self::TYPE_CAMPAIGN_SENT => 'primary',
             self::TYPE_CAMPAIGN_DELIVERED => 'success',
             self::TYPE_CAMPAIGN_FAILED => 'danger',
+            self::TYPE_QUIL_MEETING_COMPLETED => 'info',
             default => 'primary',
         };
     }

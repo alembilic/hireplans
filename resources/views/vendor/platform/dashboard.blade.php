@@ -6,13 +6,6 @@
     data-controller="menu"> --}}
     <div class="aside position-sticky top-0 xl:h-screenxxx col-xs-12 col-xxl-2 bg-dark d-flex flex-column me-auto" data-controller="menu">
         <header class="d-xl-block p-3 mt-xl-4 w-100 d-flex align-items-center">
-            <a href="#" class="header-toggler d-xl-none me-auto order-first d-flex align-items-center lh-1"
-               data-action="click->menu#toggle">
-                <x-orchid-icon path="bs.three-dots-vertical" class="icon-menu"/>
-
-                <span class="ms-2">@yield('title')</span>
-            </a>
-
             <a class="header-brand order-last" href="{{ route(config('platform.index')) }}">
                 @includeFirst([config('platform.template.header'), 'platform::header'])
             </a>

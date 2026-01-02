@@ -355,6 +355,81 @@
                             </p>
                         </div>
                         @endif
+
+                        <!-- Quil Meeting Notes Section -->
+                        @if($quilMeetings && $quilMeetings->count() > 0)
+                        <div class="mt-5 pt-4 border-top">
+                            <div class="fw-bold fs-5 d-flex align-items-center mb-4">
+                                <i class="bi bi-mic text-info me-2"></i>
+                                AI Meeting Notes
+                            </div>
+                            
+                            @foreach($quilMeetings as $quilMeeting)
+                            <div class="card shadow-sm mb-3">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-3">
+                                        <div>
+                                            <div class="fw-bold fs-6 mb-1">{{ $quilMeeting->meeting_name }}</div>
+                                            <small class="text-muted">
+                                                @if($quilMeeting->start_time)
+                                                    <i class="bi bi-calendar me-1"></i>
+                                                    {{ $quilMeeting->start_time->format('M d, Y \a\t g:i A') }}
+                                                @endif
+                                                @if($quilMeeting->owner_name)
+                                                    • <i class="bi bi-person me-1"></i>{{ $quilMeeting->owner_name }}
+                                                @endif
+                                            </small>
+                                        </div>
+                                        <a href="{{ route('platform.quil.view', $quilMeeting->id) }}" 
+                                           class="btn btn-sm btn-outline-info"
+                                           target="_blank">
+                                            <i class="bi bi-eye me-1"></i>View Details
+                                        </a>
+                                    </div>
+                                    
+                                    <!-- Summary Preview -->
+                                    @if($quilMeeting->getSummary())
+                                    <div class="bg-light rounded p-3 mb-3">
+                                        <h6 class="fw-bold text-dark mb-2">
+                                            <i class="bi bi-journal-text me-1"></i>Summary
+                                        </h6>
+                                        <p class="mb-0 small" style="white-space: pre-wrap;">{{ \Illuminate\Support\Str::limit($quilMeeting->getSummary(), 200) }}</p>
+                                    </div>
+                                    @endif
+
+                                    <!-- Available Assets -->
+                                    <div class="d-flex flex-wrap gap-2 align-items-center">
+                                        <span class="text-muted small me-2">Available:</span>
+                                        @if($quilMeeting->transcription_url)
+                                            <a href="{{ $quilMeeting->transcription_url }}" 
+                                               target="_blank" 
+                                               class="badge bg-success-subtle text-success-emphasis">
+                                                <i class="bi bi-file-text me-1"></i>Transcript
+                                            </a>
+                                        @endif
+                                        @if($quilMeeting->recording_url)
+                                            <a href="{{ $quilMeeting->recording_url }}" 
+                                               target="_blank" 
+                                               class="badge bg-primary-subtle text-primary-emphasis">
+                                                <i class="bi bi-camera-video me-1"></i>Recording
+                                            </a>
+                                        @endif
+                                        @if($quilMeeting->database_notes && count($quilMeeting->database_notes) > 0)
+                                            <span class="badge bg-info-subtle text-info-emphasis">
+                                                <i class="bi bi-journal-text me-1"></i>{{ count($quilMeeting->database_notes) }} Notes
+                                            </span>
+                                        @endif
+                                        @if(!$quilMeeting->transcription_url && !$quilMeeting->recording_url && (!$quilMeeting->database_notes || count($quilMeeting->database_notes) == 0))
+                                            <span class="badge bg-secondary-subtle text-secondary-emphasis">
+                                                No assets available
+                                            </span>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                        @endif
                     </div>
                 </div>
             @else
@@ -590,6 +665,83 @@
                     @endif
                 </div>
             </div>
+
+            <!-- Quil Meeting Notes Section -->
+            @if($quilMeetings && $quilMeetings->count() > 0)
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <div class="fw-bold fs-5 d-flex align-items-center mb-3">
+                        <i class="bi bi-mic text-info me-2"></i>
+                        AI Meeting Notes
+                    </div>
+                    
+                    <div class="row g-3">
+                        @foreach($quilMeetings as $quilMeeting)
+                        <div class="col-12">
+                            <div class="border rounded-3 p-3 bg-light">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div class="flex-grow-1">
+                                        <div class="fw-medium text-dark mb-2">
+                                            {{ $quilMeeting->meeting_name }}
+                                        </div>
+                                        <div class="d-flex flex-wrap gap-2 align-items-center small text-muted mb-2">
+                                            @if($quilMeeting->start_time)
+                                                <span>
+                                                    <i class="bi bi-calendar-event me-1"></i>
+                                                    {{ $quilMeeting->start_time->format('M d, Y \a\t g:i A') }}
+                                                </span>
+                                            @endif
+                                            @if($quilMeeting->owner_name)
+                                                <span>
+                                                    <i class="bi bi-person me-1"></i>
+                                                    {{ $quilMeeting->owner_name }}
+                                                </span>
+                                            @endif
+                                        </div>
+                                        
+                                        <!-- Available Assets -->
+                                        <div class="d-flex flex-wrap gap-2 align-items-center">
+                                            @if($quilMeeting->transcription_url)
+                                                <a href="{{ $quilMeeting->transcription_url }}" 
+                                                   target="_blank" 
+                                                   class="badge bg-success-subtle text-success-emphasis">
+                                                    <i class="bi bi-file-text me-1"></i>Transcript
+                                                </a>
+                                            @endif
+                                            @if($quilMeeting->recording_url)
+                                                <a href="{{ $quilMeeting->recording_url }}" 
+                                                   target="_blank" 
+                                                   class="badge bg-primary-subtle text-primary-emphasis">
+                                                    <i class="bi bi-camera-video me-1"></i>Recording
+                                                </a>
+                                            @endif
+                                            @if($quilMeeting->database_notes && count($quilMeeting->database_notes) > 0)
+                                                <span class="badge bg-info-subtle text-info-emphasis">
+                                                    <i class="bi bi-journal-text me-1"></i>{{ count($quilMeeting->database_notes) }} Notes
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <a href="{{ route('platform.quil.view', $quilMeeting->id) }}" 
+                                       class="btn btn-sm btn-outline-info ms-3">
+                                        <i class="bi bi-eye me-1"></i>View
+                                    </a>
+                                </div>
+                                
+                                <!-- Summary Preview -->
+                                @if($quilMeeting->getSummary())
+                                <div class="mt-3 pt-3 border-top">
+                                    <small class="text-muted fw-medium">AI Summary:</small>
+                                    <p class="mb-0 mt-1 small" style="white-space: pre-wrap;">{{ \Illuminate\Support\Str::limit($quilMeeting->getSummary(), 200) }}</p>
+                                </div>
+                                @endif
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+            @endif
 
             <!-- Documents Section -->
             @if($cvLinks || $otherDocumentsLinks)

@@ -97,6 +97,11 @@ class PlatformProvider extends OrchidServiceProvider
                 ->route('platform.outreach')
                 ->permission('platform.systems.users'),
 
+            Menu::make(__('Meeting Notes'))
+                ->icon('bs.mic')
+                ->route('platform.quil.list')
+                ->permission('platform.systems.users'),
+
             Menu::make(__('References'))
                 ->icon('bs.person-fill-check')
                 ->route('platform.references.list')

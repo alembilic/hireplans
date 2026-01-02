@@ -45,6 +45,8 @@ use App\Orchid\Screens\ScheduleScreen;
 use App\Orchid\Screens\OutreachScreen;
 use App\Orchid\Screens\OutreachEditScreen;
 use App\Orchid\Screens\OutreachViewScreen;
+use App\Orchid\Screens\Quil\QuilMeetingsScreen;
+use App\Orchid\Screens\Quil\QuilMeetingViewScreen;
 use App\Http\Controllers\GoogleAuthController;
 
 use App\Http\Middleware\ReferenceAccessControl;
@@ -273,6 +275,21 @@ Route::screen('outreach/{campaign}/view', OutreachViewScreen::class)
 //         ->parent('platform.index')
 //         ->push(__('LinkedIn Search'), route('platform.linkedin.search'))
 //     );
+
+// Platform > Quil Meetings
+Route::screen('quil/meetings', QuilMeetingsScreen::class)
+    ->name('platform.quil.list')
+    ->breadcrumbs(fn (Trail $trail) => $trail
+        ->parent('platform.index')
+        ->push(__('Meeting Notes'), route('platform.quil.list'))
+    );
+
+Route::screen('quil/meetings/{quilMeeting}', QuilMeetingViewScreen::class)
+    ->name('platform.quil.view')
+    ->breadcrumbs(fn (Trail $trail, $quilMeeting) => $trail
+        ->parent('platform.quil.list')
+        ->push(__('Meeting Details'), route('platform.quil.view', $quilMeeting))
+    );
 
 // Schedule AJAX routes
 Route::post('schedule/update-status', [ScheduleScreen::class, 'updateStatus'])

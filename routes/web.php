@@ -55,3 +55,7 @@ Route::get('/jobs/details/{id}', JobDetails::class)->name('jobs.details');
 
 // Route::get('/jobs/{id}', 'JobController@showDetails')->name('jobs.details');
 // Route::get('/jobs/{id}', [JobController::class, 'showDetails'])->name('jobs.details');
+
+// Quil Webhook Routes (API endpoints without auth middleware)
+Route::post('/webhooks/quil/meeting-completed', [\App\Http\Controllers\Api\QuilWebhookController::class, 'handleMeetingCompleted'])
+    ->name('webhooks.quil.meeting-completed');

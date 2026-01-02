@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Candidate;
 use App\Models\Activity;
+use App\Models\QuilMeeting;
 use App\Services\ActivityService;
 use Livewire\Component;
 
@@ -20,6 +21,7 @@ class CandidateProfileView extends Component
     public $showNoteInput = false;
     public $newNote = '';
     public $activities;
+    public $quilMeetings;
 
     public function mount(Candidate $candidate, $cvLinks = [], $otherDocumentsLinks = [])
     {
@@ -28,6 +30,7 @@ class CandidateProfileView extends Component
         $this->cvLinks = $cvLinks;
         $this->otherDocumentsLinks = $otherDocumentsLinks;
         $this->loadActivities();
+        $this->loadQuilMeetings();
     }
 
     public function addSkill()
@@ -166,6 +169,13 @@ class CandidateProfileView extends Component
     {
         $this->activities = $this->candidate->activities()
             ->with(['createdBy'])
+            ->get();
+    }
+
+    public function loadQuilMeetings()
+    {
+        $this->quilMeetings = QuilMeeting::where('candidate_id', $this->candidate->id)
+            ->orderBy('created_at', 'desc')
             ->get();
     }
 
