@@ -896,3 +896,287 @@ Job::where('is_active', true)
 - **Data-Driven**: No hardcoded values, all from database
 - **Performance**: Efficient queries with proper counting
 - **Scalability**: Automatically adapts as jobs are added/removed
+
+## Quil AI Meeting Notes Integration with Comprehensive Logging (Feb 2026)
+
+**Advanced webhook integration with Quil AI for meeting transcriptions, recordings, and AI-generated summaries, featuring enterprise-grade logging and monitoring**
+
+### Comprehensive Logging System:
+
+#### Dedicated Log Channel:
+- **Channel Name**: `quil_webhooks`
+- **Log File**: `storage/logs/quil-webhooks.log`
+- **Rotation**: Daily rotation with 30-day retention
+- **Configuration**: `config/logging.php` - separate from main application logs
+- **Purpose**: Isolated logging for debugging, monitoring, and compliance
+
+#### Log Middleware (`LogQuilWebhookRequests`):
+- **Function**: Automatic request/response logging for all webhook calls
+- **Logged Information**:
+  * Request ID (unique identifier for tracking)
+  * Timestamp (ISO 8601 format)
+  * HTTP method, URL, IP address, User Agent
+  * Request headers (sanitized to remove sensitive data)
+  * Payload size (actual payload logged separately)
+  * Response status code and body
+  * Processing time in milliseconds
+  * Performance warnings for slow processing (>2000ms)
+
+#### Enhanced Controller Logging:
+**Granular step-by-step tracking throughout webhook processing:**
+
+1. **Initial Receipt**:
+   - Event ID, event type, meeting ID logged immediately
+   - Marks start of processing with timestamp
+
+2. **Validation Stage**:
+   - Validation start logged
+   - Success/failure with specific field errors
+   - Invalid payload details in debug mode
+
+3. **Idempotency Check**:
+   - Duplicate detection logged with existing meeting details
+   - Created timestamp of original processing
+
+4. **Phone Number Matching**:
+   - Participant count and phone numbers logged
+   - Each matching attempt tracked with:
+     * Original phone number
+     * Cleaned phone number
+     * Search pattern used
+     * Match success/failure
+   - Final match result with user details or "no match" warning
+
+5. **Database Operations**:
+   - Meeting record creation with processing status
+   - Available assets logged (transcription, recording, notes count)
+   - Database ID confirmation
+
+6. **Activity Log Creation**:
+   - Candidate ID and Quil meeting ID
+   - Success/failure of activity creation
+   - Errors caught and logged separately
+
+7. **Completion**:
+   - ✓ Success indicator for easy scanning
+   - Processing time in milliseconds
+   - Matched user name
+   - Complete asset availability summary
+
+8. **Error Handling**:
+   - ✗ Failure indicator for easy identification
+   - Error message, file, and line number
+   - Stack trace in debug logs
+   - Processing time even on failure
+
+#### Log Format Features:
+- **Visual Indicators**: ✓ for success, ✗ for failure
+- **Structured Data**: All logs include JSON context
+- **Request Correlation**: Unique request ID ties together all logs for single webhook
+- **Performance Metrics**: Processing time tracked for every request
+- **Security**: Sensitive headers (authorization, api-key, cookie) automatically redacted
+- **Size Management**: Large payloads (>50KB) automatically truncated with metadata preserved
+
+### Monitoring & Debugging Tools:
+
+#### Artisan Command (`php artisan quil:logs`):
+**Powerful CLI tool for viewing and monitoring webhook logs**
+
+**Basic Usage:**
+```bash
+# View last 50 lines (default)
+php artisan quil:logs
+
+# View last 100 lines
+php artisan quil:logs --lines=100
+
+# Monitor logs in real-time (tail mode)
+php artisan quil:logs --tail
+
+# Filter by keyword
+php artisan quil:logs --filter="error"
+php artisan quil:logs --filter="matched"
+
+# Filter by log level
+php artisan quil:logs --level=error
+php artisan quil:logs --level=warning
+
+# Show only today's logs
+php artisan quil:logs --today
+```
+
+**Features:**
+- **Color-coded output**: Errors (red), warnings (yellow), info (green), debug (gray)
+- **Summary statistics**: Total lines, successful/failed processing, duplicates, errors, warnings
+- **Helpful tips**: Built-in command examples
+- **Real-time monitoring**: Tail mode for live webhook monitoring
+- **Smart filtering**: Keyword and log level filtering
+
+**Command Output Example:**
+```
+=== QUIL WEBHOOK LOGS ===
+File: storage/logs/quil-webhooks.log
+Lines: 50
+
+[2026-02-04 14:30:15] INFO: === INCOMING QUIL WEBHOOK ===
+[2026-02-04 14:30:15] INFO: Starting webhook processing
+[2026-02-04 14:30:15] DEBUG: Validating webhook payload
+[2026-02-04 14:30:15] INFO: Payload validated successfully
+[2026-02-04 14:30:15] INFO: Phone match found!
+[2026-02-04 14:30:15] INFO: ✓ Webhook processing completed successfully
+
+╔════════════════════════╦═══════╗
+║ Metric                 ║ Count ║
+╠════════════════════════╬═══════╣
+║ Total Lines            ║ 50    ║
+║ Successful Processing  ║ 5     ║
+║ Failed Processing      ║ 0     ║
+║ Duplicate Webhooks     ║ 1     ║
+║ Errors                 ║ 0     ║
+║ Warnings               ║ 3     ║
+╚════════════════════════╩═══════╝
+```
+
+### Log File Structure:
+
+**Daily Log Files:**
+- `quil-webhooks-2026-02-04.log` - Today's logs
+- `quil-webhooks-2026-02-03.log` - Yesterday's logs
+- Automatic rotation at midnight
+- 30-day retention policy
+
+**Log Entry Structure:**
+```
+[timestamp] LEVEL: Message {"context": "json"}
+```
+
+**Example Log Entries:**
+```
+[2026-02-04 14:30:15] INFO: === INCOMING QUIL WEBHOOK === 
+{"request_id":"quil_65f8a3b2c1d4e","timestamp":"2026-02-04T14:30:15+00:00","method":"POST","url":"https://example.com/webhooks/quil/meeting-completed","ip":"34.123.45.67","user_agent":"Quil-Webhook/1.0"}
+
+[2026-02-04 14:30:15] INFO: Starting webhook processing 
+{"event_id":"evt_123abc","event_type":"meeting.completed","meeting_id":"mtg_456def"}
+
+[2026-02-04 14:30:15] INFO: Phone match found! 
+{"user_id":42,"user_name":"John Doe","candidate_id":15,"matched_phone":"+1-555-0123","attempt_number":1}
+
+[2026-02-04 14:30:16] INFO: ✓ Webhook processing completed successfully 
+{"quil_meeting_id":89,"processing_status":"matched","processing_time_ms":857.32,"matched_user":"John Doe","assets_available":{"transcription":true,"recording":true,"action_items":false,"notes_count":3}}
+```
+
+### Performance Monitoring:
+
+**Tracked Metrics:**
+- **Processing Time**: Measured for every webhook (milliseconds)
+- **Performance Warnings**: Automatic warnings for processing >2000ms
+- **Asset Availability**: Tracked per meeting (transcription, recording, notes, action items)
+- **Match Rate**: Success rate of phone number matching
+- **Duplicate Rate**: Idempotency check hits
+- **Error Rate**: Failed processing attempts
+
+**Performance Optimization:**
+- Middleware logs request/response without blocking processing
+- Large payloads automatically truncated (>50KB)
+- Async activity log creation with error isolation
+- Database queries optimized for phone matching
+
+### Error Tracking & Alerting:
+
+**Error Categories:**
+1. **Validation Errors**: Invalid webhook payload structure
+2. **Processing Errors**: Database, matching, or activity creation failures
+3. **Performance Issues**: Slow processing times
+4. **Duplicate Webhooks**: Idempotency violations (informational)
+
+**Error Information Logged:**
+- Error message and type
+- File and line number
+- Stack trace (debug level)
+- Request payload that caused error
+- Processing time before failure
+- Request correlation ID
+
+### Security & Compliance:
+
+**Data Protection:**
+- Sensitive headers automatically redacted
+- API keys, authorization tokens never logged
+- Cookie data stripped from logs
+- Large payloads summarized to prevent log bloat
+
+**Audit Trail:**
+- Complete record of all webhook interactions
+- Request correlation for troubleshooting
+- Processing status tracked end-to-end
+- Activity creation tied to webhook events
+
+**Compliance Features:**
+- 30-day log retention for audit purposes
+- Structured JSON logging for parsing/analysis
+- Timestamp precision for forensics
+- Request ID for tracing through system
+
+### Troubleshooting Guide:
+
+**Common Scenarios:**
+
+1. **Webhook Not Processing:**
+   ```bash
+   php artisan quil:logs --level=error --lines=100
+   ```
+   Look for validation errors or processing failures.
+
+2. **Phone Number Not Matching:**
+   ```bash
+   php artisan quil:logs --filter="Phone match" --today
+   ```
+   Check phone matching attempts and patterns used.
+
+3. **Slow Processing:**
+   ```bash
+   php artisan quil:logs --filter="Slow webhook" --today
+   ```
+   Identify performance bottlenecks.
+
+4. **Duplicate Webhooks:**
+   ```bash
+   php artisan quil:logs --filter="Duplicate" --today
+   ```
+   Verify idempotency is working correctly.
+
+5. **Real-time Monitoring:**
+   ```bash
+   php artisan quil:logs --tail
+   ```
+   Watch webhooks as they arrive in production.
+
+### Integration with Development Workflow:
+
+**Local Development:**
+- All logs visible in real-time with `--tail`
+- Debug level enabled by default
+- Full stack traces for troubleshooting
+
+**Production:**
+- Info level recommended
+- Error alerts can be configured via log handlers
+- Performance metrics tracked automatically
+- 30-day retention for compliance
+
+**Testing:**
+- Test webhook payloads logged in full
+- Easy verification of processing steps
+- Request IDs simplify debugging
+
+### Benefits of Logging System:
+
+- **Debugging**: Quickly identify why webhooks fail
+- **Monitoring**: Track processing times and success rates
+- **Compliance**: Complete audit trail of webhook interactions
+- **Performance**: Identify and optimize slow operations
+- **Security**: Sensitive data automatically protected
+- **Troubleshooting**: Request correlation simplifies issue tracking
+- **Visibility**: Real-time monitoring of webhook activity
+- **Analytics**: Structured logs enable metric extraction
+- **Alerting**: Foundation for alert/notification systems

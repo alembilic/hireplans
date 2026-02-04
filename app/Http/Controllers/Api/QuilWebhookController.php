@@ -26,11 +26,14 @@ class QuilWebhookController extends Controller
      */
     public function handleMeetingCompleted(Request $request)
     {
+        $startTime = microtime(true);
+        
         try {
             // Log the incoming webhook for debugging
-            Log::info('Quil webhook received', ['payload' => $request->all()]);
+            Log::channel('quil_webhooks')->info('Starting webhook processing', $request->all());
 
             // Validate the webhook payload
+            Log::channel('quil_webhooks')->debug('Validating webhook payload');
             $validated = $request->validate([
                 'id' => 'required|string',
                 'eventType' => 'required|string',
@@ -48,12 +51,24 @@ class QuilWebhookController extends Controller
                 'data.assets' => 'nullable|array',
             ]);
 
+            Log::channel('quil_webhooks')->info('Payload validated successfully');
+
             // Check if we already processed this webhook (idempotency)
+            Log::channel('quil_webhooks')->debug('Checking for duplicate webhook', [
+                'event_id' => $validated['id']
+            ]);
+            
             $existingMeeting = QuilMeeting::where('event_id', $validated['id'])->first();
             if ($existingMeeting) {
-                Log::info('Webhook already processed', ['event_id' => $validated['id']]);
+                Log::channel('quil_webhooks')->warning('Duplicate webhook detected', [
+                    'event_id' => $validated['id'],
+                    'existing_meeting_id' => $existingMeeting->id,
+                    'created_at' => $existingMeeting->created_at
+                ]);
                 return response()->json(['message' => 'Webhook already processed'], 200);
             }
+
+            Log::channel('quil_webhooks')->debug('No duplicate found, proceeding with processing');
 
             // Extract data from webhook
             $meetingData = $validated['data']['meeting'];
@@ -61,15 +76,27 @@ class QuilWebhookController extends Controller
             $assetsData = $validated['data']['assets'] ?? [];
 
             // Try to match user by phone number
+            Log::channel('quil_webhooks')->info('Starting phone number matching', [
+                'participants' => $meetingData['participants'] ?? [],
+                'participant_count' => count($meetingData['participants'] ?? [])
+            ]);
+            
             $matchedUser = null;
             $matchedCandidate = null;
             $processingStatus = 'unmatched';
             $processingNotes = [];
 
             if (!empty($meetingData['participants'])) {
-                foreach ($meetingData['participants'] as $phoneNumber) {
+                foreach ($meetingData['participants'] as $index => $phoneNumber) {
                     // Clean phone number for matching
                     $cleanPhone = preg_replace('/[^0-9+]/', '', $phoneNumber);
+                    
+                    Log::channel('quil_webhooks')->debug('Attempting phone match', [
+                        'attempt' => $index + 1,
+                        'original_phone' => $phoneNumber,
+                        'cleaned_phone' => $cleanPhone,
+                        'search_pattern' => substr($cleanPhone, -10)
+                    ]);
                     
                     // Try to find user by phone
                     $user = User::where('phone', 'LIKE', '%' . substr($cleanPhone, -10) . '%')->first();
@@ -79,16 +106,42 @@ class QuilWebhookController extends Controller
                         $matchedCandidate = $user->candidate;
                         $processingStatus = 'matched';
                         $processingNotes[] = "Matched to user: {$user->name} (ID: {$user->id}) via phone: {$phoneNumber}";
+                        
+                        Log::channel('quil_webhooks')->info('Phone match found!', [
+                            'user_id' => $user->id,
+                            'user_name' => $user->name,
+                            'candidate_id' => $matchedCandidate?->id,
+                            'matched_phone' => $phoneNumber,
+                            'attempt_number' => $index + 1
+                        ]);
+                        
                         break; // Use first match
+                    } else {
+                        Log::channel('quil_webhooks')->debug('No match for phone number', [
+                            'phone' => $phoneNumber
+                        ]);
                     }
                 }
             }
 
             if (!$matchedUser) {
                 $processingNotes[] = 'No user matched by phone number: ' . implode(', ', $meetingData['participants'] ?? []);
+                Log::channel('quil_webhooks')->warning('No phone number match found', [
+                    'participants' => $meetingData['participants'] ?? [],
+                    'attempts_made' => count($meetingData['participants'] ?? [])
+                ]);
             }
 
             // Create the Quil meeting record
+            Log::channel('quil_webhooks')->info('Creating Quil meeting record', [
+                'meeting_name' => $meetingData['name'],
+                'processing_status' => $processingStatus,
+                'matched_user_id' => $matchedUser?->id,
+                'has_transcription' => !empty($assetsData['transcriptionUrl']),
+                'has_recording' => !empty($assetsData['recordingUrl']),
+                'has_notes' => !empty($assetsData['databaseNotes']),
+            ]);
+            
             $quilMeeting = QuilMeeting::create([
                 'event_id' => $validated['id'],
                 'event_type' => $validated['eventType'],
@@ -113,28 +166,59 @@ class QuilWebhookController extends Controller
                 'processing_notes' => implode(' | ', $processingNotes),
             ]);
 
+            Log::channel('quil_webhooks')->info('Quil meeting record created successfully', [
+                'quil_meeting_id' => $quilMeeting->id,
+                'database_id' => $quilMeeting->id
+            ]);
+
             // Create activity log if matched to a candidate
             if ($matchedCandidate) {
-                $this->activityService->log(
-                    candidateId: $matchedCandidate->id,
-                    activityType: 'quil_meeting_completed',
-                    title: 'AI Meeting Summary Available',
-                    description: "Meeting '{$meetingData['name']}' has been completed and processed by Quil AI. Transcription, recording, and summary are now available.",
-                    metadata: [
-                        'quil_meeting_id' => $quilMeeting->id,
-                        'meeting_name' => $meetingData['name'],
-                        'participants' => $meetingData['participants'] ?? [],
-                        'has_transcription' => !empty($assetsData['transcriptionUrl']),
-                        'has_recording' => !empty($assetsData['recordingUrl']),
-                        'summary' => $quilMeeting->getSummary(),
-                    ],
-                    createdBy: null // System generated
-                );
+                Log::channel('quil_webhooks')->info('Creating activity log entry', [
+                    'candidate_id' => $matchedCandidate->id,
+                    'quil_meeting_id' => $quilMeeting->id
+                ]);
+                
+                try {
+                    $this->activityService->log(
+                        candidate: $matchedCandidate,
+                        activityType: 'quil_meeting_completed',
+                        title: 'AI Meeting Summary Available',
+                        description: "Meeting '{$meetingData['name']}' has been completed and processed by Quil AI. Transcription, recording, and summary are now available.",
+                        metadata: [
+                            'quil_meeting_id' => $quilMeeting->id,
+                            'meeting_name' => $meetingData['name'],
+                            'participants' => $meetingData['participants'] ?? [],
+                            'has_transcription' => !empty($assetsData['transcriptionUrl']),
+                            'has_recording' => !empty($assetsData['recordingUrl']),
+                            'summary' => $quilMeeting->getSummary(),
+                        ],
+                        createdBy: null // System generated
+                    );
+                    
+                    Log::channel('quil_webhooks')->info('Activity log created successfully');
+                } catch (\Exception $e) {
+                    Log::channel('quil_webhooks')->error('Failed to create activity log', [
+                        'error' => $e->getMessage(),
+                        'candidate_id' => $matchedCandidate->id
+                    ]);
+                }
+            } else {
+                Log::channel('quil_webhooks')->info('Skipping activity log - no candidate matched');
             }
 
-            Log::info('Quil meeting processed successfully', [
+            $processingTime = round((microtime(true) - $startTime) * 1000, 2);
+            
+            Log::channel('quil_webhooks')->info('✓ Webhook processing completed successfully', [
                 'quil_meeting_id' => $quilMeeting->id,
                 'processing_status' => $processingStatus,
+                'processing_time_ms' => $processingTime,
+                'matched_user' => $matchedUser?->name,
+                'assets_available' => [
+                    'transcription' => !empty($assetsData['transcriptionUrl']),
+                    'recording' => !empty($assetsData['recordingUrl']),
+                    'action_items' => !empty($assetsData['actionItemsUrl']),
+                    'notes_count' => count($assetsData['databaseNotes'] ?? []),
+                ]
             ]);
 
             // Return 200 OK immediately to acknowledge receipt
@@ -145,19 +229,35 @@ class QuilWebhookController extends Controller
             ], 200);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
-            Log::error('Quil webhook validation failed', [
+            Log::channel('quil_webhooks')->error('✗ Webhook validation failed', [
+                'event_id' => $request->input('id'),
                 'errors' => $e->errors(),
-                'payload' => $request->all(),
+                'failed_fields' => array_keys($e->errors()),
             ]);
+            
+            // Log full payload in debug mode
+            Log::channel('quil_webhooks')->debug('Invalid payload details', [
+                'payload' => $request->all()
+            ]);
+            
             return response()->json([
                 'message' => 'Invalid webhook payload',
                 'errors' => $e->errors(),
             ], 422);
         } catch (\Exception $e) {
-            Log::error('Quil webhook processing failed', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-                'payload' => $request->all(),
+            $processingTime = round((microtime(true) - $startTime) * 1000, 2);
+            
+            Log::channel('quil_webhooks')->error('✗ Webhook processing failed', [
+                'event_id' => $request->input('id'),
+                'error_message' => $e->getMessage(),
+                'error_file' => $e->getFile(),
+                'error_line' => $e->getLine(),
+                'processing_time_ms' => $processingTime,
+            ]);
+            
+            // Log stack trace separately for debugging
+            Log::channel('quil_webhooks')->debug('Error stack trace', [
+                'trace' => $e->getTraceAsString()
             ]);
             
             // Still return 200 to prevent retries for unrecoverable errors

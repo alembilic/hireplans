@@ -73,6 +73,14 @@ return [
             'replace_placeholders' => true,
         ],
 
+        'quil_webhooks' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/quil-webhooks.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 30, // Keep webhook logs for 30 days
+            'replace_placeholders' => true,
+        ],
+
         'slack' => [
             'driver' => 'slack',
             'url' => env('LOG_SLACK_WEBHOOK_URL'),
