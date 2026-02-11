@@ -37,7 +37,6 @@ Route::get('/debug/relation-test', function () {
     })->values();
     
     return response()->json([
-        'orchid_version' => \Illuminate\Support\Composer::getPackageVersion('orchid/platform'),
         'expected_format' => $format1,
         'current_prod_format' => $format2,
         'note' => 'If production returns format2, there might be a middleware transforming responses'
