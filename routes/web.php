@@ -1,70 +1,62 @@
 <?php
 
+use App\Http\Controllers\JobController;
+use App\Orchid\Screens\Reference\PublicReferenceFeedbackEditScreen;
+use App\Livewire\AboutPage;
+use App\Livewire\TermsPage;
+use App\Livewire\PrivacyPage;
+use App\Livewire\HomePage;
 use Illuminate\Support\Facades\Route;
+use App\Livewire\Pages\Jobs\JobDetails;
+// Schedule is now handled by Orchid platform
+use App\Models\Job;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+// Route::view('/', 'welcome');
+Route::get('/', HomePage::class)->name('home');
+Route::get('/about', AboutPage::class)->name('about');
+Route::get('/terms-of-use', TermsPage::class)->name('terms-of-use');
+Route::get('/privacy-policy', PrivacyPage::class)->name('privacy-policy');
 
-Route::get('/', function () {
-    return redirect()->route('home');
-});
+// Route::view('dashboard', 'dashboard')
+//     ->middleware(['auth', 'verified'])
+//     ->name('dashboard');
 
-// ...existing routes...
+// Route::get('dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth'])->name('dashboard');
 
-// Privacy and Terms pages
-Route::get('/privacy-policy', \App\Livewire\PrivacyPage::class)->name('privacy-policy');
-Route::get('/terms-of-use', \App\Livewire\TermsPage::class)->name('terms-of-use');
+// Route::view('profile', 'profile')
+//     ->middleware(['auth'])
+//     ->name('profile');
 
-// Diagnostic route to check Relation response format
-Route::get('/debug/relation-test', function () {
-    // Simulate what RelationController returns
-    $users = \App\Models\User::limit(10)->get();
-    
-    $format1 = $users->mapWithKeys(function ($user) {
-        return [$user->id => $user->name];
-    });
-    
-    $format2 = $users->map(function ($user) {
-        return ['value' => $user->id, 'label' => $user->name];
-    })->values();
-    
-    // Get Orchid version from composer.lock
-    $composerLock = json_decode(file_get_contents(base_path('composer.lock')), true);
-    $orchidVersion = collect($composerLock['packages'] ?? [])
-        ->firstWhere('name', 'orchid/platform')['version'] ?? 'unknown';
-    
-    return response()->json([
-        'orchid_version' => $orchidVersion,
-        'expected_format' => $format1,
-        'current_prod_format' => $format2,
-        'note' => 'If production returns format2, there might be a middleware transforming responses'
-    ]);
-})->middleware('auth');
+// Redefine the route for public access
+Route::screen('feedback/{reference?}/edit', PublicReferenceFeedbackEditScreen::class)->name('feedback.edit');
 
-// Test actual Orchid RelationController endpoint
-Route::post('/debug/test-orchid-relation', function (\Illuminate\Http\Request $request) {
-    // Simulate the actual Orchid Relation request
-    $users = \App\Models\User::where('name', 'like', '%' . $request->get('search', '') . '%')
-        ->limit(10)
-        ->get();
-    
-    // This is what Orchid's RelationController does (lines 87-103)
-    $result = $users->mapWithKeys(function ($user) {
-        return [$user->id => $user->name];
-    });
-    
-    return response()->json([
-        'test_type' => 'Simulated Orchid RelationController',
-        'format' => 'key-value object',
-        'data' => $result,
-        'note' => 'This should match what /platform/relation returns'
-    ]);
-})->middleware('auth');
+require __DIR__.'/auth.php';
+
+// Password Setup Routes
+Route::get('/password/setup/{token}', [\App\Http\Controllers\Auth\PasswordSetupController::class, 'show'])
+    ->name('password.setup');
+Route::post('/password/setup', [\App\Http\Controllers\Auth\PasswordSetupController::class, 'store'])
+    ->name('password.setup.store');
+
+Route::get('/jobs/listings', function () {
+    $page = request()->get('page', 1);
+    session(['page' => $page]);
+
+    return view('job-listings', ['page' => $page]);
+})->name('jobs.listings');
+
+// Route::get('/jobs/{id}', function ($id) {
+//     $job = Job::findOrFail($id);
+//     return view('job-details', ['job' => $job]);
+// })->name('jobs.details');
+Route::get('/jobs/details/{id}', JobDetails::class)->name('jobs.details');
+
+// Route::get('/jobs/{id}', 'JobController@showDetails')->name('jobs.details');
+// Route::get('/jobs/{id}', [JobController::class, 'showDetails'])->name('jobs.details');
+
+// Quil Webhook Routes (API endpoints without auth middleware)
+Route::post('/webhooks/quil/meeting-completed', [\App\Http\Controllers\Api\QuilWebhookController::class, 'handleMeetingCompleted'])
+    ->middleware(\App\Http\Middleware\LogQuilWebhookRequests::class)
+    ->name('webhooks.quil.meeting-completed');
