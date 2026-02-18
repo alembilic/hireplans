@@ -101,6 +101,7 @@ class QuilMeeting extends Model
 
     /**
      * Get the summary from database notes.
+     * Returns the first note found (usually 'General' or 'Summary').
      */
     public function getSummary()
     {
@@ -118,13 +119,27 @@ class QuilMeeting extends Model
             return null;
         }
         
+        // Look for 'Summary' note first, then 'General', then return first note
+        $summaryNote = null;
+        $generalNote = null;
+        $firstNote = null;
+        
         foreach ($notes as $note) {
-            if (isset($note['name']) && strtolower($note['name']) === 'summary') {
-                return $note['note'] ?? null;
+            if (empty($firstNote)) {
+                $firstNote = $note['note'] ?? null;
+            }
+            
+            $noteName = strtolower($note['name'] ?? '');
+            if ($noteName === 'summary') {
+                $summaryNote = $note['note'] ?? null;
+                break;
+            }
+            if ($noteName === 'general') {
+                $generalNote = $note['note'] ?? null;
             }
         }
         
-        return null;
+        return $summaryNote ?? $generalNote ?? $firstNote;
     }
 
     /**

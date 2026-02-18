@@ -75,13 +75,40 @@ class QuilWebhookController extends Controller
             $organizationData = $validated['data']['organization'] ?? [];
             $assetsData = $validated['data']['assets'] ?? [];
             
-            // Ensure databaseNotes and followUpMaterials are arrays
-            if (isset($assetsData['databaseNotes']) && is_string($assetsData['databaseNotes'])) {
-                $assetsData['databaseNotes'] = json_decode($assetsData['databaseNotes'], true) ?? [];
+            // Fetch database notes from URL if provided
+            $databaseNotesData = [];
+            if (!empty($assetsData['databaseNotes']) && filter_var($assetsData['databaseNotes'], FILTER_VALIDATE_URL)) {
+                try {
+                    Log::channel('quil_webhooks')->debug('Fetching database notes from URL', [
+                        'url' => $assetsData['databaseNotes']
+                    ]);
+                    
+                    $response = \Illuminate\Support\Facades\Http::timeout(10)->get($assetsData['databaseNotes']);
+                    
+                    if ($response->successful()) {
+                        $notesJson = $response->json();
+                        // Extract the 'data' array from the response
+                        $databaseNotesData = $notesJson['data'] ?? [];
+                        
+                        Log::channel('quil_webhooks')->info('Database notes fetched successfully', [
+                            'notes_count' => count($databaseNotesData)
+                        ]);
+                    } else {
+                        Log::channel('quil_webhooks')->warning('Failed to fetch database notes', [
+                            'status_code' => $response->status(),
+                            'url' => $assetsData['databaseNotes']
+                        ]);
+                    }
+                } catch (\Exception $e) {
+                    Log::channel('quil_webhooks')->error('Error fetching database notes', [
+                        'error' => $e->getMessage(),
+                        'url' => $assetsData['databaseNotes']
+                    ]);
+                }
             }
-            if (isset($assetsData['followUpMaterials']) && is_string($assetsData['followUpMaterials'])) {
-                $assetsData['followUpMaterials'] = json_decode($assetsData['followUpMaterials'], true) ?? [];
-            }
+            
+            // Store the fetched notes data (not the URL)
+            $assetsData['databaseNotes'] = $databaseNotesData;
 
             // Try to match user by phone number
             Log::channel('quil_webhooks')->info('Starting phone number matching', [
