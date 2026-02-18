@@ -1206,7 +1206,7 @@ Lines: 50
 - `vendor/orchid/platform/src/Platform/Http/Controllers/RelationController.php` - Returns relation data
 - `vendor/orchid/platform/resources/js/controllers/relation_controller.js` - Transforms API response
 
-### Quil Webhook CSRF and JSON Parsing Fixes
+### Quil Webhook CSRF and Database Notes Display (Feb 2026)
 
 **Issues Fixed:**
 
@@ -1220,40 +1220,76 @@ Lines: 50
      ```
    - **Result:** Webhooks now publicly accessible without CSRF tokens while maintaining security logging
 
-2. **JSON String Parsing Error in Database Notes:**
-   - **Problem:** `foreach() argument must be of type array|object, string given` when viewing meeting details
-   - **Root Cause:** Quil webhook sends `databaseNotes` and `followUpMaterials` as JSON strings, not arrays
-   - **Error Locations:** 
-     * Line 111 in `QuilMeeting::getSummary()` - foreach on string value
-     * Line 220 in `QuilWebhookController` - count() on string value
-     * Blade templates using count() and foreach without type safety
+2. **Database Notes Not Displaying - URL Fetch Required:**
+   - **Problem:** 
+     * `foreach() argument must be of type array|object, string given` errors
+     * Database notes were not being displayed at all
+     * Meeting detail page crashed when viewing
    
-   - **Solutions Implemented:**
-     * **QuilWebhookController.php:** Added JSON string decoding before saving to database
-       ```php
-       if (isset($assetsData['databaseNotes']) && is_string($assetsData['databaseNotes'])) {
-           $assetsData['databaseNotes'] = json_decode($assetsData['databaseNotes'], true) ?? [];
-       }
-       ```
-     * **QuilMeeting.php:** Added defensive JSON decoding in `getSummary()` method
-     * **meeting-summary.blade.php:** Added `is_array()` check before count() and foreach
-     * **meeting-assets.blade.php:** Added `is_array()` check before count() and foreach
-     * **Webhook logging:** Changed count() to safely handle string values
+   - **Root Cause Discovery:** 
+     * Quil webhook sends `databaseNotes` as a **URL**, not raw data
+     * Webhook structure: `"databaseNotes": "https://example.com/notes.json"`
+     * That URL returns: `{"data":[{"name":"General","note":"<html content>"}]}`
+     * We were storing the URL string instead of fetching and parsing the actual notes
    
-   - **Result:** Webhooks process successfully, meeting detail pages display correctly, backward compatible with existing data
+   - **Complete Solution Implemented:**
+     
+     **A) QuilWebhookController.php - URL Fetching:**
+     ```php
+     // Fetch database notes from URL
+     if (!empty($assetsData['databaseNotes']) && filter_var($assetsData['databaseNotes'], FILTER_VALIDATE_URL)) {
+         $response = Http::timeout(10)->get($assetsData['databaseNotes']);
+         if ($response->successful()) {
+             $notesJson = $response->json();
+             $databaseNotesData = $notesJson['data'] ?? [];  // Extract 'data' array
+         }
+     }
+     ```
+     
+     **B) QuilMeeting.php - Enhanced getSummary():**
+     - Looks for 'Summary' note first, then 'General', then first available note
+     - Defensive JSON decoding for backward compatibility
+     - Returns HTML-formatted content for display
+     
+     **C) meeting-summary.blade.php - HTML Rendering:**
+     - Changed from `{{ }}` to `{!! !!}` to render HTML content properly
+     - Added professional CSS styling for h3, ul, li, strong, br tags
+     - Note content includes: headings, lists, paragraphs, manual notes
+     - Added icon for each note section (bi-journal-bookmark)
+     - Proper spacing and typography for readability
+     
+     **D) Type Safety Throughout:**
+     - Added `is_array()` checks before count() and foreach
+     - Safe count() in webhook logging: `is_array($data) ? count($data) : 0`
+     - Blade templates verify array type before iteration
 
-**Technical Implementation:**
-- Quil API sends nested JSON as encoded strings: `"databaseNotes": "[{\"name\":\"Summary\",\"note\":\"...\"}]"`
-- Added pre-processing to decode JSON strings before database insertion
-- Model casting (`'database_notes' => 'array'`) now works correctly with properly formatted data
-- Defensive programming throughout to handle both string and array formats
-- Maintains backward compatibility with any existing malformed data
+**Technical Architecture:**
+- **Webhook Flow:** Webhook received → URL validated → HTTP GET to fetch notes JSON → Parse `data` array → Store in database
+- **Data Structure:** `{"data":[{"name":"General","note":"<h3>Title</h3><ul><li>Item</li></ul>"}]}`
+- **Display:** HTML content rendered with {!! !!} and styled with CSS for professional appearance
+- **Error Handling:** Try-catch for HTTP fetch failures, fallback to empty array, logging all steps
+- **Performance:** 10-second timeout for URL fetch, async HTTP request doesn't block webhook response
+
+**Visual Improvements:**
+- **Quick Summary Section:** Shows first/main note in info alert box with icon
+- **All Notes Section:** Displays all notes as expandable cards with note names as headers
+- **HTML Rendering:** Proper heading hierarchy, styled lists, formatted paragraphs
+- **Professional Styling:** Custom CSS for note content with proper spacing, colors, fonts
+- **Empty State:** Clear messaging when no notes available with icon
 
 **Files Updated:**
 - `bootstrap/app.php` - CSRF exception for webhooks
-- `app/Http/Controllers/Api/QuilWebhookController.php` - JSON decoding and safe count()
-- `app/Models/QuilMeeting.php` - Defensive JSON handling in getSummary()
-- `resources/views/orchid/quil/meeting-summary.blade.php` - Type safety checks
+- `app/Http/Controllers/Api/QuilWebhookController.php` - URL fetching, JSON parsing, safe logging
+- `app/Models/QuilMeeting.php` - Enhanced getSummary() with priority logic and defensive parsing
+- `resources/views/orchid/quil/meeting-summary.blade.php` - HTML rendering, CSS styling, type safety
 - `resources/views/orchid/quil/meeting-assets.blade.php` - Type safety checks
 
-**Recommendation:** Always validate webhook payload structure and decode JSON strings before database storage.
+**Result:** 
+- ✅ Webhooks process successfully without 419 errors
+- ✅ Database notes fetched from URL and stored properly
+- ✅ Meeting detail pages display rich HTML content with proper formatting
+- ✅ Call summaries, action items, and manual notes all visible
+- ✅ Backward compatible with any existing data
+- ✅ Complete error handling and logging throughout
+
+**Recommendation:** Always check if webhook fields contain URLs that need to be fetched rather than assuming raw data.
