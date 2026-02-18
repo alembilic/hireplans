@@ -74,6 +74,14 @@ class QuilWebhookController extends Controller
             $meetingData = $validated['data']['meeting'];
             $organizationData = $validated['data']['organization'] ?? [];
             $assetsData = $validated['data']['assets'] ?? [];
+            
+            // Ensure databaseNotes and followUpMaterials are arrays
+            if (isset($assetsData['databaseNotes']) && is_string($assetsData['databaseNotes'])) {
+                $assetsData['databaseNotes'] = json_decode($assetsData['databaseNotes'], true) ?? [];
+            }
+            if (isset($assetsData['followUpMaterials']) && is_string($assetsData['followUpMaterials'])) {
+                $assetsData['followUpMaterials'] = json_decode($assetsData['followUpMaterials'], true) ?? [];
+            }
 
             // Try to match user by phone number
             Log::channel('quil_webhooks')->info('Starting phone number matching', [
@@ -217,7 +225,7 @@ class QuilWebhookController extends Controller
                     'transcription' => !empty($assetsData['transcriptionUrl']),
                     'recording' => !empty($assetsData['recordingUrl']),
                     'action_items' => !empty($assetsData['actionItemsUrl']),
-                    'notes_count' => count($assetsData['databaseNotes'] ?? []),
+                    'notes_count' => is_array($assetsData['databaseNotes'] ?? null) ? count($assetsData['databaseNotes']) : 0,
                 ]
             ]);
 

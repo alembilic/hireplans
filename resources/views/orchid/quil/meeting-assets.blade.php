@@ -66,7 +66,7 @@
     </div>
 
     <!-- Follow-up Materials -->
-    @if($quilMeeting->follow_up_materials && count($quilMeeting->follow_up_materials) > 0)
+    @if($quilMeeting->follow_up_materials && is_array($quilMeeting->follow_up_materials) && count($quilMeeting->follow_up_materials) > 0)
         <div class="mt-4">
             <h5 class="fw-bold mb-3">
                 <i class="bi bi-file-earmark-arrow-down me-2"></i>Follow-up Materials

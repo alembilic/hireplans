@@ -108,7 +108,17 @@ class QuilMeeting extends Model
             return null;
         }
         
-        foreach ($this->database_notes as $note) {
+        // Ensure database_notes is an array
+        $notes = $this->database_notes;
+        if (is_string($notes)) {
+            $notes = json_decode($notes, true) ?? [];
+        }
+        
+        if (!is_array($notes)) {
+            return null;
+        }
+        
+        foreach ($notes as $note) {
             if (isset($note['name']) && strtolower($note['name']) === 'summary') {
                 return $note['note'] ?? null;
             }

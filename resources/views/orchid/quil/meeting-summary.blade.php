@@ -10,7 +10,7 @@
         </div>
     @endif
 
-    @if($quilMeeting->database_notes && count($quilMeeting->database_notes) > 0)
+    @if($quilMeeting->database_notes && is_array($quilMeeting->database_notes) && count($quilMeeting->database_notes) > 0)
         <div class="mt-3">
             <h5 class="fw-bold mb-3">All Notes</h5>
             @foreach($quilMeeting->database_notes as $note)

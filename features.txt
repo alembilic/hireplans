@@ -1180,3 +1180,80 @@ Lines: 50
 - **Visibility**: Real-time monitoring of webhook activity
 - **Analytics**: Structured logs enable metric extraction
 - **Alerting**: Foundation for alert/notification systems
+
+## Orchid Platform & Quil Webhook Fixes (Feb 2026)
+
+### Orchid Relation Field Version Compatibility Issue
+
+**Issue:** Inconsistent dropdown display showing "[object Object]" on production but correct names on local
+
+**Root Cause:** Version mismatch between environments
+- **Local:** Orchid Platform 14.23.1 → Updated to 14.52.5
+- **Production:** Orchid Platform 14.52.4
+
+**Technical Details:**
+- Orchid's `Relation` field (used in JobEditLayout for Employer and Recruiter dropdowns) makes AJAX calls to `/platform/relation` endpoint
+- RelationController returns data as key-value object: `{"1": "admin", "2": "HP Admin"}`
+- JavaScript controller (`relation_controller.js`) transforms using `Object.entries()` for TomSelect dropdown
+- Version differences can cause response format inconsistencies
+
+**Solution:** Updated local environment to 14.52.5 to match production
+- Fixed composer autoload hang by disabling optimize-autoloader temporarily
+- Cleared all Laravel caches (cache, config, route, view)
+
+**Files Involved:**
+- `app/Orchid/Layouts/Job/JobEditLayout.php` - Uses `Relation::make()` field
+- `vendor/orchid/platform/src/Platform/Http/Controllers/RelationController.php` - Returns relation data
+- `vendor/orchid/platform/resources/js/controllers/relation_controller.js` - Transforms API response
+
+### Quil Webhook CSRF and JSON Parsing Fixes
+
+**Issues Fixed:**
+
+1. **419 CSRF Error on Webhook Endpoint:**
+   - **Problem:** Quil webhooks were being rejected with 419 status (CSRF token mismatch)
+   - **Root Cause:** External webhooks don't include CSRF tokens
+   - **Solution:** Excluded `/webhooks/*` routes from CSRF verification in `bootstrap/app.php`
+   - **Implementation:** 
+     ```php
+     $middleware->validateCsrfTokens(except: ['webhooks/*']);
+     ```
+   - **Result:** Webhooks now publicly accessible without CSRF tokens while maintaining security logging
+
+2. **JSON String Parsing Error in Database Notes:**
+   - **Problem:** `foreach() argument must be of type array|object, string given` when viewing meeting details
+   - **Root Cause:** Quil webhook sends `databaseNotes` and `followUpMaterials` as JSON strings, not arrays
+   - **Error Locations:** 
+     * Line 111 in `QuilMeeting::getSummary()` - foreach on string value
+     * Line 220 in `QuilWebhookController` - count() on string value
+     * Blade templates using count() and foreach without type safety
+   
+   - **Solutions Implemented:**
+     * **QuilWebhookController.php:** Added JSON string decoding before saving to database
+       ```php
+       if (isset($assetsData['databaseNotes']) && is_string($assetsData['databaseNotes'])) {
+           $assetsData['databaseNotes'] = json_decode($assetsData['databaseNotes'], true) ?? [];
+       }
+       ```
+     * **QuilMeeting.php:** Added defensive JSON decoding in `getSummary()` method
+     * **meeting-summary.blade.php:** Added `is_array()` check before count() and foreach
+     * **meeting-assets.blade.php:** Added `is_array()` check before count() and foreach
+     * **Webhook logging:** Changed count() to safely handle string values
+   
+   - **Result:** Webhooks process successfully, meeting detail pages display correctly, backward compatible with existing data
+
+**Technical Implementation:**
+- Quil API sends nested JSON as encoded strings: `"databaseNotes": "[{\"name\":\"Summary\",\"note\":\"...\"}]"`
+- Added pre-processing to decode JSON strings before database insertion
+- Model casting (`'database_notes' => 'array'`) now works correctly with properly formatted data
+- Defensive programming throughout to handle both string and array formats
+- Maintains backward compatibility with any existing malformed data
+
+**Files Updated:**
+- `bootstrap/app.php` - CSRF exception for webhooks
+- `app/Http/Controllers/Api/QuilWebhookController.php` - JSON decoding and safe count()
+- `app/Models/QuilMeeting.php` - Defensive JSON handling in getSummary()
+- `resources/views/orchid/quil/meeting-summary.blade.php` - Type safety checks
+- `resources/views/orchid/quil/meeting-assets.blade.php` - Type safety checks
+
+**Recommendation:** Always validate webhook payload structure and decode JSON strings before database storage.
