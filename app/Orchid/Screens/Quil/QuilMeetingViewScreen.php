@@ -65,7 +65,7 @@ class QuilMeetingViewScreen extends Screen
         if ($this->quilMeeting->candidate_id) {
             $buttons[] = Link::make('View Candidate Profile')
                 ->icon('user')
-                ->route('platform.candidates.profile', $this->quilMeeting->candidate_id);
+                ->route('platform.candidates.view', $this->quilMeeting->candidate_id);
         }
 
         return $buttons;
@@ -106,7 +106,7 @@ class QuilMeetingViewScreen extends Screen
                     ->render(function (QuilMeeting $meeting) {
                         if ($meeting->user) {
                             return Link::make($meeting->user->name)
-                                ->route('platform.candidates.profile', $meeting->candidate_id ?? $meeting->user_id);
+                                ->route('platform.candidates.view', $meeting->candidate_id ?? $meeting->user_id);
                         }
                         return '<span class="text-warning">No user matched by phone number</span>';
                     }),

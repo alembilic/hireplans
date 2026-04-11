@@ -90,7 +90,7 @@ class QuilMeetingsScreen extends Screen
                     ->render(function (QuilMeeting $meeting) {
                         if ($meeting->user) {
                             return Link::make($meeting->user->name)
-                                ->route('platform.candidates.profile', $meeting->candidate_id ?? $meeting->user_id);
+                                ->route('platform.candidates.view', $meeting->candidate_id ?? $meeting->user_id);
                         }
                         return '<span class="badge bg-warning">No match</span>';
                     }),
