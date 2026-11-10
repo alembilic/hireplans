@@ -39,11 +39,11 @@ class JobEditLayout extends Rows
             //     ->required()
             //     ->horizontal(),
 
-            Relation::make('job.employer_id')
-                ->fromModel(Employer::class, 'name')
-                ->title(__('Employer'))
-                ->required()
-                ->horizontal(),
+            // Relation::make('job.employer_id')
+            //     ->fromModel(Employer::class, 'name')
+            //     ->title(__('Employer'))
+            //     ->required()
+            //     ->horizontal(),
 
             Relation::make('job.created_by')
                 ->fromModel(User::class, 'name')

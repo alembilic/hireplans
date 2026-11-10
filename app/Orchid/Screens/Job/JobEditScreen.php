@@ -127,12 +127,12 @@ class JobEditScreen extends Screen
         // dd($request->all());
 
         $request->validate([
-            'job.employer_id' => 'required|exists:employers,id', // Check if the employer exists
             'job.title' => 'required|string|max:255',
             'job.created_by' => 'nullable|exists:users,id', // Validate recruiter exists
         ]);
 
         $jobData = $request->input('job');
+        $jobData['employer_id'] = 1;
         $jobData['job_ref'] = HelperFunc::generateReferenceNumber('job');
         $jobData['slug'] = HelperFunc::generateUniqueJobSlug($jobData['title']);
         // $jobData['is_active'] = (isset($jobData['is_active']) && $jobData['is_active'] === 'on') ? 1 : 0;

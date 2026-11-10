@@ -33,7 +33,7 @@
     <x-how-it-works title="How it works" />
 
     <!-- Testimonials -->
-    <x-testimonials-section title="What people are saying" />
+    {{-- <x-testimonials-section title="What people are saying" /> --}}
 
     <!-- CTA Band -->
     <x-cta-band 

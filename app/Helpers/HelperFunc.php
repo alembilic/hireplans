@@ -112,6 +112,7 @@ class HelperFunc
     public static function getJobCategories(): array
     {
         return [
+            'education' => 'Education',
             'engineering' => 'Engineering',
             'marketing' => 'Marketing',
             'sales' => 'Sales',
