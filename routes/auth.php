@@ -4,10 +4,6 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
-use App\Orchid\Screens\PlatformScreen;
-use App\Orchid\Screens\User\UserProfileScreen;
-use Tabuna\Breadcrumbs\Trail;
-
 Route::middleware('guest')->group(function () {
     Volt::route('register', 'pages.auth.register')
         ->name('register');
@@ -34,11 +30,3 @@ Route::middleware('auth')->group(function () {
     Volt::route('confirm-password', 'pages.auth.confirm-password')
         ->name('password.confirm');
 });
-
-Route::middleware(['auth', 'verified'])->group(function () {
-
-    // require __DIR__.'/platform.php';
-
-});
-
-require __DIR__.'/platform.php';
